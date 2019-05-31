@@ -1,0 +1,108 @@
+{% extends 'main/base.html' %}
+{% load widget_tweaks %}
+
+{% block page-header %}Lobby{% endblock %}
+
+{% block page-body %}
+
+<style>
+    .games-list td,.games-list th {
+        text-align: center;
+    }
+</style>
+
+<div class="row">
+
+    <div class="games-list col-lg-12">
+        <form class="form-inline" method="get" action="{% url 'main-lobby' %}" id="formFilter">
+            Filter by&nbsp;
+            <div class="form-group">
+                <label for="{{ form_filter.user_participation.id_for_label }}">User participation&nbsp;:&nbsp;</label>
+                {% render_field form_filter.user_participation class+='form-control' %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form_filter.game_status.id_for_label }}">&nbsp;Game status&nbsp;:&nbsp;</label>
+                {% render_field form_filter.game_status class+='form-control' %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form_filter.game_creator.id_for_label }}">&nbsp;Creator&nbsp;:&nbsp;</label>
+                {% render_field form_filter.game_creator class+='form-control' %}
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-left: 7px">Refresh</button>
+            <button id="btnReset" class="btn btn-warning" style="display: none; margin-left: 7px">Reset</button>
+        </form>
+
+        <table class="table table-responsive" style="margin-top: 7px">
+        <thead>
+            <tr>
+                <th>Game name</th>
+                <th>Participants</th>
+                <th>ES</th>
+                <th>Status</th>
+                <th>Creator</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for game in user_games %}
+            <tr>
+                <td>{{ game.label }}</td>
+                <td>{{ game.participants_count }}</td>
+                <td>{{ game.stages_count }}</td>
+                <td>{{ game.status|lower|capfirst }}</td>
+                <td>{{ game.creator.get_full_name }}</td>
+                <td>
+                    {% if game.is_joignable %}
+                    <button class="btn btn-primary">Join</button>
+                    {% endif %}
+                    {% if game.is_quitable %}
+                    <button class="btn btn-primary">Quit</button>
+                    {% endif %}
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="5">You don't have a game in progress.</td></tr>
+        {% endfor %}
+        </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+
+    $(document).ready(function() {
+        let btnReset = $('#formFilter #btnReset');
+        let inputFilterUserParticipation = $('#{{ form_filter.user_participation.id_for_label }}');
+        let inputFilterGameStatus = $('#{{ form_filter.game_status.id_for_label }}');
+        let inputFilterGameCreator = $('#{{ form_filter.game_creator.id_for_label }}');
+        let formFilter = $('#formFilter');
+
+        inputFilterUserParticipation.change(function() {
+            btnReset.show();
+        });
+        inputFilterGameStatus.change(function() {
+            btnReset.show();
+        });
+        inputFilterGameCreator.change(function() {
+            btnReset.show();
+        });
+
+        btnReset.click(function() {
+            inputFilterUserParticipation.val('');
+            inputFilterGameStatus.val('');
+            inputFilterGameCreator.val('');
+            formFilter.submit();
+        });
+
+        if ((inputFilterUserParticipation.val() !== '')
+            || (inputFilterGameStatus.val() !== '')
+            || (inputFilterGameCreator.val() !== '')) {
+            btnReset.show();
+        }
+
+    });
+
+</script>
+
+{% endblock %}

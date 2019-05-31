@@ -1,0 +1,20 @@
+{% extends 'main/base.html' %}
+
+{% block page-header %}Welcome in Rallyman Online{% endblock %}
+
+{% block page-body %}
+
+<style>
+
+</style>
+
+<p>
+    It's rally time!
+</p>
+<ul>
+    <li><a href="{% url 'main-lobby' %}?game_status=STARTED">Spectate a running game</a></li>
+    <li><a href="{% url 'main-lobby' %}?game_status=OPENED&user_participation=False">Join a opened game</a></li>
+    <li><a href="{% url 'main-lobby' %}?game_status=STARTED">Create a new game</a></li>
+</ul>
+
+{% endblock %}

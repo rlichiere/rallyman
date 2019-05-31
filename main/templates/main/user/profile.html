@@ -1,0 +1,74 @@
+{% extends 'main/base.html' %}
+{% load widget_tweaks %}
+
+{% block page-header %}Profile{% endblock %}
+
+{% block page-body %}
+
+
+<form method="post" action="{% url 'user-profile' %}">
+<table class="table table-responsive">
+    <tr>
+        <th>
+            <label for="{{ form_fields.email.id_for_label }}">Email&nbsp;:</label>
+        </th>
+        <td colspan="3">
+            {% render_field form_fields.email class+='form-control' %}
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <label for="{{ form_fields.first_name.id_for_label }}">First name&nbsp;:</label>
+        </th>
+        <td>
+            {% render_field form_fields.first_name class+='form-control' %}
+        </td>
+        <th>
+            <label for="{{ form_fields.last_name.id_for_label }}">Last name&nbsp;:</label>
+        </th>
+        <td>
+            {% render_field form_fields.last_name class+='form-control' %}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+        </td>
+        <td align="right">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Change profile</button>
+        </td>
+    </tr>
+</table>
+</form>
+
+<form method="post" action="{% url 'user-profile' %}">
+<table class="table table-responsive">
+    <tr>
+        <th>
+            <label for="{{ form_password.password.id_for_label }}" class="mr-sm-2">Password&nbsp;:</label>
+        </th>
+        <td>
+            {% render_field form_password.password class+='form-control mb-2 mr-sm-2' %}
+        </td>
+        <th>
+            <label for="{{ form_password.password_check.id_for_label }}" class="mr-sm-2">Confirmation&nbsp;:</label>
+        </th>
+        <td>
+            {% render_field form_password.password_check class+='form-control mb-2 mr-sm-2' %}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+        </td>
+        <td align="right">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary mb-2">Change password</button>
+            <div style="display: none">
+                {% render_field form_password.password_change %}
+            </div>
+        </td>
+    </tr>
+</table>
+</form>
+
+{% endblock %}
