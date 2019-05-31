@@ -6,7 +6,7 @@
 {% block page-body %}
 
 <style>
-    .games-list td,.games-list th {
+    .rallies-list td, .rallies-list th {
         text-align: center;
     }
 
@@ -17,20 +17,20 @@
 
 <div class="row">
 
-    <div class="games-list col-lg-12">
+    <div class="rallies-list col-lg-12">
         <form class="form-inline" method="get" action="{% url 'main-lobby' %}" id="formFilter">
             Filter by&nbsp;
             <div class="form-group">
-                <label for="{{ form_filter.game_status.id_for_label }}">&nbsp;Rally status&nbsp;:&nbsp;</label>
-                {% render_field form_filter.game_status class+='form-control' %}
+                <label for="{{ form_filter.rally_status.id_for_label }}">&nbsp;Rally status&nbsp;:&nbsp;</label>
+                {% render_field form_filter.rally_status class+='form-control' %}
             </div>
             <div class="form-group">
                 <label for="{{ form_filter.user_participation.id_for_label }}">&nbsp;Rallies I participate in&nbsp;:&nbsp;</label>
                 {% render_field form_filter.user_participation class+='form-control' %}
             </div>
             <div class="form-group">
-                <label for="{{ form_filter.game_creator.id_for_label }}">&nbsp;Rally creator&nbsp;:&nbsp;</label>
-                {% render_field form_filter.game_creator class+='form-control' %}
+                <label for="{{ form_filter.rally_creator.id_for_label }}">&nbsp;Rally creator&nbsp;:&nbsp;</label>
+                {% render_field form_filter.rally_creator class+='form-control' %}
             </div>
             <button type="submit" class="btn btn-primary" style="margin-left: 7px">Refresh</button>
             <button id="btnReset" class="btn btn-warning" style="display: none; margin-left: 7px">Reset</button>
@@ -53,24 +53,24 @@
             </tr>
         </thead>
         <tbody>
-        {% for game in user_games %}
+        {% for rally in user_rallies %}
             <tr>
-                <td>{{ game.label }}</td>
-                <td>{{ game.participants_count }}</td>
-                <td>{{ game.stages_count }}</td>
-                <td>{{ game.status|lower|capfirst }}</td>
-                <td>{{ game.creator.get_full_name }}</td>
+                <td>{{ rally.label }}</td>
+                <td>{{ rally.participants_count }}</td>
+                <td>{{ rally.stages_count }}</td>
+                <td>{{ rally.status|lower|capfirst }}</td>
+                <td>{{ rally.creator.get_full_name }}</td>
                 <td>
-                    {% if game.is_joignable %}
+                    {% if rally.is_joignable %}
                     <button class="btn btn-primary">Join</button>
                     {% endif %}
-                    {% if game.is_quitable %}
+                    {% if rally.is_quitable %}
                     <button class="btn btn-primary">Quit</button>
                     {% endif %}
                 </td>
             </tr>
         {% empty %}
-            <tr><td colspan="5">You don't have a game in progress.</td></tr>
+            <tr><td colspan="5">You don't have a rally in progress.</td></tr>
         {% endfor %}
         </tbody>
         </table>
@@ -82,8 +82,8 @@
 
     let btnReset = $('#formFilter #btnReset');
     let inputFilterUserParticipation = $('#{{ form_filter.user_participation.id_for_label }}');
-    let inputFilterGameStatus = $('#{{ form_filter.game_status.id_for_label }}');
-    let inputFilterGameCreator = $('#{{ form_filter.game_creator.id_for_label }}');
+    let inputFilterRallyStatus = $('#{{ form_filter.rally_status.id_for_label }}');
+    let inputFilterRallyCreator = $('#{{ form_filter.rally_creator.id_for_label }}');
     let formFilter = $('#formFilter');
     let inputOrderBy = $('#{{ form_filter.order_by.id_for_label }}');
     let inputOrderWay = $('#{{ form_filter.order_way.id_for_label }}');
@@ -104,23 +104,23 @@
         inputFilterUserParticipation.change(function() {
             btnReset.show();
         });
-        inputFilterGameStatus.change(function() {
+        inputFilterRallyStatus.change(function() {
             btnReset.show();
         });
-        inputFilterGameCreator.change(function() {
+        inputFilterRallyCreator.change(function() {
             btnReset.show();
         });
 
         btnReset.click(function() {
             inputFilterUserParticipation.val('');
-            inputFilterGameStatus.val('');
-            inputFilterGameCreator.val('');
+            inputFilterRallyStatus.val('');
+            inputFilterRallyCreator.val('');
             formFilter.submit();
         });
 
         if ((inputFilterUserParticipation.val() !== '')
-            || (inputFilterGameStatus.val() !== '')
-            || (inputFilterGameCreator.val() !== '')) {
+            || (inputFilterRallyStatus.val() !== '')
+            || (inputFilterRallyCreator.val() !== '')) {
             btnReset.show();
         }
 

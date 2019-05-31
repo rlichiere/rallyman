@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.views.generic import TemplateView
 
-from ..forms.lobby import FilterGamesForm
+from ..forms.lobby import FilterRalliesForm
 from ..generic.views import ViewHelper
-from ..models import Game, GameStatus, Participation, Stage
+from ..models import Game, RallyStatus, Participation, Stage
 
 
 class LobbyView(TemplateView, ViewHelper):
@@ -14,72 +14,72 @@ class LobbyView(TemplateView, ViewHelper):
         _executor = self.request.user
         context = super(LobbyView, self).get_context_data(**kwargs)
 
-        _allGames = Game.objects.all()
+        _allRallies = Game.objects.all()
 
         # prepare filters
-        _filterForm = FilterGamesForm(request=self.request)
+        _filterForm = FilterRalliesForm(request=self.request)
         _orderBy = _filterForm.fields['order_by'].initial
         _orderWay = _filterForm.fields['order_way'].initial
         _userParticipation = _filterForm.fields['user_participation'].initial
-        _gameStatus = _filterForm.fields['game_status'].initial
-        _gameCreator = _filterForm.fields['game_creator'].initial
-        _gamesFilter = dict()
-        _gamesExclude = dict()
+        _rallyStatus = _filterForm.fields['rally_status'].initial
+        _rallyCreator = _filterForm.fields['rally_creator'].initial
+        _ralliesFilter = dict()
+        _ralliesExclude = dict()
 
         # manage creator filter
-        if _gameCreator == 'me':
-            _gamesFilter['creator'] = _executor
-        elif _gameCreator == 'notme':
-            _gamesExclude['creator'] = _executor
+        if _rallyCreator == 'me':
+            _ralliesFilter['creator'] = _executor
+        elif _rallyCreator == 'notme':
+            _ralliesExclude['creator'] = _executor
 
-        # manage game_status filter
-        if _gameStatus not in ['-', '']:
-            _gamesFilter['status'] = _gameStatus
+        # manage rally_status filter
+        if _rallyStatus not in ['-', '']:
+            _ralliesFilter['status'] = _rallyStatus
 
         # apply filters
-        _games = _allGames.exclude(**_gamesExclude)
-        _games = _games.filter(**_gamesFilter)
+        _rallies = _allRallies.exclude(**_ralliesExclude)
+        _rallies = _rallies.filter(**_ralliesFilter)
 
-        _gamesParticipations = Participation.objects.filter(game__in=_games)
-        _gamesParticipationsIds = _gamesParticipations.values_list('id', flat=True)
+        _ralliesParticipations = Participation.objects.filter(game__in=_rallies)
+        _ralliesParticipationsIds = _ralliesParticipations.values_list('id', flat=True)
         if _userParticipation == 'True':
-            _games = _games.filter(id__in=_gamesParticipationsIds)
+            _rallies = _rallies.filter(id__in=_ralliesParticipationsIds)
         elif _userParticipation == 'False':
-            _games = _games.exclude(id__in=_gamesParticipationsIds)
+            _rallies = _rallies.exclude(id__in=_ralliesParticipationsIds)
 
         # order by database fields
         if _orderBy and _orderBy in ['label', 'status', 'creator']:
-            _games = _games.order_by('%s%s' % ('-' if _orderWay == 'desc' else '', _orderBy))
+            _rallies = _rallies.order_by('%s%s' % ('-' if _orderWay == 'desc' else '', _orderBy))
 
         # browse elected games, and add temporary attributes
         _allStages = Stage.objects.all()
-        for _game in _games:
-            _gameParticipations = _gamesParticipations.filter(game=_game)
-            setattr(_game, 'participants', _gameParticipations)
-            setattr(_game, 'participants_count', _gameParticipations.count())
+        for _rally in _rallies:
+            _rallyParticipations = _ralliesParticipations.filter(game=_rally)
+            setattr(_rally, 'participants', _rallyParticipations)
+            setattr(_rally, 'participants_count', _rallyParticipations.count())
 
             _checkIfJoignable = True
             _checkIfQuitable = True
             try:
-                if _game.status in [GameStatus.SCHEDULED, GameStatus.STARTED]:
+                if _rally.status in [RallyStatus.SCHEDULED, RallyStatus.STARTED]:
                     _checkIfJoignable = False
 
-                if _game.status == GameStatus.FINISHED:
+                if _rally.status == RallyStatus.FINISHED:
                     _checkIfJoignable = False
                     _checkIfQuitable = False
 
-                _ = _gameParticipations.get(player=_executor)
+                _ = _rallyParticipations.get(player=_executor)
 
                 if _checkIfQuitable:
-                    setattr(_game, 'is_quitable', True)
+                    setattr(_rally, 'is_quitable', True)
 
             except Participation.DoesNotExist:
                 if _checkIfJoignable:
-                    setattr(_game, 'is_joignable', True)
+                    setattr(_rally, 'is_joignable', True)
 
-            _stages = _allStages.filter(game=_game)
-            setattr(_game, 'stages', _stages)
-            setattr(_game, 'stages_count', _stages.count())
+            _stages = _allStages.filter(game=_rally)
+            setattr(_rally, 'stages', _stages)
+            setattr(_rally, 'stages_count', _stages.count())
 
         # order by
         if _orderBy and _orderBy in ['number_of_participants', 'number_of_es']:
@@ -89,5 +89,5 @@ class LobbyView(TemplateView, ViewHelper):
         context['order_by'] = _orderBy
         context['order_way'] = _orderWay
         context['form_filter'] = _filterForm
-        context['user_games'] = _games
+        context['user_rallies'] = _rallies
         return context

@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.contrib import admin
 
-from .core.renderers import CarSkinRenderer, GameStagesRenderer, RoadbookRenderer
+from .core.renderers import CarSkinRenderer, RallyStagesRenderer, RoadbookRenderer
 from .models import CarSkin, Game, Participation, Stage, Zone
 
 
@@ -17,7 +17,7 @@ class CarSkinAdmin(admin.ModelAdmin):
         return CarSkinRenderer(instance).as_image()
 
 
-class GameAdmin(admin.ModelAdmin):
+class RallyAdmin(admin.ModelAdmin):
     list_display = ('label', 'status', 'creator', 'created_at', 'opened_at', 'finished_at')
     list_filter = ('status', 'creator', )
     search_fields = ('label', )
@@ -34,7 +34,7 @@ class GameAdmin(admin.ModelAdmin):
 
     @staticmethod
     def stages(instance):
-        return GameStagesRenderer(instance).as_table()
+        return RallyStagesRenderer(instance).as_table()
 
 
 class ParticipationAdmin(admin.ModelAdmin):
@@ -74,7 +74,7 @@ class ZoneAdmin(admin.ModelAdmin):
 
 
 admin.site.register(CarSkin, CarSkinAdmin)
-admin.site.register(Game, GameAdmin)
+admin.site.register(Game, RallyAdmin)
 admin.site.register(Participation, ParticipationAdmin)
 admin.site.register(Stage, StageAdmin)
 admin.site.register(Zone, ZoneAdmin)

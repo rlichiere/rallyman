@@ -33,7 +33,7 @@ class ZoneSurfaces(object):
         return cls.DRY
 
 
-class GameStatus(object):
+class RallyStatus(object):
     SCHEDULED = 'SCHEDULED'
     OPENED = 'OPENED'
     STARTED = 'STARTED'

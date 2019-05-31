@@ -35,7 +35,7 @@ class RoadbookRenderer(object):
         return mark_safe(_res)
 
 
-class GameStagesRenderer(object):
+class RallyStagesRenderer(object):
 
     def __init__(self, game):
         self.game = game
