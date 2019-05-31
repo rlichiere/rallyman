@@ -14,12 +14,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
+from django.contrib.auth import views as auth_views
 
-from views.home import HomeView
-from views.lobby import LobbyView
+from forms.signin import SignInForm
+from views.signup import SignUpView
+from views.profile import UserProfileView
 
 
 urlpatterns = [
-    url(r'^$', HomeView.as_view(), name='main-home'),
-    url(r'^lobby', LobbyView.as_view(), name='main-lobby'),
+    url(r'^signup', SignUpView.as_view(), name='auth-signup'),
+    url(r'^signin', auth_views.login, {'template_name': 'user/signin.html',
+                                       'authentication_form': SignInForm}, name='auth-signin'),
+    url(r'^signout', auth_views.logout, {'next_page': '/signin'}, name='auth-signout'),
+    url(r'^user/profile', UserProfileView.as_view(), name='user-profile'),
 ]

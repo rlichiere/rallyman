@@ -9,6 +9,10 @@
     .games-list td,.games-list th {
         text-align: center;
     }
+
+    th.orderable {
+        cursor: pointer;
+    }
 </style>
 
 <div class="row">
@@ -17,29 +21,34 @@
         <form class="form-inline" method="get" action="{% url 'main-lobby' %}" id="formFilter">
             Filter by&nbsp;
             <div class="form-group">
-                <label for="{{ form_filter.user_participation.id_for_label }}">User participation&nbsp;:&nbsp;</label>
-                {% render_field form_filter.user_participation class+='form-control' %}
-            </div>
-            <div class="form-group">
-                <label for="{{ form_filter.game_status.id_for_label }}">&nbsp;Game status&nbsp;:&nbsp;</label>
+                <label for="{{ form_filter.game_status.id_for_label }}">&nbsp;Rally status&nbsp;:&nbsp;</label>
                 {% render_field form_filter.game_status class+='form-control' %}
             </div>
             <div class="form-group">
-                <label for="{{ form_filter.game_creator.id_for_label }}">&nbsp;Creator&nbsp;:&nbsp;</label>
+                <label for="{{ form_filter.user_participation.id_for_label }}">&nbsp;Rallies I participate in&nbsp;:&nbsp;</label>
+                {% render_field form_filter.user_participation class+='form-control' %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form_filter.game_creator.id_for_label }}">&nbsp;Rally creator&nbsp;:&nbsp;</label>
                 {% render_field form_filter.game_creator class+='form-control' %}
             </div>
             <button type="submit" class="btn btn-primary" style="margin-left: 7px">Refresh</button>
             <button id="btnReset" class="btn btn-warning" style="display: none; margin-left: 7px">Reset</button>
+
+            <div style="display:none;">
+                {% render_field form_filter.order_by %}
+                {% render_field form_filter.order_way %}
+            </div>
         </form>
 
         <table class="table table-responsive" style="margin-top: 7px">
         <thead>
             <tr>
-                <th>Game name</th>
-                <th>Participants</th>
-                <th>ES</th>
-                <th>Status</th>
-                <th>Creator</th>
+                <th onclick="orderByColumnClicked('label');" class="orderable">Rally name</th>
+                <th>Number of participants</th>
+                <th>Number of ES</th>
+                <th onclick="orderByColumnClicked('status');" class="orderable">Rally status</th>
+                <th onclick="orderByColumnClicked('creator');" class="orderable">Creator of the rally</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -71,12 +80,26 @@
 
 <script>
 
+    let btnReset = $('#formFilter #btnReset');
+    let inputFilterUserParticipation = $('#{{ form_filter.user_participation.id_for_label }}');
+    let inputFilterGameStatus = $('#{{ form_filter.game_status.id_for_label }}');
+    let inputFilterGameCreator = $('#{{ form_filter.game_creator.id_for_label }}');
+    let formFilter = $('#formFilter');
+    let inputOrderBy = $('#{{ form_filter.order_by.id_for_label }}');
+    let inputOrderWay = $('#{{ form_filter.order_way.id_for_label }}');
+
+    function orderByColumnClicked(column_name) {
+        inputOrderBy.val(column_name);
+
+        if (inputOrderWay.val() === 'desc') {
+            inputOrderWay.val('asc');
+        } else {
+            inputOrderWay.val('desc');
+        }
+        formFilter.submit();
+    }
+
     $(document).ready(function() {
-        let btnReset = $('#formFilter #btnReset');
-        let inputFilterUserParticipation = $('#{{ form_filter.user_participation.id_for_label }}');
-        let inputFilterGameStatus = $('#{{ form_filter.game_status.id_for_label }}');
-        let inputFilterGameCreator = $('#{{ form_filter.game_creator.id_for_label }}');
-        let formFilter = $('#formFilter');
 
         inputFilterUserParticipation.change(function() {
             btnReset.show();
