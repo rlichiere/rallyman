@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 
+from django.contrib.messages import constants as messages
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -74,6 +76,53 @@ WSGI_APPLICATION = 'rallyman.wsgi.application'
 
 LOGIN_URL = 'auth-signin'
 LOGIN_REDIRECT_URL = '/'
+
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger'
+}
+
+# Logging Settings
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'large': {
+            'format': '%(asctime)s %(levelname)s %(pathname)s %(lineno)d %(funcName)s: %(message)s',
+        },
+        'tiny': {
+            'format': '%(asctime)s %(levelname)s %(module)s %(lineno)d %(funcName)s: %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S'
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'tiny',
+        },
+        'errors_file': {
+            'level': 'ERROR',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'when': 'midnight',
+            'interval': 1,
+            'filename': 'logs/ErrorLoggers.log',
+            'formatter': 'large',
+        },
+        'verbose_file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'when': 'midnight',
+            'interval': 1,
+            'filename': 'logs/VerboseLoggers.log',
+            'formatter': 'large',
+        },
+    },
+    'loggers': {
+        'provisioning': {
+            'handlers': ['console', 'errors_file', 'verbose_file'],
+            'level': os.environ.get('LOG_LEVEL', 'INFO'),
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
