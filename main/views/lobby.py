@@ -7,12 +7,16 @@ from ..generic.views import ViewHelper
 from ..models import Rally, Participation, Stage
 
 
-class LobbyView(TemplateView, ViewHelper):
+class LobbyView(ViewHelper, TemplateView):
     template_name = 'main/lobby.html'
 
+    def __init__(self, *args, **kwargs):
+        super(LobbyView, self).__init__(*args, **kwargs)
+
     def get_context_data(self, **kwargs):
-        _lp = '%s.get_context_data:' % self.__class__.__name__
         _executor = self.request.user
+        self.log.startView(_executor)
+
         context = super(LobbyView, self).get_context_data(**kwargs)
 
         _allRallies = Rally.objects.all()
@@ -38,9 +42,9 @@ class LobbyView(TemplateView, ViewHelper):
             _ralliesFilter['status'] = _rallyStatus
 
         # apply filters
-        _rallies = _allRallies.exclude(**_ralliesExclude)
-        _rallies = _rallies.filter(**_ralliesFilter)
+        _rallies = _allRallies.exclude(**_ralliesExclude).filter(**_ralliesFilter)
 
+        # manage user_participation
         _ralliesParticipations = Participation.objects.filter(rally__in=_rallies)
         _ralliesParticipationsIds = _ralliesParticipations.values_list('id', flat=True)
         if not _executor.is_anonymous:
@@ -93,4 +97,6 @@ class LobbyView(TemplateView, ViewHelper):
 
         context['form_filter'] = _filterForm
         context['user_rallies'] = _rallies
+
+        self.log.endView()
         return context

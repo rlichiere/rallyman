@@ -2,17 +2,11 @@
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.views.generic import TemplateView, FormView
 
+from ..core.logger import Log
 
-class GenericTemplateView(TemplateView):
-    def __init__(self, *args, **kwargs):
-        super(GenericTemplateView, self).__init__(*args, **kwargs)
-
-
-class GenericFormView(FormView):
-    def __init__(self, *args, **kwargs):
-        super(GenericFormView, self).__init__(*args, **kwargs)
+import logging
+logger = logging.getLogger('main_logger')
 
 
 class ViewHelper(object):
@@ -20,34 +14,25 @@ class ViewHelper(object):
     ERROR = messages.ERROR
 
     def __init__(self, *args, **kwargs):
-        _lp = '%s.__init__:' % self.__class__.__name__
+        self.log = Log(caller=self)
 
-        for _arg in args:
-            print '%s arg : %s' % (_lp, _arg)
-
-        for _k, _v in kwargs.iteritems():
-            print '%s k : %s, v : %s' % (_lp, _k, _v)
-
-    @staticmethod
-    def add_message(request, status, message):
-        print message
+    def add_message(self, request, status, message):
+        self.log.info(message)
         messages.add_message(request, status, message)
 
-    @classmethod
-    def return_error(cls, request, message, target):
-        print message
-        messages.add_message(request, cls.ERROR, message)
+    def redirect_success(self, request, message, target):
+        self.log.infoIndirect(message)
+        messages.add_message(request, self.SUCCESS, message)
         return HttpResponseRedirect(reverse(target))
 
-    @classmethod
-    def set_context_error(cls, request, message, context):
+    def redirect_error(self, request, message, target):
+        self.log.error(message)
+        messages.add_message(request, self.ERROR, message)
+        return HttpResponseRedirect(reverse(target))
+
+    def set_context_error(self, request, message, context):
         context['error'] = message
-        print message
-        messages.add_message(request, cls.ERROR, message)
+        self.log.error(message)
+        messages.add_message(request, self.ERROR, message)
         return context
 
-    @classmethod
-    def return_success(cls, request, message, target):
-        print message
-        messages.add_message(request, cls.SUCCESS, message)
-        return HttpResponseRedirect(reverse(target))

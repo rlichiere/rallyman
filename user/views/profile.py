@@ -7,7 +7,7 @@ from ..forms.profile import UserProfileForm, UserProfilePasswordChangeForm
 from main.generic.views import ViewHelper
 
 
-class UserProfileView(LoginRequiredMixin, TemplateView, ViewHelper):
+class UserProfileView(LoginRequiredMixin, ViewHelper, TemplateView):
     template_name = 'user/profile.html'
 
     def get_context_data(self, **kwargs):
@@ -17,31 +17,29 @@ class UserProfileView(LoginRequiredMixin, TemplateView, ViewHelper):
         return context
 
     def post(self, request, *args, **kwargs):
-        _lp = '%s.post:' % self.__class__.__name__
-
         _executor = self.request.user
-        print '%s self.request.POST : %s' % (_lp, self.request.POST)
+        self.log.startView(_executor)
 
         if self.request.POST.get('password_change'):
             # user modifies password
 
             _form = UserProfilePasswordChangeForm(self.request.POST, request=self.request)
             if not _form.is_valid():
-                return self.return_error(self.request, 'Form is not valid', 'user-profile')
+                return self.redirect_error(self.request, 'Form is not valid', 'user-profile')
 
             _newPass = _form.cleaned_data.get('password')
             if _newPass != _form.cleaned_data.get('password_check'):
-                return self.return_error(self.request, 'Passwords are different', 'user-profile')
+                return self.redirect_error(self.request, 'Passwords are different', 'user-profile')
 
             _executor.set_password(_newPass)
             _executor.save()
             login(request, _executor)
-            return self.return_success(self.request, 'Password changed', 'user-profile')
+            return self.redirect_success(self.request, 'Password changed', 'user-profile')
 
         # user modifies other fields (email, first_name, last_name)
         _form = UserProfileForm(self.request.POST, request=self.request)
         if not _form.is_valid():
-            return self.return_error(self.request, 'Form is not valid', 'user-profile')
+            return self.redirect_error(self.request, 'Form is not valid', 'user-profile')
 
         _pEmail = _form.cleaned_data.get('email')
         if _pEmail != _executor.email:
@@ -57,4 +55,4 @@ class UserProfileView(LoginRequiredMixin, TemplateView, ViewHelper):
 
         _executor.save()
 
-        return self.return_success(self.request, 'Profile changed', 'user-profile')
+        return self.redirect_success(self.request, 'Profile changed', 'user-profile')

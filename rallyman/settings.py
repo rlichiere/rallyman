@@ -89,9 +89,12 @@ LOGGING = {
         'large': {
             'format': '%(asctime)s %(levelname)s %(pathname)s %(lineno)d %(funcName)s: %(message)s',
         },
-        'tiny': {
-            'format': '%(asctime)s %(levelname)s %(module)s %(lineno)d %(funcName)s: %(message)s',
+        'short': {
+            'format': '%(levelname)s %(message)s',
             'datefmt': '%Y-%m-%d %H:%M:%S'
+        },
+        'tiny': {
+            'format': '%(levelname)s %(message)s',
         },
     },
     'handlers': {
@@ -117,7 +120,7 @@ LOGGING = {
         },
     },
     'loggers': {
-        'provisioning': {
+        'main_logger': {
             'handlers': ['console', 'errors_file', 'verbose_file'],
             'level': os.environ.get('LOG_LEVEL', 'INFO'),
         },
