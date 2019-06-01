@@ -69,7 +69,6 @@
         let groupOpenAtHelp = $('#{{ form_create.opened_at.id_for_label }}_help');
 
         checkboxSetOpenAt.click(function() {
-            console.log('clicked. checked : ' + $(this).prop('checked'));
             if ($(this).prop('checked')) {
                 groupOpenAtHelp.hide();
                 inputOpenAt.parent().show();
