@@ -24,10 +24,15 @@
             <label class="input-group-text" style="border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0">
                 Deferred opening date
             </label>
-            <div class="input-group-prepend">
+            <div class="input-group-append">
                 <div class="input-group-text">
                     {% render_field form_create.set_opened_at %}
                 </div>
+                <a class="btn btn-primary" href="#" data-toggle="tooltip" data-html="true"
+                   title="Set a custom <strong>deferred opening date</strong> if you want to lock registrations until a given date.<br />
+                    Registration will be available after this date.<br /><br />
+                    Otherwise, the registration will be opened as soon as the rally is created."
+                >?</a>
             </div>
         </div>
         <div class="input-group" id="{{ form_create.opened_at.id_for_label }}_help">
