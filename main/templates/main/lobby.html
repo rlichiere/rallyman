@@ -17,7 +17,7 @@
 
 <div class="row">
 
-    <div class="rallies-list col-lg-12">
+    <div class="col-lg-12">
         <form class="form-inline" method="get" action="{% url 'main-lobby' %}" id="formFilter">
             Filter by&nbsp;
             <div class="form-group">
@@ -30,7 +30,9 @@
                 <label for="{{ form_filter.user_participation.id_for_label }}">&nbsp;Rallies I participate in&nbsp;:&nbsp;</label>
                 {% render_field form_filter.user_participation class+='form-control' %}
             </div>
+            {% endif %}
 
+            {% if not user.is_anonymous %}
             <div class="form-group">
                 <label for="{{ form_filter.rally_creator.id_for_label }}">&nbsp;Rally creator&nbsp;:&nbsp;</label>
                 {% render_field form_filter.rally_creator class+='form-control' %}
@@ -45,7 +47,8 @@
                 {% render_field form_filter.order_way %}
             </div>
         </form>
-
+    </div>
+    <div class="rallies-list col-lg-12">
         <table class="table table-responsive" style="margin-top: 7px">
         <thead>
             <tr>
@@ -54,6 +57,8 @@
                 <th>Number of ES</th>
                 <th onclick="orderByColumnClicked('status');" class="orderable">Rally status</th>
                 <th onclick="orderByColumnClicked('creator');" class="orderable">Creator of the rally</th>
+                <th onclick="orderByColumnClicked('created_at');" class="orderable">Rally created at</th>
+                <th onclick="orderByColumnClicked('opened_at');" class="orderable">Rally opens at</th>
 
                 {% if not user.is_anonymous %}
                 <th>Action</th>
@@ -69,6 +74,8 @@
                 <td>{{ rally.stages_count }}</td>
                 <td>{{ rally.status|lower|capfirst }}</td>
                 <td>{{ rally.creator.get_full_name }}</td>
+                <td>{{ rally.created_at }}</td>
+                <td>{{ rally.opened_at }}</td>
 
                 {% if not user.is_anonymous %}
                 <td>
@@ -112,6 +119,20 @@
         formFilter.submit();
     }
 
+    function isResetRequired() {
+        {% if not user.is_anonymous %}
+        if ((inputFilterRallyStatus.val() !== '')
+            || (inputFilterUserParticipation.val() !== '')
+            || (inputFilterRallyCreator.val() !== '')) {
+            return true;
+        }
+        {% else %}
+        if (inputFilterRallyStatus.val() !== '') {
+            return true;
+        }
+        {% endif %}
+    }
+
     $(document).ready(function() {
 
         inputFilterUserParticipation.change(function() {
@@ -131,12 +152,9 @@
             formFilter.submit();
         });
 
-        if ((inputFilterUserParticipation.val() !== '')
-            || (inputFilterRallyStatus.val() !== '')
-            || (inputFilterRallyCreator.val() !== '')) {
+        if (isResetRequired()) {
             btnReset.show();
         }
-
     });
 
 </script>

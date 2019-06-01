@@ -33,6 +33,9 @@ class ZoneSurfaces(object):
         return cls.DRY
 
 
+EMPTY_CHOICE = ('', '---')
+
+
 class RallyStatus(object):
     SCHEDULED = 'SCHEDULED'
     OPENED = 'OPENED'
@@ -50,9 +53,31 @@ class RallyStatus(object):
     @classmethod
     def as_choices_with_undefined(cls):
         _list = cls.as_choices()
-        _list.insert(0, ('', '---'))
+        _list.insert(0, EMPTY_CHOICE)
         return _list
 
     @classmethod
     def get_default(cls):
         return cls.OPENED
+
+
+LOBBY__FILTER_RALLIES__PARTICIPATION_CHOICES = [
+    EMPTY_CHOICE,
+    ('True', 'Yes'),
+    ('False', 'No')
+]
+LOBBY__FILTER_RALLIES__CREATOR_CHOICES = [
+    EMPTY_CHOICE,
+    ('me', 'Me'),
+    ('notme', 'Not me')
+]
+LOBBY__FILTER_RALLIES__ORDER_BY = [
+    'label',
+    # ('number_of_participants', 'number_of_participants'),
+    # ('number_of_es', 'number_of_es'),
+    'status',
+    'creator',
+]
+LOBBY__FILTER_RALLIES__ORDER_BY__DEFAULT_KEY = LOBBY__FILTER_RALLIES__ORDER_BY[0]
+LOBBY__FILTER_RALLIES__ORDER_WAY = ['asc', 'desc']
+LOBBY__FILTER_RALLIES__ORDER_WAY__DEFAULT_KEY = LOBBY__FILTER_RALLIES__ORDER_WAY[0]

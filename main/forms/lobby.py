@@ -4,26 +4,17 @@ from django import forms
 from ..core import constants
 
 
-ORDER_BY_CHOICES = [
-    ('label', 'label'),
-    # ('number_of_participants', 'number_of_participants'),
-    # ('number_of_es', 'number_of_es'),
-    ('status', 'status'),
-    ('creator', 'creator'),
-]
-
-ORDER_WAY_CHOICES = [
-    ('asc', 'asc'),
-    ('desc', 'desc'),
-]
-
-
 class FilterRalliesForm(forms.Form):
-    user_participation = forms.ChoiceField(choices=[('', '---'), ('True', 'Yes'), ('False', 'No')], required=False)
-    rally_status = forms.ChoiceField(choices=constants.RallyStatus.as_choices_with_undefined(), required=False)
-    rally_creator = forms.ChoiceField(choices=[('', '---'), ('me', 'Me'), ('notme', 'Not me')], required=False)
-    order_by = forms.CharField(required=False, initial=ORDER_BY_CHOICES[0][0])
-    order_way = forms.CharField(required=False, initial=ORDER_WAY_CHOICES[0][0])
+    user_participation = forms.ChoiceField(choices=constants.LOBBY__FILTER_RALLIES__PARTICIPATION_CHOICES,
+                                           required=False)
+    rally_status = forms.ChoiceField(choices=constants.RallyStatus.as_choices_with_undefined(),
+                                     required=False)
+    rally_creator = forms.ChoiceField(choices=constants.LOBBY__FILTER_RALLIES__CREATOR_CHOICES,
+                                      required=False)
+    order_by = forms.CharField(initial=constants.LOBBY__FILTER_RALLIES__ORDER_BY__DEFAULT_KEY,
+                               required=False)
+    order_way = forms.CharField(initial=constants.LOBBY__FILTER_RALLIES__ORDER_WAY__DEFAULT_KEY,
+                                required=False)
 
     def __init__(self, *args, **kwargs):
         request = kwargs.pop('request')
@@ -32,5 +23,7 @@ class FilterRalliesForm(forms.Form):
         self.fields['user_participation'].initial = request.GET.get('user_participation', '')
         self.fields['rally_status'].initial = request.GET.get('rally_status', '')
         self.fields['rally_creator'].initial = request.GET.get('rally_creator', '')
-        self.fields['order_by'].initial = request.GET.get('order_by', ORDER_BY_CHOICES[0][0])
-        self.fields['order_way'].initial = request.GET.get('order_way', ORDER_WAY_CHOICES[0][0])
+        self.fields['order_by'].initial = request.GET.get('order_by',
+                                                          constants.LOBBY__FILTER_RALLIES__ORDER_BY__DEFAULT_KEY)
+        self.fields['order_way'].initial = request.GET.get('order_way',
+                                                           constants.LOBBY__FILTER_RALLIES__ORDER_WAY__DEFAULT_KEY)

@@ -49,7 +49,7 @@ class LobbyView(TemplateView, ViewHelper):
                 _rallies = _rallies.exclude(id__in=_ralliesParticipationsIds)
 
         # order by database fields
-        if _orderBy and _orderBy in ['label', 'status', 'creator']:
+        if _orderBy and _orderBy in ['label', 'status', 'creator', 'created_at', 'opened_at']:
             _rallies = _rallies.order_by('%s%s' % ('-' if _orderWay == 'desc' else '', _orderBy))
 
         # browse elected rally, and add temporary attributes
