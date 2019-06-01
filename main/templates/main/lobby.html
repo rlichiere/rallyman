@@ -21,21 +21,21 @@
         <form class="form-inline" method="get" action="{% url 'main-lobby' %}" id="formFilter">
             Filter by&nbsp;
             <div class="form-group">
-                <label for="{{ form_filter.rally_status.id_for_label }}">&nbsp;Rally status&nbsp;:&nbsp;</label>
-                {% render_field form_filter.rally_status class+='form-control' %}
+                <label for="{{ form_filter.rly_stat.id_for_label }}">&nbsp;Rally status&nbsp;:&nbsp;</label>
+                {% render_field form_filter.rly_stat class+='form-control' %}
             </div>
 
             {% if not user.is_anonymous %}
             <div class="form-group">
-                <label for="{{ form_filter.user_participation.id_for_label }}">&nbsp;Rallies I participate in&nbsp;:&nbsp;</label>
-                {% render_field form_filter.user_participation class+='form-control' %}
+                <label for="{{ form_filter.usr_part.id_for_label }}">&nbsp;Rallies I participate in&nbsp;:&nbsp;</label>
+                {% render_field form_filter.usr_part class+='form-control' %}
             </div>
             {% endif %}
 
             {% if not user.is_anonymous %}
             <div class="form-group">
-                <label for="{{ form_filter.rally_creator.id_for_label }}">&nbsp;Rally creator&nbsp;:&nbsp;</label>
-                {% render_field form_filter.rally_creator class+='form-control' %}
+                <label for="{{ form_filter.rly_crea.id_for_label }}">&nbsp;Rally creator&nbsp;:&nbsp;</label>
+                {% render_field form_filter.rly_crea class+='form-control' %}
             </div>
             {% endif %}
 
@@ -43,8 +43,8 @@
             <button id="btnReset" class="btn btn-warning" style="display: none; margin-left: 7px">Reset</button>
 
             <div style="display:none;">
-                {% render_field form_filter.order_by %}
-                {% render_field form_filter.order_way %}
+                {% render_field form_filter.ord_b %}
+                {% render_field form_filter.ord_w %}
             </div>
         </form>
     </div>
@@ -101,20 +101,20 @@
 <script>
 
     let btnReset = $('#formFilter #btnReset');
-    let inputFilterUserParticipation = $('#{{ form_filter.user_participation.id_for_label }}');
-    let inputFilterRallyStatus = $('#{{ form_filter.rally_status.id_for_label }}');
-    let inputFilterRallyCreator = $('#{{ form_filter.rally_creator.id_for_label }}');
+    let inputFilterUserParticipation = $('#{{ form_filter.usr_part.id_for_label }}');
+    let inputFilterRallyStatus = $('#{{ form_filter.rly_stat.id_for_label }}');
+    let inputFilterRallyCreator = $('#{{ form_filter.rly_crea.id_for_label }}');
     let formFilter = $('#formFilter');
-    let inputOrderBy = $('#{{ form_filter.order_by.id_for_label }}');
-    let inputOrderWay = $('#{{ form_filter.order_way.id_for_label }}');
+    let inputOrderBy = $('#{{ form_filter.ord_b.id_for_label }}');
+    let inputOrderWay = $('#{{ form_filter.ord_w.id_for_label }}');
 
     function orderByColumnClicked(column_name) {
         inputOrderBy.val(column_name);
 
-        if (inputOrderWay.val() === 'desc') {
-            inputOrderWay.val('asc');
+        if (inputOrderWay.val() === 'd') {
+            inputOrderWay.val('a');
         } else {
-            inputOrderWay.val('desc');
+            inputOrderWay.val('d');
         }
         formFilter.submit();
     }

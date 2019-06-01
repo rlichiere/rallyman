@@ -18,21 +18,21 @@ class LobbyView(TemplateView, ViewHelper):
 
         # prepare filters
         _filterForm = FilterRalliesForm(request=self.request)
-        _orderBy = _filterForm.fields['order_by'].initial
-        _orderWay = _filterForm.fields['order_way'].initial
-        _userParticipation = _filterForm.fields['user_participation'].initial
-        _rallyStatus = _filterForm.fields['rally_status'].initial
-        _rallyCreator = _filterForm.fields['rally_creator'].initial
+        _orderBy = _filterForm.fields['ord_b'].initial
+        _orderWay = _filterForm.fields['ord_w'].initial
+        _userParticipation = _filterForm.fields['usr_part'].initial
+        _rallyStatus = _filterForm.fields['rly_stat'].initial
+        _rallyCreator = _filterForm.fields['rly_crea'].initial
         _ralliesFilter = dict()
         _ralliesExclude = dict()
 
         # manage creator filter
         if _rallyCreator == 'me':
             _ralliesFilter['creator'] = _executor
-        elif _rallyCreator == 'notme':
+        elif _rallyCreator == 'nm':
             _ralliesExclude['creator'] = _executor
 
-        # manage rally_status filter
+        # manage rally status filter
         if _rallyStatus not in ['-', '']:
             _ralliesFilter['status'] = _rallyStatus
 
@@ -43,14 +43,14 @@ class LobbyView(TemplateView, ViewHelper):
         _ralliesParticipations = Participation.objects.filter(rally__in=_rallies)
         _ralliesParticipationsIds = _ralliesParticipations.values_list('id', flat=True)
         if not _executor.is_anonymous:
-            if _userParticipation == 'True':
+            if _userParticipation == '1':
                 _rallies = _rallies.filter(id__in=_ralliesParticipationsIds)
-            elif _userParticipation == 'False':
+            elif _userParticipation == '0':
                 _rallies = _rallies.exclude(id__in=_ralliesParticipationsIds)
 
         # order by database fields
         if _orderBy and _orderBy in ['label', 'status', 'creator', 'created_at', 'opened_at']:
-            _rallies = _rallies.order_by('%s%s' % ('-' if _orderWay == 'desc' else '', _orderBy))
+            _rallies = _rallies.order_by('%s%s' % ('-' if _orderWay == 'd' else '', _orderBy))
 
         # browse elected rally, and add temporary attributes
         _allStages = Stage.objects.all()
@@ -90,8 +90,6 @@ class LobbyView(TemplateView, ViewHelper):
             # todo : manage ordering by logic data
             pass
 
-        context['order_by'] = _orderBy
-        context['order_way'] = _orderWay
         context['form_filter'] = _filterForm
         context['user_rallies'] = _rallies
         return context

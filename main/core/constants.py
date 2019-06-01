@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 
+EMPTY_CHOICE = ('', '---')
+
+
 class CarDirections(object):
     UP = 0
     UP_RIGHT = 45
@@ -33,9 +36,6 @@ class ZoneSurfaces(object):
         return cls.DRY
 
 
-EMPTY_CHOICE = ('', '---')
-
-
 class RallyStatus(object):
     SCHEDULED = 'SCHEDULED'
     OPENED = 'OPENED'
@@ -63,15 +63,15 @@ class RallyStatus(object):
 
 LOBBY_RALLIES_PARTICIP_CHOICES = [
     EMPTY_CHOICE,
-    ('True', 'Yes'),
-    ('False', 'No')
+    ('1', 'Yes'),
+    ('0', 'No')
 ]
 LOBBY_RALLIES_PARTICIP_DEFAULT_KEY = LOBBY_RALLIES_PARTICIP_CHOICES[0][0]
 LOBBY_RALLIES_STATUS_DEFAULT_KEY = EMPTY_CHOICE[0]
 LOBBY_RALLIES_CREATOR_CHOICES = [
     EMPTY_CHOICE,
     ('me', 'Me'),
-    ('notme', 'Not me')
+    ('nm', 'Not me')
 ]
 LOBBY_RALLIES_CREATOR_DEFAULT_KEY = LOBBY_RALLIES_CREATOR_CHOICES[0][0]
 
@@ -83,5 +83,5 @@ LOBBY_RALLIES_ORDER_BY = [
     'creator',
 ]
 LOBBY_RALLIES_ORDER_BY_DEFAULT_KEY = LOBBY_RALLIES_ORDER_BY[0]
-LOBBY_RALLIES_ORDER_WAY = ['asc', 'desc']
+LOBBY_RALLIES_ORDER_WAY = ['a', 'd']
 LOBBY_RALLIES_ORDER_WAY_DEFAULT_KEY = LOBBY_RALLIES_ORDER_WAY[0]
