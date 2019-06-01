@@ -127,7 +127,11 @@
                     {% endif %}
 
                     {% if rally.is_quitable %}
-                        <button class="btn btn-primary"><i class="far fa-calendar-minus"></i> Quit</button>
+                    <a id="btnQuitModal_{{ rally.id }}" href="{% url 'rally-unregister' pk=rally.id %}" class="btn btn-primary"
+                        data-toggle="modal" data-target="#GenericModal">
+                        <i class="far fa-calendar-minus"></i> Quit
+                    </a>
+
                     {% endif %}
                 </td>
                 {% endif %}
@@ -220,13 +224,25 @@
             loadElementContentFromUrl('GenericModalContent', $(this).prop('href'));
         });
 
+        {% if not user.is_anonymous %}
         {% for rally in user_rallies %}
-        let btnJoinModal_{{ rally.id }} = $('#btnJoinModal_{{ rally.id }}');
 
+        {% if rally.is_joignable %}
+        let btnJoinModal_{{ rally.id }} = $('#btnJoinModal_{{ rally.id }}');
         btnJoinModal_{{ rally.id }}.click(function() {
             loadElementContentFromUrl('GenericModalContent', $(this).prop('href'));
         });
+        {% endif %}
+
+        {% if rally.is_quitable %}
+        let btnQuitModal_{{ rally.id }} = $('#btnQuitModal_{{ rally.id }}');
+        btnQuitModal_{{ rally.id }}.click(function() {
+            loadElementContentFromUrl('GenericModalContent', $(this).prop('href'));
+        });
+        {% endif %}
+
         {% endfor %}
+        {% endif %}
 
 
         if (isResetRequired()) {

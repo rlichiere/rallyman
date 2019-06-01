@@ -28,16 +28,14 @@ class CreateRallyView(ViewHelper, TemplateView):
 
     def post(self, request, *args, **kwargs):
         _executor = self.request.user
-        self.log.startView(_executor)
+        _redirect = self.request.GET.get('redirect', 'main-home')
+        self.log.startView(_executor, _redirect)
 
         _now = dt.now()
 
-        _target = self.request.GET.get('target', 'main-home')
-        self.log.debug(_target=_target)
-
         _form = CreateRallyForm(self.request.POST, request=self.request)
         if not _form.is_valid():
-            return self.redirect_error(self.request, mark_safe('Form is not valid : %s' % _form.errors), _target)
+            return self.redirect_error(self.request, mark_safe('Form is not valid : %s' % _form.errors))
 
         _rally = Rally(label=_form.cleaned_data.get('label'), creator=_executor)
 
@@ -51,4 +49,4 @@ class CreateRallyView(ViewHelper, TemplateView):
         _rally.save()
 
         self.log.endView()
-        return self.redirect_success(self.request, 'Rally created successfully', _target)
+        return self.redirect_success(self.request, 'Rally created successfully')

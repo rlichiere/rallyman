@@ -20,19 +20,26 @@ class ViewHelper(object):
         self.log.info(message)
         messages.add_message(request, status, message)
 
-    def redirect_success(self, request, message, target):
+    def redirect_success(self, request, message, redirect=None):
+        _redirect = self.log.getRedirect()
+        if redirect is not None:
+            _redirect = redirect
+
         self.log.infoIndirect(message)
         messages.add_message(request, self.SUCCESS, message)
-        return HttpResponseRedirect(reverse(target))
+        return HttpResponseRedirect(reverse(_redirect))
 
-    def redirect_error(self, request, message, target):
+    def redirect_error(self, request, message, redirect=None):
+        _redirect = self.log.getRedirect()
+        if redirect is not None:
+            _redirect = redirect
+
         self.log.error(message)
         messages.add_message(request, self.ERROR, message)
-        return HttpResponseRedirect(reverse(target))
+        return HttpResponseRedirect(reverse(_redirect))
 
     def set_context_error(self, request, message, context):
         context['error'] = message
         self.log.error(message)
         messages.add_message(request, self.ERROR, message)
         return context
-

@@ -1,0 +1,97 @@
+{% load widget_tweaks %}
+
+<style>
+    th, td {
+        text-align: center;
+    }
+
+    pre.rly-data {
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.1em;
+        margin-bottom: 0px;
+    }
+    pre.rly-title {
+        border: 1px #212529 solid;
+        font-size: 1.5em;
+    }
+</style>
+
+<form method="POST" action="{% url 'rally-unregister' pk=rally.id %}?redirect=main-lobby">
+{% csrf_token %}
+
+    <div class="modal-header">
+        <h4 class="modal-title">Rally unregistration</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+    </div>
+
+    <div class="modal-body">
+        <div class="mb-4">
+            You're about to unregister from the rally:
+            <pre class="rly-data rly-title" style="margin-top: 5px">{{ rally.label }}</pre>
+        </div>
+
+        <p class="mb-4">
+            Are you sure you want to unsubscribe ?<br />
+            You must confirm this wish by checking the option below.
+        </p>
+
+        <div class="input-group">
+            <label class="input-group-text" style="border-top-right-radius: 0; border-bottom-right-radius: 0" for="confirmCbx">
+                Confirm unsubscription
+            </label>
+            <div class="input-group-append">
+                <div class="input-group-text">
+                    <input type="checkbox" id="confirmCbx">
+                </div>
+            </div>
+        </div>
+
+        <p class="mb-2">
+            Nevertheless, you can re-register again before the start of the rally, and if there are still places available.
+        </p>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button id="submitBtn" type="submit"
+                class="btn btn-primary"
+                title="Confirmation required">Submit</button>
+    </div>
+
+</form>
+
+<script>
+
+    $(document).ready(function() {
+
+        let submitBtn = $('#submitBtn');
+        let confirmCbx = $('#confirmCbx');
+
+        {# listen click on confirmation checkbox #}
+        confirmCbx.click(function() {
+            {# toggle the status of the submit button #}
+            if ($(this).prop('checked')) {
+                submitBtn.prop('disabled', false);
+            } else {
+                submitBtn.prop('disabled', true);
+            }
+        });
+
+        {# listen click on submit button #}
+        submitBtn.click(function() {
+
+            {# proceed action if unlocked #}
+            if ($(this).prop('disabled') !== 'disabled') {
+                $(this).hide();
+                return true;
+            }
+        });
+
+        confirmCbx.prop('checked', false);
+        submitBtn.prop('disabled', true);
+        submitBtn.show();
+
+    });
+
+</script>

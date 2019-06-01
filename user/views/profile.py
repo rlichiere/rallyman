@@ -18,28 +18,28 @@ class UserProfileView(LoginRequiredMixin, ViewHelper, TemplateView):
 
     def post(self, request, *args, **kwargs):
         _executor = self.request.user
-        self.log.startView(_executor)
+        self.log.startView(_executor, 'user-profile')
 
         if self.request.POST.get('password_change'):
             # user modifies password
 
             _form = UserProfilePasswordChangeForm(self.request.POST, request=self.request)
             if not _form.is_valid():
-                return self.redirect_error(self.request, 'Form is not valid', 'user-profile')
+                return self.redirect_error(self.request, 'Form is not valid')
 
             _newPass = _form.cleaned_data.get('password')
             if _newPass != _form.cleaned_data.get('password_check'):
-                return self.redirect_error(self.request, 'Passwords are different', 'user-profile')
+                return self.redirect_error(self.request, 'Passwords are different')
 
             _executor.set_password(_newPass)
             _executor.save()
             login(request, _executor)
-            return self.redirect_success(self.request, 'Password changed', 'user-profile')
+            return self.redirect_success(self.request, 'Password changed')
 
         # user modifies other fields (email, first_name, last_name)
         _form = UserProfileForm(self.request.POST, request=self.request)
         if not _form.is_valid():
-            return self.redirect_error(self.request, 'Form is not valid', 'user-profile')
+            return self.redirect_error(self.request, 'Form is not valid')
 
         _pEmail = _form.cleaned_data.get('email')
         if _pEmail != _executor.email:
@@ -55,4 +55,4 @@ class UserProfileView(LoginRequiredMixin, ViewHelper, TemplateView):
 
         _executor.save()
 
-        return self.redirect_success(self.request, 'Profile changed', 'user-profile')
+        return self.redirect_success(self.request, 'Profile changed')

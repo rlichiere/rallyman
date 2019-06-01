@@ -10,6 +10,7 @@ class Log(object):
     def __init__(self, caller=None):
         self._caller = caller
         self._executor = None
+        self._redirect_to = None
 
     """ Public """
 
@@ -37,9 +38,19 @@ class Log(object):
     def setExecutor(self, executor):
         self._executor = executor
 
-    def startView(self, executor=None):
+    def getRedirect(self):
+        return self._redirect_to
+
+    def setRedirect(self, redirect_to):
+        self._redirect_to = redirect_to
+
+    def startView(self, executor=None, redirect_to=None):
         if executor is not None:
             self.setExecutor(executor)
+
+        if redirect_to is not None:
+            self.setRedirect(redirect_to)
+
         self.infoIndirect('Start')
 
     def endView(self):

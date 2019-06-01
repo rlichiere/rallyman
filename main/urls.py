@@ -18,12 +18,13 @@ from django.conf.urls import url
 from .views.home import HomeView
 from .views.lobby import LobbyView
 from .views.rally.create import CreateRallyView
-from .views.rally.register import RegisterToRallyView
+from .views.rally.register import RegisterToRallyView, UnRegisterFromRallyView
 
 
 urlpatterns = [
     url(r'^$', HomeView.as_view(), name='main-home'),
     url(r'^lobby', LobbyView.as_view(), name='main-lobby'),
     url(r'^rally/(?P<pk>[0-9]+)/register', RegisterToRallyView.as_view(), name='rally-register'),
+    url(r'^rally/(?P<pk>[0-9]+)/unregister', UnRegisterFromRallyView.as_view(), name='rally-unregister'),
     url(r'^rally', CreateRallyView.as_view(), name='rally-create'),
 ]

@@ -1,6 +1,6 @@
 {% load widget_tweaks %}
 
-<form method="POST" action="{% url 'rally-create' %}?target=main-lobby">
+<form method="POST" action="{% url 'rally-create' %}?redirect=main-lobby">
 {% csrf_token %}
 
     <div class="modal-header">
@@ -21,7 +21,7 @@
         </div>
 
         <div class="input-group">
-            <label class="input-group-text" style="border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0">
+            <label class="input-group-text" style="border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0" for="{{ form_create.set_opened_at.id_for_label }}">
                 Deferred opening date
             </label>
             <div class="input-group-append">

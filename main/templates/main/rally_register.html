@@ -17,7 +17,7 @@
     }
 </style>
 
-<form method="POST" action="{% url 'rally-register' pk=rally.id%}?target=main-lobby">
+<form method="POST" action="{% url 'rally-register' pk=rally.id %}?redirect=main-lobby">
 {% csrf_token %}
 
     <div class="modal-header">
