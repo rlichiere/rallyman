@@ -3,7 +3,7 @@ from django.views.generic import TemplateView
 
 from ..forms.lobby import FilterRalliesForm
 from ..generic.views import ViewHelper
-from ..models import Game, RallyStatus, Participation, Stage
+from ..models import Rally, RallyStatus, Participation, Stage
 
 
 class LobbyView(TemplateView, ViewHelper):
@@ -14,7 +14,7 @@ class LobbyView(TemplateView, ViewHelper):
         _executor = self.request.user
         context = super(LobbyView, self).get_context_data(**kwargs)
 
-        _allRallies = Game.objects.all()
+        _allRallies = Rally.objects.all()
 
         # prepare filters
         _filterForm = FilterRalliesForm(request=self.request)
@@ -40,7 +40,7 @@ class LobbyView(TemplateView, ViewHelper):
         _rallies = _allRallies.exclude(**_ralliesExclude)
         _rallies = _rallies.filter(**_ralliesFilter)
 
-        _ralliesParticipations = Participation.objects.filter(game__in=_rallies)
+        _ralliesParticipations = Participation.objects.filter(rally__in=_rallies)
         _ralliesParticipationsIds = _ralliesParticipations.values_list('id', flat=True)
         if _userParticipation == 'True':
             _rallies = _rallies.filter(id__in=_ralliesParticipationsIds)
@@ -51,10 +51,10 @@ class LobbyView(TemplateView, ViewHelper):
         if _orderBy and _orderBy in ['label', 'status', 'creator']:
             _rallies = _rallies.order_by('%s%s' % ('-' if _orderWay == 'desc' else '', _orderBy))
 
-        # browse elected games, and add temporary attributes
+        # browse elected rally, and add temporary attributes
         _allStages = Stage.objects.all()
         for _rally in _rallies:
-            _rallyParticipations = _ralliesParticipations.filter(game=_rally)
+            _rallyParticipations = _ralliesParticipations.filter(rally=_rally)
             setattr(_rally, 'participants', _rallyParticipations)
             setattr(_rally, 'participants_count', _rallyParticipations.count())
 
@@ -77,7 +77,7 @@ class LobbyView(TemplateView, ViewHelper):
                 if _checkIfJoignable:
                     setattr(_rally, 'is_joignable', True)
 
-            _stages = _allStages.filter(game=_rally)
+            _stages = _allStages.filter(rally=_rally)
             setattr(_rally, 'stages', _stages)
             setattr(_rally, 'stages_count', _stages.count())
 

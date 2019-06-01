@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from ..core.constants import RallyStatus
 
 
-class Game(models.Model):
+class Rally(models.Model):
     label = models.CharField(help_text='Human readable name of the rally. 200 characters max.',
                              max_length=200)
     created_at = models.DateTimeField(help_text='Creation date of the rally.',

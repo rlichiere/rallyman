@@ -37,9 +37,9 @@ class RoadbookRenderer(object):
 
 class RallyStagesRenderer(object):
 
-    def __init__(self, game):
-        self.game = game
-        self.stages = Stage.objects.filter(game=game)
+    def __init__(self, rally):
+        self.rally = rally
+        self.stages = Stage.objects.filter(rally=rally)
 
     def as_table(self):
         _res = '<table>'

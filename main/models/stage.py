@@ -4,13 +4,14 @@ import json
 from django.db import models
 
 from ..core import constants
-from .game import Game
+from .rally import Rally
 
 
 class Stage(models.Model):
-    game = models.ForeignKey(help_text='Game targeted by this membership.',
-                             to=Game,
-                             on_delete=models.CASCADE)
+    rally = models.ForeignKey(help_text='Rally targeted by this membership.',
+                              to=Rally,
+                              null=True, blank=True,
+                              on_delete=models.CASCADE)
     position_in_roadbook = models.IntegerField(help_text='Position of the stage in the roadbook',
                                                default=1,
                                                unique=True)

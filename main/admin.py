@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.contrib import admin
 
 from .core.renderers import CarSkinRenderer, RallyStagesRenderer, RoadbookRenderer
-from .models import CarSkin, Game, Participation, Stage, Zone
+from .models import CarSkin, Rally, Participation, Stage, Zone
 
 
 class CarSkinAdmin(admin.ModelAdmin):
@@ -38,9 +38,9 @@ class RallyAdmin(admin.ModelAdmin):
 
 
 class ParticipationAdmin(admin.ModelAdmin):
-    list_display = ('game', 'player', 'turn_position', 'car', )
-    list_filter = ('game', 'player', )
-    search_fields = ('game', 'player', )
+    list_display = ('rally', 'player', 'turn_position', 'car', )
+    list_filter = ('rally', 'player', )
+    search_fields = ('rally', 'player', )
 
     @staticmethod
     def car(instance):
@@ -48,14 +48,14 @@ class ParticipationAdmin(admin.ModelAdmin):
 
 
 class StageAdmin(admin.ModelAdmin):
-    list_display = ('game', 'position_in_roadbook', 'roadbook_as_label', )
-    list_filter = ('game', )
-    search_fields = ('game', )
+    list_display = ('rally', 'position_in_roadbook', 'roadbook_as_label', )
+    list_filter = ('rally', )
+    search_fields = ('rally', )
 
     readonly_fields = ('stages', )
     fieldsets = (
         (None, {
-            'fields': ('game', 'position_in_roadbook', 'roadbook', 'has_assistance', )
+            'fields': ('rally', 'position_in_roadbook', 'roadbook', 'has_assistance', )
         }),
         ('Roadbook', {
             'fields': ('stages', )
@@ -74,7 +74,7 @@ class ZoneAdmin(admin.ModelAdmin):
 
 
 admin.site.register(CarSkin, CarSkinAdmin)
-admin.site.register(Game, RallyAdmin)
+admin.site.register(Rally, RallyAdmin)
 admin.site.register(Participation, ParticipationAdmin)
 admin.site.register(Stage, StageAdmin)
 admin.site.register(Zone, ZoneAdmin)
