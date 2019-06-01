@@ -10,8 +10,15 @@
         text-align: center;
     }
 
-    th.orderable {
+    .rallies-list > table {
+        margin-top: 7px;
+    }
+    .rallies-list th.orderable {
         cursor: pointer;
+    }
+
+    .rallies-list-tooltip p {
+        text-align: left;
     }
 </style>
 
@@ -50,29 +57,61 @@
     </div>
 
     <div class="rallies-list col-lg-12">
-        <table class="table table-responsive" style="margin-top: 7px">
+        <table class="table table-responsive">
         <thead>
             <tr>
-                <th onclick="orderByColumnClicked('label');" class="orderable">Rally name</th>
+                <th class="orderable" onclick="orderByColumnClicked('label');">Rally name</th>
                 <th>Number of participants</th>
-                <th>Number of ES</th>
-                <th onclick="orderByColumnClicked('status');" class="orderable">Rally status</th>
-                <th onclick="orderByColumnClicked('creator');" class="orderable">Creator of the rally</th>
-                <th onclick="orderByColumnClicked('created_at');" class="orderable">Rally created at</th>
-                <th onclick="orderByColumnClicked('opened_at');" class="orderable">Rally opens at</th>
+                <th>Number of stages</th>
+                <th class="orderable" onclick="orderByColumnClicked('status');">Rally status</th>
+                <th class="orderable" onclick="orderByColumnClicked('creator');">Creator of the rally</th>
+                <th class="orderable" onclick="orderByColumnClicked('created_at');">Rally created at</th>
+                <th class="orderable" onclick="orderByColumnClicked('opened_at');">Rally opens at</th>
 
                 {% if not user.is_anonymous %}
                 <th>Action</th>
                 {% endif %}
-
             </tr>
         </thead>
         <tbody>
         {% for rally in user_rallies %}
             <tr>
                 <td>{{ rally.label }}</td>
-                <td>{{ rally.participants_count }}</td>
-                <td>{{ rally.stages_count }}</td>
+                <td>
+                    <a href="#" class="btn btn-secondary"
+                    {% if rally.participants_count > 0 %}
+                        data-toggle="tooltip" data-html="true"
+                        data-title="<div class='rallies-list-tooltip'>
+                                        <h5>Participants</h5>
+                                        <p>
+                                        {% for part in rally.participants %}
+                                            {{ part.player }}<br />
+                                        {% endfor %}
+                                        </p>
+                                    </div>"
+                    {% endif %}
+                    >
+                        {{ rally.participants_count }}
+                    </a>
+                </td>
+                <td>
+                    <a href="#" class="btn btn-secondary"
+                    {% if rally.stages_count > 0 %}
+                        data-toggle="tooltip" data-html="true"
+                        data-title="<div class='rallies-list-tooltip'>
+                                        <h5>Stages</h5>
+                                        <p>
+                                        {% for stage in rally.stages %}
+                                            <strong>SS {{ forloop.counter }}</strong>: {{ stage.roadbook_as_label }}
+                                            <br />
+                                        {% endfor %}
+                                        </p>
+                                    </div>"
+                    {% endif %}
+                    >
+                        {{ rally.stages_count }}
+                    </a>
+                </td>
                 <td>{{ rally.status|lower|capfirst }}</td>
                 <td>{{ rally.creator.get_full_name }}</td>
                 <td>{{ rally.created_at }}</td>
@@ -177,6 +216,7 @@
         if (isResetRequired()) {
             btnReset.show();
         }
+
     });
 
 </script>
