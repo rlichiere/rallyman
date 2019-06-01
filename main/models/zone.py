@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 
-from ..core import constants
+from ..core.const import zone as const_zone
 
 
 class Zone(models.Model):
@@ -9,7 +9,7 @@ class Zone(models.Model):
                             max_length=1)
     surface = models.CharField(help_text='Surface of the zone.',
                                max_length=16,
-                               choices=constants.ZoneSurfaces.as_choices())
+                               choices=const_zone.ZoneSurfaces.as_choices())
     file = models.CharField(help_text='File of the zone.',
                             max_length=200,
                             null=True, blank=True)
@@ -25,4 +25,3 @@ class Zone(models.Model):
 
         super(Zone, self).save(force_insert=force_insert, force_update=force_update, using=using,
                                update_fields=update_fields)
-

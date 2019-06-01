@@ -1,24 +1,9 @@
 # -*- coding: utf-8 -*-
 from django import template
 
-from ..core import constants
+from ..core import const
 
 register = template.Library()
-
-
-@register.simple_tag
-def const(constant_name):
-    """
-        Returns the value of given constant.
-    :param constant_name: Name of the constant to retrieve
-    :type constant_name: str
-    :return: value of the constant
-    :rtype: str
-    """
-    if hasattr(constants, constant_name):
-        return getattr(constants, constant_name)
-
-    return None
 
 
 class GetConstantsNode(template.Node):
@@ -26,7 +11,7 @@ class GetConstantsNode(template.Node):
         pass
 
     def render(self, context):
-        context['constants'] = constants
+        context['const'] = const
         return ''
 
 

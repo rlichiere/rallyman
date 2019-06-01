@@ -3,7 +3,7 @@ import json
 
 from django.db import models
 
-from ..core import constants
+from ..core.const import zone as const_zone
 from .rally import Rally
 
 
@@ -25,7 +25,7 @@ class Stage(models.Model):
     @property
     def roadbook_as_label(self):
         _res = ' - '.join(
-            ['%s%s%s' % (_zone['zone'], _zone['anchor'], '*' if _zone['surface'] == constants.ZoneSurfaces.SNOW else '')
+            ['%s%s%s' % (_zone['zone'], _zone['anchor'], '*' if _zone['surface'] == const_zone.ZoneSurfaces.SNOW else '')
              for _zone in self.get_roadbook]
         )
         if self.has_assistance:

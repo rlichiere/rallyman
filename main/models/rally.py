@@ -2,7 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from ..core.constants import RallyStatus
+from ..core.const.lobby.rallies import RallyStatus
 
 
 class Rally(models.Model):

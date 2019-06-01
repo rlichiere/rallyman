@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.views.generic import TemplateView
 
+from ..core.const.lobby.rallies import RallyStatus
 from ..forms.lobby import FilterRalliesForm
 from ..generic.views import ViewHelper
-from ..models import Rally, RallyStatus, Participation, Stage
+from ..models import Rally, Participation, Stage
 
 
 class LobbyView(TemplateView, ViewHelper):

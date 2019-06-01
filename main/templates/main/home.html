@@ -24,17 +24,17 @@
 
 <ul>
     <li>
-        <a href="{% url 'main-lobby' %}?rly_stat={{ constants.RallyStatus.STARTED }}">
+        <a href="{% url 'main-lobby' %}?rly_stat={{ const.lobby.rallies.RallyStatus.STARTED }}">
             Spectate a running rally
         </a>
     </li>
     <li>
-        <a {% if not user.is_anonymous %}href="{% url 'main-lobby' %}?rly_stat={{ constants.RallyStatus.OPENED }}&usr_part=False" {% else %}title="You must register in order to Join a rally"{% endif %}>
+        <a {% if not user.is_anonymous %}href="{% url 'main-lobby' %}?rly_stat={{ const.lobby.rallies.RallyStatus.OPENED }}&usr_part=False" {% else %}title="You must register in order to Join a rally"{% endif %}>
             Join a opened rally
         </a>
     </li>
     <li>
-        <a {% if not user.is_anonymous %}href="{% url 'main-lobby' %}?rly_stat={{ constants.RallyStatus.STARTED }}" {% else %}title="You must register in order to Create a rally"{% endif %}>
+        <a {% if not user.is_anonymous %}href="{% url 'main-lobby' %}?rly_stat={{ const.lobby.rallies.RallyStatus.STARTED }}" {% else %}title="You must register in order to Create a rally"{% endif %}>
             Create a new rally
         </a>
     </li>
