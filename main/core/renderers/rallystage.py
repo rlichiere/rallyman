@@ -12,7 +12,7 @@ class RallyStagesRenderer(object):
 
     def as_table(self):
         _res = '<table>'
-        _res += '<tr><th>ES</th><th>Roadbook</th></tr>'
+        _res += '<tr><th>SS</th><th>Roadbook</th></tr>'
         _idx = 1
         for _stage in self.stages:
             _res += '<tr><td>{index}</td><td>{roadbook}</td></tr>'.format(index=_idx,

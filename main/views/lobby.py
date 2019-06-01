@@ -19,15 +19,15 @@ class LobbyView(ViewHelper, TemplateView):
 
         context = super(LobbyView, self).get_context_data(**kwargs)
 
-        _allRallies = Rally.objects.all()
+        _allRlys = Rally.objects.all()
 
         # prepare filters
-        _filterForm = FilterRalliesForm(request=self.request)
-        _orderBy = _filterForm.fields['ord_b'].initial
-        _orderWay = _filterForm.fields['ord_w'].initial
-        _userParticipation = _filterForm.fields['usr_part'].initial
-        _rallyStatus = _filterForm.fields['rly_stat'].initial
-        _rallyCreator = _filterForm.fields['rly_crea'].initial
+        _form = FilterRalliesForm(request=self.request)
+        _orderBy = _form.fields['ord_b'].initial
+        _orderWay = _form.fields['ord_w'].initial
+        _userPart = _form.fields['usr_part'].initial
+        _rallyStatus = _form.fields['rly_stat'].initial
+        _rallyCreator = _form.fields['rly_crea'].initial
         _ralliesFilter = dict()
         _ralliesExclude = dict()
 
@@ -42,16 +42,16 @@ class LobbyView(ViewHelper, TemplateView):
             _ralliesFilter['status'] = _rallyStatus
 
         # apply filters
-        _rallies = _allRallies.exclude(**_ralliesExclude).filter(**_ralliesFilter)
+        _rallies = _allRlys.exclude(**_ralliesExclude).filter(**_ralliesFilter)
 
         # manage user_participation
-        _ralliesParticipations = Participation.objects.filter(rally__in=_rallies)
-        _ralliesParticipationsIds = _ralliesParticipations.values_list('id', flat=True)
+        _rlysParts = Participation.objects.filter(rally__in=_rallies)
+        _rlysPartsIds = _rlysParts.values_list('id', flat=True)
         if not _executor.is_anonymous:
-            if _userParticipation == '1':
-                _rallies = _rallies.filter(id__in=_ralliesParticipationsIds)
-            elif _userParticipation == '0':
-                _rallies = _rallies.exclude(id__in=_ralliesParticipationsIds)
+            if _userPart == '1':
+                _rallies = _rallies.filter(id__in=_rlysPartsIds)
+            elif _userPart == '0':
+                _rallies = _rallies.exclude(id__in=_rlysPartsIds)
 
         # order by database fields
         if _orderBy and _orderBy in ['label', 'status', 'creator', 'created_at', 'opened_at']:
@@ -60,9 +60,9 @@ class LobbyView(ViewHelper, TemplateView):
         # browse elected rally, and add temporary attributes
         _allStages = Stage.objects.all()
         for _rally in _rallies:
-            _rallyParticipations = _ralliesParticipations.filter(rally=_rally)
-            setattr(_rally, 'participants', _rallyParticipations)
-            setattr(_rally, 'participants_count', _rallyParticipations.count())
+            _rlyParts = _rlysParts.filter(rally=_rally)
+            setattr(_rally, 'participants', _rlyParts)
+            setattr(_rally, 'participants_count', _rlyParts.count())
 
             _checkIfJoignable = True
             _checkIfQuitable = True
@@ -77,7 +77,7 @@ class LobbyView(ViewHelper, TemplateView):
                 if _executor.is_anonymous:
                     raise Participation.DoesNotExist
 
-                _ = _rallyParticipations.get(player=_executor)
+                _ = _rlyParts.get(player=_executor)
 
                 if _checkIfQuitable:
                     setattr(_rally, 'is_quitable', True)
@@ -91,11 +91,11 @@ class LobbyView(ViewHelper, TemplateView):
             setattr(_rally, 'stages_count', _stages.count())
 
         # order by
-        if _orderBy and _orderBy in ['number_of_participants', 'number_of_es']:
+        if _orderBy and _orderBy in ['number_of_participants', 'number_of_ss']:
             # todo : manage ordering by logic data
             pass
 
-        context['form_filter'] = _filterForm
+        context['form_filter'] = _form
         context['user_rallies'] = _rallies
 
         self.log.endView()
