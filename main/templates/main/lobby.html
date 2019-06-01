@@ -148,8 +148,6 @@
 
 <script>
 
-    let dbg = null;
-
     let btnReset = $('#formFilter #btnReset');
     let inputFilterUserParticipation = $('#{{ form_filter.usr_part.id_for_label }}');
     let inputFilterRallyStatus = $('#{{ form_filter.rly_stat.id_for_label }}');
@@ -186,6 +184,21 @@
         {% endif %}
     }
 
+    function loadElementContentFromUrl(elem_id, url) {
+        let elem = $('#' + elem_id);
+        elem.html('');
+        $.ajax({
+            url: url,
+            success: function(data, status, xhr) {
+                elem.html(data);
+            },
+            error: function(xhr, status, data) {
+                elem.html(data);
+            }
+        });
+
+    }
+
     $(document).ready(function() {
 
         inputFilterUserParticipation.change(function() {
@@ -206,40 +219,11 @@
         });
 
         btnCreateModal.click(function() {
-            let _targetUrl = $(this).prop('href');
-            let modalContent = $('#GenericModalContent');
-
-            modalContent.html('');
-            $.ajax({
-                url: _targetUrl,
-                success: function(data, status, xhr) {
-                    modalContent.html(data);
-                },
-                error: function(xhr, status, data) {
-                    modalContent.html(data);
-                }
-            });
+            loadElementContentFromUrl('GenericModalContent', $(this).prop('href'));
         });
 
         btnJoinModal.click(function() {
-            let _lp = 'btnJoinModal.click: ';
-            let _targetUrl = $(this).prop('href');
-            let modalContent = $('#GenericModalContent');
-            console.log(_lp + 'Prepare ajax call with url ' + _targetUrl);
-
-            modalContent.html('');
-            $.ajax({
-                url: _targetUrl,
-                success: function(data, status, xhr) {
-                    dbg = xhr;
-                    console.log(_lp + 'Success '+ xhr.status +' while calling url ' + _targetUrl);
-                    modalContent.html(data);
-                },
-                error: function(xhr, status, data) {
-                    console.log(_lp + 'Error '+ xhr.status +' while calling url ' + _targetUrl + ' : ' + data);
-                    modalContent.html(data);
-                }
-            });
+            loadElementContentFromUrl('GenericModalContent', $(this).prop('href'));
         });
 
         if (isResetRequired()) {
