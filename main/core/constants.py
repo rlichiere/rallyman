@@ -48,7 +48,7 @@ class RallyStatus(object):
 
     @classmethod
     def as_choices(cls):
-        return [(_s, _s) for _s in cls.as_list()]
+        return [(_s, str(_s).lower().capitalize()) for _s in cls.as_list()]
 
     @classmethod
     def as_choices_with_undefined(cls):
