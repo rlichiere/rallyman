@@ -1,0 +1,82 @@
+{% load widget_tweaks %}
+
+<form method="POST" action="{% url 'rally-create' %}?target=main-lobby">
+{% csrf_token %}
+
+    <div class="modal-header">
+        <h4 class="modal-title">Create a Rally</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+    </div>
+
+    <div class="modal-body">
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Rally name</span>
+            </div>
+            {% render_field form_create.label class+='form-control' %}
+            <div class="input-group-append">
+                <a class="btn btn-primary" href="#" data-toggle="tooltip" title="Choose a name for your rally">?</a>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label class="input-group-text" style="border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0">
+                Deferred opening date
+            </label>
+            <div class="input-group-prepend">
+                <div class="input-group-text">
+                    {% render_field form_create.set_opened_at %}
+                </div>
+            </div>
+        </div>
+        <div class="input-group" id="{{ form_create.opened_at.id_for_label }}_help">
+            <div class="input-group-prepend">
+                <span class="input-group-text" style="border-top-left-radius: 0">
+                    Registration will be open as soon as the rally is created
+                </span>
+            </div>
+        </div>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text" style="border-top-left-radius: 0">
+                    Registration will be open on
+                </span>
+            </div>
+            {% render_field form_create.opened_at class+='form-control' %}
+        </div>
+
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+
+</form>
+
+<script>
+
+    $(document).ready(function() {
+
+        let checkboxSetOpenAt = $('#{{ form_create.set_opened_at.id_for_label }}');
+        let inputOpenAt = $('#{{ form_create.opened_at.id_for_label }}');
+        let groupOpenAtHelp = $('#{{ form_create.opened_at.id_for_label }}_help');
+
+        checkboxSetOpenAt.click(function() {
+            console.log('clicked. checked : ' + $(this).prop('checked'));
+            if ($(this).prop('checked')) {
+                groupOpenAtHelp.hide();
+                inputOpenAt.parent().show();
+            } else {
+                inputOpenAt.parent().hide();
+                groupOpenAtHelp.show();
+            }
+        });
+
+        inputOpenAt.parent().hide();
+
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
+</script>

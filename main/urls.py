@@ -15,11 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import url
 
-from views.home import HomeView
-from views.lobby import LobbyView
+from .views.home import HomeView
+from .views.lobby import LobbyView
+from .views.rally.create import CreateRallyView
 
 
 urlpatterns = [
     url(r'^$', HomeView.as_view(), name='main-home'),
     url(r'^lobby', LobbyView.as_view(), name='main-lobby'),
+    url(r'^rally', CreateRallyView.as_view(), name='rally-create'),
 ]

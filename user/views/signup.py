@@ -28,18 +28,18 @@ class SignUpView(FormView):
         _user.save()
 
         _msg = 'User account created successfully'
-        print _msg
+        print(_msg)
         messages.add_message(self.request, messages.SUCCESS, _msg)
 
         login(self.request, _user)
         _msg = 'User logged successfully'
-        print _msg
+        print(_msg)
         messages.add_message(self.request, messages.SUCCESS, _msg)
 
         return HttpResponseRedirect(reverse('user-profile'))
 
     def form_invalid(self, form):
         _msg = 'Error while creating user account : %s' % form.errors
-        print _msg
+        print(_msg)
         messages.add_message(self.request, messages.ERROR, mark_safe(_msg))
         return HttpResponseRedirect(reverse('auth-signup'))

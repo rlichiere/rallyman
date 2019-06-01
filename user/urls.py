@@ -16,9 +16,9 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 
-from forms.signin import SignInForm
-from views.signup import SignUpView
-from views.profile import UserProfileView
+from .forms.signin import SignInForm
+from .views.signup import SignUpView
+from .views.profile import UserProfileView
 
 
 urlpatterns = [

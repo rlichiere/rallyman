@@ -48,6 +48,7 @@
             </div>
         </form>
     </div>
+
     <div class="rallies-list col-lg-12">
         <table class="table table-responsive" style="margin-top: 7px">
         <thead>
@@ -94,6 +95,10 @@
         {% endfor %}
         </tbody>
         </table>
+
+        <a id="btnCreateModal" href="{% url 'rally-create' %}" class="btn btn-primary" data-toggle="modal" data-target="#GenericModal">
+            Create Rally
+        </a>
     </div>
 
 </div>
@@ -107,6 +112,8 @@
     let formFilter = $('#formFilter');
     let inputOrderBy = $('#{{ form_filter.ord_b.id_for_label }}');
     let inputOrderWay = $('#{{ form_filter.ord_w.id_for_label }}');
+
+    let btnCreateModal = $('#btnCreateModal');
 
     function orderByColumnClicked(column_name) {
         inputOrderBy.val(column_name);
@@ -150,6 +157,21 @@
             inputFilterRallyStatus.val('');
             inputFilterRallyCreator.val('');
             formFilter.submit();
+        });
+
+        btnCreateModal.click(function() {
+            let _targetUrl = $(this).prop('href');
+            let modalContent = $('#GenericModalContent');
+
+            $.ajax({
+                url: _targetUrl,
+                success: function(data, status, xhr) {
+                    modalContent.html(data);
+                },
+                error: function(xhr, status, data) {
+                    modalContent.html(data);
+                }
+            });
         });
 
         if (isResetRequired()) {
