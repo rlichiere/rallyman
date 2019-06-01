@@ -120,7 +120,11 @@
                 {% if not user.is_anonymous %}
                 <td>
                     {% if rally.is_joignable %}
-                    <button class="btn btn-primary">Join</button>
+{#                    <button class="btn btn-primary">Join</button>#}
+                    <a id="btnJoinModal" href="{% url 'rally-register' pk=rally.id %}" class="btn btn-primary"
+                        data-toggle="modal" data-target="#GenericModal">
+                        Join
+                    </a>
                     {% endif %}
                     {% if rally.is_quitable %}
                     <button class="btn btn-primary">Quit</button>
@@ -144,6 +148,8 @@
 
 <script>
 
+    let dbg = null;
+
     let btnReset = $('#formFilter #btnReset');
     let inputFilterUserParticipation = $('#{{ form_filter.usr_part.id_for_label }}');
     let inputFilterRallyStatus = $('#{{ form_filter.rly_stat.id_for_label }}');
@@ -153,6 +159,7 @@
     let inputOrderWay = $('#{{ form_filter.ord_w.id_for_label }}');
 
     let btnCreateModal = $('#btnCreateModal');
+    let btnJoinModal = $('#btnJoinModal');
 
     function orderByColumnClicked(column_name) {
         inputOrderBy.val(column_name);
@@ -202,12 +209,34 @@
             let _targetUrl = $(this).prop('href');
             let modalContent = $('#GenericModalContent');
 
+            modalContent.html('');
             $.ajax({
                 url: _targetUrl,
                 success: function(data, status, xhr) {
                     modalContent.html(data);
                 },
                 error: function(xhr, status, data) {
+                    modalContent.html(data);
+                }
+            });
+        });
+
+        btnJoinModal.click(function() {
+            let _lp = 'btnJoinModal.click: ';
+            let _targetUrl = $(this).prop('href');
+            let modalContent = $('#GenericModalContent');
+            console.log(_lp + 'Prepare ajax call with url ' + _targetUrl);
+
+            modalContent.html('');
+            $.ajax({
+                url: _targetUrl,
+                success: function(data, status, xhr) {
+                    dbg = xhr;
+                    console.log(_lp + 'Success '+ xhr.status +' while calling url ' + _targetUrl);
+                    modalContent.html(data);
+                },
+                error: function(xhr, status, data) {
+                    console.log(_lp + 'Error '+ xhr.status +' while calling url ' + _targetUrl + ' : ' + data);
                     modalContent.html(data);
                 }
             });

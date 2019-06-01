@@ -1,0 +1,99 @@
+{% load widget_tweaks %}
+
+<style>
+    th, td {
+        text-align: center;
+    }
+
+    pre.rly-data {
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.1em;
+        margin-bottom: 0px;
+    }
+    pre.rly-title {
+        border: 1px #212529 solid;
+        font-size: 1.5em;
+    }
+</style>
+
+<form method="POST" action="{% url 'rally-register' pk=rally.id%}?target=main-lobby">
+{% csrf_token %}
+
+    <div class="modal-header">
+        <h4 class="modal-title">Rally registration</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+    </div>
+
+    <div class="modal-body">
+        <div class="mb-4">
+            You're about to join the rally:
+            <pre class="rly-data rly-title" style="margin-top: 5px">{{ rally.label }}</pre>
+        </div>
+
+        <div class="mb-4">
+            Current participants:
+            {% if participations|length %}
+                <table class="table table-sm" role="table" style="display:table;">
+                <thead>
+                    <tr>
+                        <th>Player</th>
+                        <th>Car skin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for participation in participations %}
+                    <tr>
+                        <td>
+                            <pre class="rly-data">{{ participation.player.get_full_name }}</pre>
+                        </td>
+                        <td>{{ participation.car_skin.render }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+                </table>
+            {% else %}
+                <p>The rally has no participants yet.</p>
+            {% endif %}
+        </div>
+
+        <p class="mb-2">
+            There {% if rally.available_slots_count > 1 %}are still {% else %}is {% endif %}{{ rally.available_slots_count }} place{% if rally.available_slots_count != 1 %}s{% endif %} available.
+            <br />
+            {% if rally.available_slots_count > 0 %}
+            Choose a car to finalize the registration:
+            {% endif %}
+        </p>
+
+        {% if rally.available_slots_count > 0 %}
+        <div class="input-group mb-4">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Car selection</span>
+            </div>
+            {% render_field form_register.car_skin class+='form-control' %}
+            <div class="input-group-append">
+                <a class="btn btn-primary" href="#" data-toggle="tooltip" title="Choose the color of the car you want to participate with">?</a>
+            </div>
+        </div>
+        <div>
+            <strong>Any registration can be cancelled until the start date</strong> of the rally. After this date, you will no longer be able to withdraw your registration.
+        </div>
+        {% endif %}
+
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+
+</form>
+
+<script>
+
+    $(document).ready(function() {
+
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
+</script>

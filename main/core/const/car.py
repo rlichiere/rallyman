@@ -14,4 +14,3 @@ class CarDirections(object):
     @classmethod
     def get_default(cls):
         return cls.UP
-
