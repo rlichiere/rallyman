@@ -58,7 +58,8 @@
         </div>
 
         <p class="mb-2">
-            There {% if rally.available_slots_count > 1 %}are still {% else %}is {% endif %}{{ rally.available_slots_count }} place{% if rally.available_slots_count != 1 %}s{% endif %} available.
+            There {% if rally.available_slots_count != 1 %}are {% if rally.available_slots_count > 1 %}still {% endif %}{% else %}is {% endif %}
+            <strong>{{ rally.available_slots_count }} place{% if rally.available_slots_count != 1 %}s{% endif %} available</strong>.
             <br />
             {% if rally.available_slots_count > 0 %}
             Choose a car to finalize the registration:
