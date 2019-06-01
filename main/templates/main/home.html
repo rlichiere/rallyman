@@ -4,10 +4,6 @@
 
 {% block page-body %}
 
-<style>
-
-</style>
-
 <h4 style="margin-bottom: 25px">It's rally time!</h4>
 
 <p>
@@ -27,11 +23,26 @@
 {% endif %}
 
 <ul>
-    <li><a href="{% url 'main-lobby' %}?rally_status=STARTED">Spectate a running rally</a></li>
-
-    <li><a {% if not user.is_anonymous %}href="{% url 'main-lobby' %}?rally_status=OPENED&user_participation=False"{% else %}title="You must register in order to Join a rally"{% endif %}>Join a opened rally</a></li>
-    <li><a {% if not user.is_anonymous %}href="{% url 'main-lobby' %}?rally_status=STARTED"{% else %}title="You must register in order to Create a rally"{% endif %}>Create a new rally</a></li>
-
+    <li>
+        <a href="{% url 'main-lobby' %}?rally_status={{ constants.RallyStatus.STARTED }}">
+            Spectate a running rally
+        </a>
+    </li>
+    <li>
+        <a {% if not user.is_anonymous %}href="{% url 'main-lobby' %}?rally_status={{ constants.RallyStatus.OPENED }}&user_participation=False" {% else %}title="You must register in order to Join a rally"{% endif %}>
+            Join a opened rally
+        </a>
+    </li>
+    <li>
+        <a {% if not user.is_anonymous %}href="{% url 'main-lobby' %}?rally_status={{ constants.RallyStatus.STARTED }}" {% else %}title="You must register in order to Create a rally"{% endif %}>
+            Create a new rally
+        </a>
+    </li>
+    <li>
+        <a {% if not user.is_anonymous %}href="{% url 'main-lobby' %}?rally_creator=me" {% else %}title="You must register in order to Manage your rallies"{% endif %}>
+            Manage the rallies you have created
+        </a>
+    </li>
 </ul>
 
 {% endblock %}
