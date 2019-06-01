@@ -8,13 +8,30 @@
 
 </style>
 
+<h4 style="margin-bottom: 25px">It's rally time!</h4>
+
 <p>
-    It's rally time!
+    At the wheel of your rally car, fight in wild stages !
 </p>
+<p>
+    Gears, notes, turns, skids, apex, bumps, snow, choice of tires, off-roads, heavy attack, stopwatch, assistance ...<br />
+    all the ingredients are here for an amazing rally simulation !
+</p>
+
+{% if user.is_anonymous %}
+<div class="alert alert-warning alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    As an unregistered user, you can only access to a limited number of features.<br />
+    We invite you to <a href="{% url 'auth-signup' %}">register</a> in order to fully enjoy the game.
+</div>
+{% endif %}
+
 <ul>
     <li><a href="{% url 'main-lobby' %}?rally_status=STARTED">Spectate a running rally</a></li>
-    <li><a href="{% url 'main-lobby' %}?rally_status=OPENED&user_participation=False">Join a opened rally</a></li>
-    <li><a href="{% url 'main-lobby' %}?rally_status=STARTED">Create a new rally</a></li>
+
+    <li><a {% if not user.is_anonymous %}href="{% url 'main-lobby' %}?rally_status=OPENED&user_participation=False"{% else %}title="You must register in order to Join a rally"{% endif %}>Join a opened rally</a></li>
+    <li><a {% if not user.is_anonymous %}href="{% url 'main-lobby' %}?rally_status=STARTED"{% else %}title="You must register in order to Create a rally"{% endif %}>Create a new rally</a></li>
+
 </ul>
 
 {% endblock %}

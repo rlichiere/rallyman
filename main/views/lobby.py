@@ -42,10 +42,11 @@ class LobbyView(TemplateView, ViewHelper):
 
         _ralliesParticipations = Participation.objects.filter(rally__in=_rallies)
         _ralliesParticipationsIds = _ralliesParticipations.values_list('id', flat=True)
-        if _userParticipation == 'True':
-            _rallies = _rallies.filter(id__in=_ralliesParticipationsIds)
-        elif _userParticipation == 'False':
-            _rallies = _rallies.exclude(id__in=_ralliesParticipationsIds)
+        if not _executor.is_anonymous:
+            if _userParticipation == 'True':
+                _rallies = _rallies.filter(id__in=_ralliesParticipationsIds)
+            elif _userParticipation == 'False':
+                _rallies = _rallies.exclude(id__in=_ralliesParticipationsIds)
 
         # order by database fields
         if _orderBy and _orderBy in ['label', 'status', 'creator']:
@@ -67,6 +68,9 @@ class LobbyView(TemplateView, ViewHelper):
                 if _rally.status == RallyStatus.FINISHED:
                     _checkIfJoignable = False
                     _checkIfQuitable = False
+
+                if _executor.is_anonymous:
+                    raise Participation.DoesNotExist
 
                 _ = _rallyParticipations.get(player=_executor)
 

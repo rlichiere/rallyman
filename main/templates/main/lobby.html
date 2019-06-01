@@ -24,14 +24,19 @@
                 <label for="{{ form_filter.rally_status.id_for_label }}">&nbsp;Rally status&nbsp;:&nbsp;</label>
                 {% render_field form_filter.rally_status class+='form-control' %}
             </div>
+
+            {% if not user.is_anonymous %}
             <div class="form-group">
                 <label for="{{ form_filter.user_participation.id_for_label }}">&nbsp;Rallies I participate in&nbsp;:&nbsp;</label>
                 {% render_field form_filter.user_participation class+='form-control' %}
             </div>
+
             <div class="form-group">
                 <label for="{{ form_filter.rally_creator.id_for_label }}">&nbsp;Rally creator&nbsp;:&nbsp;</label>
                 {% render_field form_filter.rally_creator class+='form-control' %}
             </div>
+            {% endif %}
+
             <button type="submit" class="btn btn-primary" style="margin-left: 7px">Refresh</button>
             <button id="btnReset" class="btn btn-warning" style="display: none; margin-left: 7px">Reset</button>
 
@@ -49,7 +54,11 @@
                 <th>Number of ES</th>
                 <th onclick="orderByColumnClicked('status');" class="orderable">Rally status</th>
                 <th onclick="orderByColumnClicked('creator');" class="orderable">Creator of the rally</th>
+
+                {% if not user.is_anonymous %}
                 <th>Action</th>
+                {% endif %}
+
             </tr>
         </thead>
         <tbody>
@@ -60,6 +69,8 @@
                 <td>{{ rally.stages_count }}</td>
                 <td>{{ rally.status|lower|capfirst }}</td>
                 <td>{{ rally.creator.get_full_name }}</td>
+
+                {% if not user.is_anonymous %}
                 <td>
                     {% if rally.is_joignable %}
                     <button class="btn btn-primary">Join</button>
@@ -68,6 +79,8 @@
                     <button class="btn btn-primary">Quit</button>
                     {% endif %}
                 </td>
+                {% endif %}
+
             </tr>
         {% empty %}
             <tr><td colspan="5">You don't have a rally in progress.</td></tr>
