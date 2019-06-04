@@ -40,7 +40,7 @@
 <div class="row">
 
     <!-- Filter -->
-    <div class="col-lg-12">
+    <div class="col-lg-12 mb-4">
         <form class="form-inline" method="get" action="{% url 'main-lobby' %}" id="formFilter">
             Filter by:
             <div class="form-group ml-4">
@@ -72,6 +72,22 @@
         </form>
     </div>
 
+    <!-- Pagination : number of items in page -->
+    <div class="col-lg-12 mb-1">
+        <div style="display:inline-block">
+            Show
+        </div>
+        <div style="display:inline-block">
+            {% render_field form_pgps.available_page_sizes class='form-control' %}
+        </div>
+        <div style="display:inline-block">
+            rallies
+        </div>
+        <div style="display:none;">
+            {% render_field form_pgps.selected_page_size class="form-control" %}
+        </div>
+    </div>
+
     <!-- List -->
     <div class="rallies-list col-lg-12">
         <table class="table table-sm" style="display: table">
@@ -91,7 +107,7 @@
             </tr>
         </thead>
         <tbody>
-        {% for rally in user_rallies %}
+        {% for rally in rallies %}
             <tr>
                 <td>{{ rally.label }}</td>
                 <td>
@@ -160,6 +176,48 @@
         </tbody>
         </table>
 
+        <!-- Pagination navigation  -->
+        <div class="float-sm-right">
+            <ul class="pagination ">
+            {% if rallies.number > 1 %}
+            {% if has_filter %}
+                <li class="page-item"><a class="page-link" href="{{ page_url }}&_pgpi={{ rallies.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="page-item"><a class="page-link" href="{{ page_url }}?_pgpi={{ rallies.previous_page_number }}">&laquo;</a></li>
+            {% endif %}
+            {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#">&laquo;</a></li>
+            {% endif %}
+
+            {% for page_button in pages_list %}
+            {% if page_button == 0 %}
+                <li class="paginate_button disabled">
+                    <a href="#">…</a>
+                </li>
+            {% else %}
+                <li class="page-item {% if page_button == rallies.number %} active{% endif %}"
+                    tabindex="{{ page_button }}">
+                    {% if has_filter %}
+                        <a class="page-link" href="{{ page_url }}&_pgpi={{ page_button }}">{{ page_button }}</a>
+                    {% else %}
+                        <a class="page-link" href="{{ page_url }}?_pgpi={{ page_button }}">{{ page_button }}</a>
+                    {% endif %}
+                </li>
+            {% endif %}
+            {% endfor %}
+
+            {% if rallies.number < rallies.paginator.num_pages %}
+            {% if has_filter %}
+                <li class="page-item"><a class="page-link" href="{{ page_url }}&_pgpi={{ rallies.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="page-item"><a class="page-link" href="{{ page_url }}?_pgpi={{ rallies.next_page_number }}">&raquo;</a></li>
+            {% endif %}
+            {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#">&raquo;</a></li>
+            {% endif %}
+            </ul>
+        </div>
+
         <a id="btnCreateModal" href="{% url 'rally-create' %}" class="btn btn-primary" data-toggle="modal" data-target="#GenericModal">
             <i class="far fa-plus-square"></i> Create Rally
         </a>
@@ -168,6 +226,26 @@
 </div>
 
 <script>
+
+    let elem_tenant_by_page = $('#available_page_sizes');
+    elem_tenant_by_page.change(function() {
+        let tenant_per_page = elem_tenant_by_page[0].value;
+        $('#show_number_tenant').val(tenant_per_page);
+        sendFilterForm();
+    });
+    function sendFilterForm() {
+        $('input').each(function() {
+            if($(this).val() === '') {
+                $(this).remove();
+            }
+        });
+        $('select').each(function() {
+            if($(this).val() === '') {
+                $(this).remove();
+            }
+        });
+        $('#filter_form').submit();
+    }
 
     let btnReset = $('#formFilter #btnReset');
     let inputFilterUserParticipation = $('#{{ form_filter.usr_part.id_for_label }}');
@@ -242,7 +320,7 @@
         });
 
         {% if not user.is_anonymous %}
-        {% for rally in user_rallies %}
+        {% for rally in rallies %}
 
         {% if rally.is_joignable %}
         let btnJoinModal_{{ rally.id }} = $('#btnJoinModal_{{ rally.id }}');

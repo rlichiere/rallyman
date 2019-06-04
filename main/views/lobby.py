@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+from django.core.paginator import Paginator
 from django.views.generic import TemplateView
 
 from ..core.const.lobby.rallies import RallyStatus
-from ..forms.lobby import FilterRalliesForm
+from ..forms.lobby import FilterRalliesForm, PaginationPageSizeForm
 from ..generic.views import ViewHelper
 from ..models import Rally, Participation, Stage
 
@@ -19,6 +20,8 @@ class LobbyView(ViewHelper, TemplateView):
 
         context = super(LobbyView, self).get_context_data(**kwargs)
 
+        _pgPageSize = int(self.request.GET.get('_pgps', 10))
+        _pgPageIndex = int(self.request.GET.get('_pgpi', 1))
         _allRlys = Rally.objects.all()
 
         # prepare filters
@@ -31,15 +34,20 @@ class LobbyView(ViewHelper, TemplateView):
         _ralliesFilter = dict()
         _ralliesExclude = dict()
 
+        _hasFilter = False
+
         # manage creator filter
         if _rallyCreator == 'me':
             _ralliesFilter['creator'] = _executor
+            _hasFilter = True
         elif _rallyCreator == 'nm':
             _ralliesExclude['creator'] = _executor
+            _hasFilter = True
 
         # manage rally status filter
         if _rallyStatus not in ['-', '']:
             _ralliesFilter['status'] = _rallyStatus
+            _hasFilter = True
 
         # apply filters
         _rallies = _allRlys.exclude(**_ralliesExclude).filter(**_ralliesFilter)
@@ -56,6 +64,20 @@ class LobbyView(ViewHelper, TemplateView):
         # order by database fields
         if _orderBy and _orderBy in ['label', 'status', 'creator', 'created_at', 'opened_at']:
             _rallies = _rallies.order_by('%s%s' % ('-' if _orderWay == 'd' else '', _orderBy))
+            _hasFilter = True
+
+        # prepare pagination page size
+        data_dict = {'available_page_sizes': _pgPageSize,
+                     'selected_page_size': _pgPageSize}
+        context['form_pgps'] = PaginationPageSizeForm(initial=data_dict)
+
+        # select rallies of current pagination
+        paginator = Paginator(_rallies, _pgPageSize)
+        try:
+            _rallies = paginator.page(_pgPageIndex)
+        except Exception as e:
+            _msg = 'Error while retrieving a page of the paginator : %s' % (repr(e))
+            return self.set_context_error(self.request, _msg, context)
 
         # browse elected rally, and add temporary attributes
         _allStages = Stage.objects.all()
@@ -95,8 +117,73 @@ class LobbyView(ViewHelper, TemplateView):
             # todo : manage ordering by logic data
             pass
 
+        context['has_filter'] = _hasFilter
         context['form_filter'] = _form
-        context['user_rallies'] = _rallies
+        context['form_filter'] = _form
+        context['rallies'] = _rallies
+        context['pages_list'] = self.get_pages_list(_pgPageIndex, paginator.num_pages)
+
+        url = self.request.get_full_path()
+        url = url.replace('?_pgpi=%s' % _pgPageIndex, '')
+        url = url.replace('&_pgpi=%s' % _pgPageIndex, '')
+        context['page_url'] = url
 
         self.log.endView()
         return context
+
+    @classmethod
+    def get_pages_list(cls, num_page, page_count):
+        # prepare pagin list of pages
+        pages_list = list()
+
+        if page_count > 7:
+            # slot 1
+            pages_list.append(1)
+
+            # slot 2
+            if num_page <= 4:
+                pages_list.append(2)
+            else:
+                pages_list.append(0)
+
+            # slot 3
+            if num_page <= 4:
+                pages_list.append(3)
+            elif num_page == 5:
+                pages_list.append(4)
+            elif num_page > (page_count - 4):
+                pages_list.append(page_count - 4)
+            else:
+                pages_list.append(num_page - 1)
+
+            # slot 4
+            if num_page <= 4:
+                pages_list.append(4)
+            elif num_page >= (page_count - 3):
+                pages_list.append(page_count - 3)
+            else:
+                pages_list.append(num_page)
+
+            # slot 5
+            if num_page <= 4:
+                pages_list.append(5)
+            # elif num_page == 5:
+            #     pages_list.append(6)
+            elif num_page >= (page_count - 2):
+                pages_list.append(page_count - 2)
+            else:
+                pages_list.append(num_page + 1)
+
+            # slot 6
+            if num_page >= (page_count - 3):
+                pages_list.append(page_count - 1)
+            else:
+                pages_list.append(0)
+
+            # slot 7
+            pages_list.append(page_count)
+        else:
+
+            pages_list = [index for index in range(1, page_count + 1)]
+
+        return pages_list

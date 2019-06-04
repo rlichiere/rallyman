@@ -30,3 +30,14 @@ class FilterRalliesForm(forms.Form):
                                                        const_rallies.ORDER_BY_DEFAULT_KEY)
         self.fields['ord_w'].initial = request.GET.get('ord_w',
                                                        const_rallies.ORDER_WAY_DEFAULT_KEY)
+
+
+class PaginationPageSizeForm(forms.Form):
+    CHOICES = (
+        (10, '10'),
+        (25, '25'),
+        (50, '50'),
+        (100, '100'),
+    )
+    available_page_sizes = forms.ChoiceField(label='Show x item', choices=CHOICES, required=False)
+    selected_page_size = forms.CharField(label='Show x item', required=False)
