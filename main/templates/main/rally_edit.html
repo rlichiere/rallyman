@@ -47,7 +47,10 @@
     let stageEditor = Object();
     stageEditor.stagesCountInput = $('#StagesCount');
     stageEditor.getStagesCount = function() {
-        return parseInt(stageEditor.stagesCountInput.val());
+        return parseInt(this.stagesCountInput.val());
+    };
+    stageEditor.incrStagesCount = function() {
+        this.stagesCountInput.val(this.getStagesCount() + 1);
     };
     stageEditor.stagesList = $('#StagesList');
     stageEditor.stagesListSaved = stageEditor.getStagesCount();
@@ -55,16 +58,17 @@
     stageEditor.addStage = function () {
         let _lp = 'stageEditor.addStage: ';
         let url = '{% url 'rally-edit-add-stage' pk=rally.id %}';
-        url += '?stage_num=' + (stageEditor.getStagesCount() + 1);
+        let _this = stageEditor;
+        url += '?stage_num=' + (_this.getStagesCount() + 1);
         $.ajax({
             url: url,
             success: function(data, status, xhr) {
-                let _stageId = 'Stage_' + stageEditor.getStagesCount();
+                let _stageId = 'Stage_' + _this.getStagesCount();
                 $('#' + _stageId + '_removeStageBtn').hide();
                 $('#' + _stageId + '_removeStageBtnUnsavedHelp').hide();
                 $('#' + _stageId + '_removeStageBtnHelp').hide();
-                stageEditor.stagesCountInput.val(stageEditor.getStagesCount() + 1);
-                stageEditor.stagesList.append(data);
+                _this.incrStagesCount();
+                _this.stagesList.append(data);
             },
             error: function(xhr, status, data) {
                 console.log(_lp+' ' + xhr.status + 'Error while calling url : ' + url + ' : ' + data);

@@ -67,19 +67,25 @@
     let _o{{oStage}} = Object();
     _o{{oStage}}.sectionsCountInput = $('#{{oStage}}_SectionsCount');
     _o{{oStage}}.getSectionsCount = function() {
-        return parseInt(_o{{oStage}}.sectionsCountInput.val());
+        return parseInt(this.sectionsCountInput.val());
+    };
+    _o{{oStage}}.incrSectionsCount = function() {
+        this.sectionsCountInput.val(this.getSectionsCount() + 1);
+    };
+    _o{{oStage}}.decrSectionsCount = function() {
+        this.sectionsCountInput.val(this.getSectionsCount() - 1);
     };
     _o{{oStage}}.sectionsList = $('#{{oStage}}_SectionsList');
 
     _o{{oStage}}.addSection = function() {
         let _lp = '_o{{oStage}}.addSection: ';
         let url = '{% url 'rally-edit-add-section' pk=rally.id stage_num=stage_num %}';
-        url += '?section_num=' + (_o{{oStage}}.getSectionsCount() + 1);
+        url += '?section_num=' + (this.getSectionsCount() + 1);
         $.ajax({
             url: url,
             success: function(data, status, xhr) {
                 $('#{{ oStage }}_' + _o{{oStage}}.getSectionsCount() + '_removeBtn').hide();
-                _o{{oStage}}.sectionsCountInput.val(_o{{oStage}}.getSectionsCount() + 1);
+                _o{{oStage}}.incrSectionsCount();
                 _o{{oStage}}.sectionsList.append(data);
             },
             error: function(xhr, status, data) {
@@ -91,8 +97,8 @@
     _o{{oStage}}.removeSection = function(section_num) {
         let _sectionName = '#{{ oStage }}_' + section_num;
         $(_sectionName).remove();
-        _o{{oStage}}.sectionsCountInput.val(_o{{oStage}}.getSectionsCount() - 1);
-        $('#{{ oStage }}_' + _o{{oStage}}.getSectionsCount() + '_removeBtn').show();
+        this.decrSectionsCount();
+        $('#{{ oStage }}_' + this.getSectionsCount() + '_removeBtn').show();
     };
 
     $(document).ready(function() {
