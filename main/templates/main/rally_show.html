@@ -5,9 +5,15 @@
 
 {% block page-body %}
 
-<p>
-    {{ rally.label }}
-</p>
+Stages:
+<ul>
+{% for stage in rally.stage_set.all %}
+    <li>ES {{ forloop.counter }} : {{ stage.roadbook_as_label }}</li>
+{% endfor %}
+</ul>
+
+<!-- Game zone -->
+
 
 <script>
 
