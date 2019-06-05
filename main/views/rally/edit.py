@@ -7,7 +7,7 @@ from ...models import Rally, Stage
 from ...forms.rally import EditRallyStagesForm
 
 
-class EditRallyView(ViewHelper, PageView, TemplateView):
+class EditRallyView(PageView, TemplateView):
     template_name = 'main/rally_edit.html'
 
     def __init__(self, *args, **kwargs):
@@ -19,6 +19,7 @@ class EditRallyView(ViewHelper, PageView, TemplateView):
                            redirect_to=self.request.GET.get('redirect'),
                            redirect_to_kwargs={'pk': self.request.GET.get('redirect_pk')})
         context = super(EditRallyView, self).get_context_data(**kwargs)
+        context['ariane'] = 'edit_rally'
         _rally = self.get_object_or_404(Rally, self.kwargs['pk'])
         context['rally'] = _rally
 
@@ -39,7 +40,6 @@ class EditRallyView(ViewHelper, PageView, TemplateView):
 
     def post(self, request, *args, **kwargs):
         _executor = self.request.user
-        _redirect = self.request.GET.get('redirect', 'main-home')
         self.log.startView(_executor,
                            redirect_to=self.request.GET.get('redirect'),
                            redirect_to_kwargs={'pk': self.request.GET.get('redirect_pk')})

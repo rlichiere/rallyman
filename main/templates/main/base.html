@@ -49,24 +49,58 @@
 
             {% if user_rallies|length > 0 %}
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
-                    Rallies
+                <a class="nav-link dropdown-toggle {% if 'show_rally' in ariane %}active{% endif %}" href="#" data-toggle="dropdown">
+                    Played rallies
                 </a>
                 <div class="dropdown-menu">
 
                     <div class="dropdown-item-group">Started rallies:</div>
-                    {% for rally in user_rallies %}
-                    {% if rally.status == 'STARTED' %}
-                        <a class="dropdown-item" href="{% url 'rally-edit' pk=rally.id %}">{{ rally.label }}</a>
-                    {% endif %}
+                    {% for rally in user_rallies.STARTED %}
+                        <a class="dropdown-item" href="{% url 'rally-show' pk=rally.id %}">{{ rally.label }}</a>
+                    {% empty %}
+                        <a class="dropdown-item">No started rallies</a>
                     {% endfor %}
                     <hr />
 
                     <div class="dropdown-item-group">Participated rallies:</div>
-                    {% for rally in user_rallies %}
-                    {% if rally.status == 'OPENED' %}
+                    {% for rally in user_rallies.OPENED %}
+                        <a class="dropdown-item" href="{% url 'rally-show' pk=rally.id %}">{{ rally.label }}</a>
+                    {% empty %}
+                        <a class="dropdown-item">No opened rallies</a>
+                    {% endfor %}
+
+                </div>
+            </li>
+            {% endif %}
+
+            {% if user_managed_rallies|length > 0 %}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle {% if 'edit_rally' in ariane %}active{% endif %}" href="#" data-toggle="dropdown">
+                    Managed rallies
+                </a>
+                <div class="dropdown-menu">
+
+                    <div class="dropdown-item-group">Show started rallies:</div>
+                    {% for rally in user_managed_rallies.STARTED %}
+                        <a class="dropdown-item" href="{% url 'rally-show' pk=rally.id %}">{{ rally.label }}</a>
+                    {% empty %}
+                        <a class="dropdown-item">No started rallies</a>
+                    {% endfor %}
+                    <div class="dropdown-divider"></div>
+
+                    <div class="dropdown-item-group">Edit opened rallies:</div>
+                    {% for rally in user_managed_rallies.OPENED %}
                         <a class="dropdown-item" href="{% url 'rally-edit' pk=rally.id %}">{{ rally.label }}</a>
-                    {% endif %}
+                    {% empty %}
+                        <a class="dropdown-item">No opened rallies</a>
+                    {% endfor %}
+                    <div class="dropdown-divider"></div>
+
+                    <div class="dropdown-item-group">Edit scheduled rallies:</div>
+                    {% for rally in user_managed_rallies.SCHEDULED %}
+                        <a class="dropdown-item" href="{% url 'rally-edit' pk=rally.id %}">{{ rally.label }}</a>
+                    {% empty %}
+                        <a class="dropdown-item">No opened rallies</a>
                     {% endfor %}
 
                 </div>

@@ -4,11 +4,11 @@ from django.views.generic import TemplateView
 
 from ..core.const.lobby.rallies import RallyStatus
 from ..forms.lobby import FilterRalliesForm, PaginationPageSizeForm
-from ..generic.views import ViewHelper, PageView
+from ..generic.views import PageView
 from ..models import Rally, Participation, Stage
 
 
-class LobbyView(ViewHelper, PageView, TemplateView):
+class LobbyView(PageView, TemplateView):
     template_name = 'main/lobby.html'
 
     def __init__(self, *args, **kwargs):
