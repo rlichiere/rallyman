@@ -28,23 +28,27 @@
     </select>
     <div class="input-group-append">
         {% if section_num == 1 %}
-        <a class="btn btn-primary" href="#"
+        <a class="btn btn-secondary" href="#"
            data-toggle="tooltip" data-html="true"
            title="<h1>Stage sections</h1>
                 <p>A stage is composed of a list of sections.</p>
                 <p>The stage starts at the beginning of its first section, and ends a the end of its last section.</p>
                 <p>The time of a player on a stage is validated when the player passes the last cell of the last section of the stage.
                     <br />If the player doesn't finishes the stage (car broken or retired), its time is set to a DNF value.</p>"
-        ><i class="fas fa-question-circle"></i></a>
+        >
+            <i class="fas fa-question-circle"></i>
+        </a>
         {% else %}
         <a id="{{ oZone }}_removeBtn" href="#" class="btn btn-danger" onclick="_o{{oStage}}.removeSection({{ section_num }})"><i class="fas fa-trash-alt"></i></a>
-            <a class="btn btn-primary" href="#"
-               data-toggle="tooltip" data-html="true"
-               title="<h1>Remove the last section</h1>
-                    <p>Click the <strong>adjacent trash icon</strong> in order to <strong>remove the last section</strong> of the stage.</p>
-                    <p>If you want to <strong>remove multiple sections</strong>, you must <strong>remove them one by one</strong>.</p>
-                    <p>You must <strong>Submit</strong> your modifications in order to <strong>sections configuration modifications</strong>.</p>"
-            ><i class="fas fa-question-circle"></i></a>
+        <a id="{{ oZone }}_removeBtnHelp" href="#" class="btn btn-secondary"
+           data-toggle="tooltip" data-html="true"
+           title="<h1>Remove the last section</h1>
+                <p>Click the <strong>adjacent trash icon</strong> in order to <strong>remove the last section</strong> of the stage.</p>
+                <p>If you want to <strong>remove multiple sections</strong>, you must <strong>remove them one by one</strong>.</p>
+                <p>You must <strong>Submit</strong> your modifications in order to <strong>sections configuration modifications</strong>.</p>"
+        >
+            <i class="fas fa-question-circle"></i>
+        </a>
         {% endif %}
     </div>
 </div>
@@ -52,10 +56,10 @@
 <script>
     $(document).ready(function(){
         $('[data-toggle="tooltip"]').tooltip();
-        let _sectionNum = {{ section_num }};
 
-        if (_sectionNum !== parseInt(_o{{oStage}}.sectionsCount.val())) {
+        if (parseInt({{ section_num }}) !== parseInt(_o{{oStage}}.sectionsCount.val())) {
             $('#{{ oZone }}_removeBtn').hide();
+            $('#{{ oZone }}_removeBtnHelp').hide();
         }
     });
 </script>

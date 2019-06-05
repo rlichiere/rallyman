@@ -60,6 +60,8 @@
                 stageEditor.stagesList.html(stageEditor.stagesList.html() + data);
                 stageEditor.stagesCount.val(parseInt(stageEditor.stagesCount.val()) + 1);
                 $('#Stage_' + (parseInt(stageEditor.stagesCount.val()) - 1) + '_removeStageBtn').hide();
+                $('#Stage_' + (parseInt(stageEditor.stagesCount.val()) - 1) + '_removeStageBtnUnsavedHelp').hide();
+                $('#Stage_' + (parseInt(stageEditor.stagesCount.val()) - 1) + '_removeStageBtnHelp').hide();
             },
             error: function(xhr, status, data) {
                 console.log(_lp+' ' + xhr.status + 'Error while calling url : ' + url + ' : ' + data);
