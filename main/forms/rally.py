@@ -24,6 +24,7 @@ class EditRallyStagesForm(object):
 
     def __init__(self, *args, **kwargs):
         self.stages = list()
+        self._errors = dict()
 
         _post = args[0]
         self.rally = kwargs.pop('rally')
@@ -44,16 +45,33 @@ class EditRallyStagesForm(object):
             for _sectionIndex in range(1, _stageSectionsCount + 1):
                 _sectionId = '%s_%s' % (_stageId.lower(), _sectionIndex)
                 _sectionData = dict()
-                # todo : try, except Missing mandatory parameter
-                _sectionData['zone'] = _post['%s_zone' % _sectionId]
-                _sectionData['anchor'] = _post['%s_anchor' % _sectionId]
-                _sectionData['surface'] = _post['%s_surface' % _sectionId]
+
+                _pZone = '%s_zone' % _sectionId
+                _pAnchor = '%s_anchor' % _sectionId
+                _pSurface = '%s_surface' % _sectionId
+                try:
+                    _sectionData['zone'] = _post[_pZone]
+                except KeyError:
+                    self._errors[_pZone] = 'Missing parameter : zone'
+                    return
+                try:
+                    _sectionData['anchor'] = _post[_pAnchor]
+                except KeyError:
+                    self._errors[_pAnchor] = 'Missing parameter : anchor'
+                    return
+                try:
+                    _sectionData['surface'] = _post[_pSurface]
+                except KeyError:
+                    self._errors[_pSurface] = 'Missing parameter : surface'
+                    return
 
                 _stage['sections'].append(_sectionData)
 
             self.stages.append(_stage)
 
     def is_valid(self):
+        if len(self._errors) > 0:
+            return False
         return True
 
     def execute(self):
@@ -72,8 +90,6 @@ class EditRallyStagesForm(object):
             # _stage['has_assistance'] = True
 
             for _sectionField in _stageField['sections']:
-
-                # todo : try, except Missing mandatory parameter
                 _sectionZone = _sectionField['zone']
                 _sectionAnchor = _sectionField['anchor']
                 _sectionSurface = _sectionField['surface']
@@ -83,7 +99,7 @@ class EditRallyStagesForm(object):
 
     @property
     def errors(self):
-        return ''
+        return self._errors
 
 
 class RegisterToRallyForm(forms.Form):

@@ -36,10 +36,13 @@ class ViewHelper(object):
 
     def redirect_error(self, request, message, redirect=None):
         _redirect = self.log.getRedirect()
-        _redirectKwargs = dict()
+
         if redirect is not None:
             _redirect = redirect
-            _redirectKwargs = self.log.getRedirectKwargs()
+
+        _redirectKwargs = self.log.getRedirectKwargs()
+        if _redirectKwargs is None:
+            _redirectKwargs = dict()
 
         self.log.error(message)
         messages.add_message(request, self.ERROR, message)
