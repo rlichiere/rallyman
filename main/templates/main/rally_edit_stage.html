@@ -64,7 +64,7 @@
 
 <script>
 
-    var _o{{oStage}} = Object();
+    let _o{{oStage}} = Object();
     _o{{oStage}}.sectionsCount = $('#{{oStage}}_SectionsCount');
     _o{{oStage}}.sectionsList = $('#{{oStage}}_SectionsList');
 
@@ -98,46 +98,24 @@
             $('#{{ oStage }}_removeStageBtnUnsaved').show();
         }
 
-        if (stageEditor.stagesCount() !== stageEditor.stagesListSaved) {
+        if (stageEditor.getStagesCount() !== stageEditor.stagesListSaved) {
             $('#{{ oStage }}_removeStageBtnLabel').html('Remove unsaved stages');
         }
 
-        if (stageEditor.stagesCount() === {{ stage_num }}) {
-
-            if (stageEditor.stagesCount() > stageEditor.stagesListSaved) {
-                $('#{{ oStage }}_removeStageBtnUnsaved').show();
+        if (stageEditor.getStagesCount() === {{ stage_num }}) {
+            if (stageEditor.getStagesCount() > stageEditor.stagesListSaved) {
                 $('#{{ oStage }}_removeStageBtn').hide();
-            }
-            else if (stageEditor.stagesCount() === stageEditor.stagesListSaved) {
-                $('#{{ oStage }}_removeStageBtnUnsaved').hide();
-                $('#{{ oStage }}_removeStageBtn').show();
-            }
-
-        }
-
-        if (stageEditor.stagesCount() === {{ stage_num }}) {
-            if (stageEditor.stagesCount() > stageEditor.stagesListSaved) {
-                $('#{{ oStage }}_removeStageBtnUnsaved').show();
-                $('#{{ oStage }}_removeStageBtn').hide();
-            }
-            else if (stageEditor.stagesCount() === stageEditor.stagesListSaved) {
-                $('#{{ oStage }}_removeStageBtnUnsaved').hide();
-                $('#{{ oStage }}_removeStageBtn').show();
-            }
-        }
-        if (stageEditor.stagesCount() === {{ stage_num }}) {
-            $('#{{ oStage }}_removeStageBtn').show();
-        }
-
-        if (stageEditor.stagesCount() === {{ stage_num }}) {
-            if (stageEditor.stagesCount() > stageEditor.stagesListSaved) {
-                $('#{{ oStage }}_removeStageBtnUnsavedHelp').show();
                 $('#{{ oStage }}_removeStageBtnHelp').hide();
+                $('#{{ oStage }}_removeStageBtnUnsaved').show();
+                $('#{{ oStage }}_removeStageBtnUnsavedHelp').show();
             }
-            else if (stageEditor.stagesCount() === stageEditor.stagesListSaved) {
+            else if (stageEditor.getStagesCount() === stageEditor.stagesListSaved) {
+                $('#{{ oStage }}_removeStageBtnUnsaved').hide();
                 $('#{{ oStage }}_removeStageBtnUnsavedHelp').hide();
+                $('#{{ oStage }}_removeStageBtn').show();
                 $('#{{ oStage }}_removeStageBtnHelp').show();
             }
+            $('#{{ oStage }}_removeStageBtn').show();
         }
 
         $('[data-toggle="tooltip"]').tooltip();
