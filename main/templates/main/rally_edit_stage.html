@@ -1,0 +1,62 @@
+{% load widget_tweaks %}
+{% load maintags %}
+
+{% with 'Stage_'|concat:stage_num as oStage %}
+<input type="hidden" id="{{oStage}}_SectionsCount" name="{{oStage}}_sections_count" value="{% if stage.sections|length > 0 %}{{ stage.sections|length }}{% else %}1{% endif %}">
+
+    <div class="panel">
+    <div class="panel-header mb-3">
+        <h4 class="modal-title">Stage {{ stage_num }}</h4>
+    </div>
+    <div class="panel-body">
+
+        <div class="row" id="{{ oStage }}_SectionsList">
+        {% for section in stage.sections %}
+        {% include 'main/rally_edit_stage_section.html' with stage_num=stage_num section_num=forloop.counter section=section %}
+        {% empty %}
+        {% include 'main/rally_edit_stage_section.html' with stage_num=stage_num section_num=1 %}
+        {% endfor %}
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-lg-12">
+                <a href="#" class="btn btn-primary" onclick="_o{{oStage}}.addSection()">Add Zone</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+    var _o{{oStage}} = Object();
+    _o{{oStage}}.sectionsCount = $('#{{oStage}}_SectionsCount');
+    _o{{oStage}}.sectionsList = $('#Stage_{{ stage_num }}_SectionsList');
+
+    _o{{oStage}}.addSection = function() {
+        let _lp = '_o{{oStage}}.addSection: ';
+        let url = '{% url 'rally-edit-add-zone' pk=rally.id stage_num=stage_num %}';
+        url += '?section_num=' + (parseInt(_o{{oStage}}.sectionsCount.val()) + 1);
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success: function(data, status, xhr) {
+                _o{{oStage}}.sectionsList.html(_o{{oStage}}.sectionsList.html() + data);
+                $('#{{ oStage }}_' + _o{{oStage}}.sectionsCount.val() + '_removeBtn').hide();
+                _o{{oStage}}.sectionsCount.val(parseInt(_o{{oStage}}.sectionsCount.val()) + 1);
+            },
+            error: function(xhr, status, data) {
+                console.log(_lp+' ' + xhr.status + 'Error while calling url : ' + url + ' : ' + data);
+            }
+        })
+    };
+
+    _o{{oStage}}.removeSection = function(section_num) {
+        let _sectionName = '#Stage_{{ stage_num }}_' + section_num;
+        $(_sectionName).remove();
+        _o{{oStage}}.sectionsCount.val(parseInt(_o{{oStage}}.sectionsCount.val()) - 1);
+        $('#{{ oStage }}_' + _o{{oStage}}.sectionsCount.val() + '_removeBtn').show();
+    };
+</script>
+
+{% endwith %}

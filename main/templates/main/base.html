@@ -25,6 +25,12 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
+    <style type="text/css">
+        .dropdown-item-group {
+            margin-left: 10px;
+            font-weight: bold;
+        }
+    </style>
     {% block head %}{% endblock %}
 
 </head>
@@ -35,21 +41,48 @@
         <a class="navbar-brand" href="#">Rallyman</a>
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link active" href="{% url 'main-home' %}">Home</a>
+                <a class="nav-link {% if 'home' in ariane %}active{% endif %}" href="{% url 'main-home' %}">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'main-lobby' %}">Lobby</a>
+                <a class="nav-link {% if 'lobby' in ariane %}active{% endif %}" href="{% url 'main-lobby' %}">Lobby</a>
             </li>
+
+            {% if user_rallies|length > 0 %}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                    Rallies
+                </a>
+                <div class="dropdown-menu">
+
+                    <div class="dropdown-item-group">Started rallies:</div>
+                    {% for rally in user_rallies %}
+                    {% if rally.status == 'STARTED' %}
+                        <a class="dropdown-item" href="{% url 'rally-edit' pk=rally.id %}">{{ rally.label }}</a>
+                    {% endif %}
+                    {% endfor %}
+                    <hr />
+
+                    <div class="dropdown-item-group">Participated rallies:</div>
+                    {% for rally in user_rallies %}
+                    {% if rally.status == 'OPENED' %}
+                        <a class="dropdown-item" href="{% url 'rally-edit' pk=rally.id %}">{{ rally.label }}</a>
+                    {% endif %}
+                    {% endfor %}
+
+                </div>
+            </li>
+            {% endif %}
+
         </ul>
         <ul class="navbar-nav">
         {% if user.is_anonymous %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'auth-signin' %}"><i class="fas fa-sign-in-alt"></i> Sign in</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'auth-signup' %}"><i class="far fa-address-card"></i> Sign up</a></li>
+            <li class="nav-item"><a class="nav-link {% if 'signin' in ariane %}active{% endif %}" href="{% url 'auth-signin' %}"><i class="fas fa-sign-in-alt"></i> Sign in</a></li>
+            <li class="nav-item"><a class="nav-link {% if 'signup' in ariane %}active{% endif %}" href="{% url 'auth-signup' %}"><i class="far fa-address-card"></i> Sign up</a></li>
         {% else %}
             {% if user.is_superuser %}
             <li class="nav-item"><a class="nav-link" href="/admin"><i class="fas fa-user-shield"></i> Admin</a></li>
             {% endif %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'user-profile' %}"><i class="far fa-user"></i> Profile</a></li>
+            <li class="nav-item"><a class="nav-link {% if 'profile' in ariane %}active{% endif %}" href="{% url 'user-profile' %}"><i class="far fa-user"></i> Profile</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'auth-signout' %}"><i class="fas fa-sign-out-alt"></i> Sign out</a></li>
         {% endif %}
         </ul>

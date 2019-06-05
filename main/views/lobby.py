@@ -4,11 +4,11 @@ from django.views.generic import TemplateView
 
 from ..core.const.lobby.rallies import RallyStatus
 from ..forms.lobby import FilterRalliesForm, PaginationPageSizeForm
-from ..generic.views import ViewHelper
+from ..generic.views import ViewHelper, PageView
 from ..models import Rally, Participation, Stage
 
 
-class LobbyView(ViewHelper, TemplateView):
+class LobbyView(ViewHelper, PageView, TemplateView):
     template_name = 'main/lobby.html'
 
     def __init__(self, *args, **kwargs):
@@ -19,6 +19,7 @@ class LobbyView(ViewHelper, TemplateView):
         self.log.startView(_executor)
 
         context = super(LobbyView, self).get_context_data(**kwargs)
+        context['ariane'] = ['lobby']
 
         _pgPageSize = int(self.request.GET.get('_pgps', 10))
         _pgPageIndex = int(self.request.GET.get('_pgpi', 1))

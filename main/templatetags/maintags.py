@@ -6,6 +6,11 @@ from ..core import const
 register = template.Library()
 
 
+@register.filter
+def concat(left, right):
+    return '%s%s' % (str(left), str(right))
+
+
 class GetConstantsNode(template.Node):
     def __init__(self):
         pass

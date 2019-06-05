@@ -17,14 +17,21 @@ from django.conf.urls import url
 
 from .views.home import HomeView
 from .views.lobby import LobbyView
-from .views.rally.create import CreateRallyView
-from .views.rally.register import RegisterToRallyView, UnRegisterFromRallyView
-
+from .views.rally import CreateRallyView, EditRallyView, EditRallyAddStageView, EditRallyAddZoneView,\
+    RegisterToRallyView, UnRegisterFromRallyView
 
 urlpatterns = [
     url(r'^$', HomeView.as_view(), name='main-home'),
     url(r'^lobby', LobbyView.as_view(), name='main-lobby'),
+
     url(r'^rally/(?P<pk>[0-9]+)/register', RegisterToRallyView.as_view(), name='rally-register'),
     url(r'^rally/(?P<pk>[0-9]+)/unregister', UnRegisterFromRallyView.as_view(), name='rally-unregister'),
+
+    url(r'^rally/(?P<pk>[0-9]+)/edit/add-stage',
+        EditRallyAddStageView.as_view(), name='rally-edit-add-stage'),
+    url(r'^rally/(?P<pk>[0-9]+)/edit/stage/(?P<stage_num>[0-9]+)/add-zone',
+        EditRallyAddZoneView.as_view(), name='rally-edit-add-zone'),
+    url(r'^rally/(?P<pk>[0-9]+)/edit', EditRallyView.as_view(), name='rally-edit'),
+
     url(r'^rally', CreateRallyView.as_view(), name='rally-create'),
 ]

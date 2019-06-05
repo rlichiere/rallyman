@@ -1,0 +1,52 @@
+{% load widget_tweaks %}
+{% load maintags %}
+
+{% with 'Stage_'|concat:stage_num as oStage %}
+{% with 'Stage_'|concat:stage_num|concat:'_'|concat:section_num as oZone %}
+
+<div class="input-group mb-3 col-lg-4 col-sm-6" id="{{ oZone }}">
+    <div class="input-group-prepend">
+        <span class="input-group-text">Section {{ section_num }}</span>
+    </div>
+    <select name="stage_{{ stage_num }}_{{ section_num }}_zone" title="Zone selection" class="form-control">
+        <option value="C" {% if section.zone == 'C' %} selected{% endif %}>C</option>
+        <option value="J" {% if section.zone == 'J' %} selected{% endif %}>J</option>
+        <option value="L" {% if section.zone == 'L' %} selected{% endif %}>L</option>
+        <option value="V" {% if section.zone == 'V' %} selected{% endif %}>V</option>
+    </select>
+    <select name="stage_{{ stage_num }}_{{ section_num }}_anchor" title="Zone anchor" class="form-control">
+        <option value="1" {% if section.anchor == '1' %} selected{% endif %}>1</option>
+        <option value="2" {% if section.anchor == '2' %} selected{% endif %}>2</option>
+        <option value="3" {% if section.anchor == '3' %} selected{% endif %}>3</option>
+        <option value="4" {% if section.anchor == '4' %} selected{% endif %}>4</option>
+        <option value="5" {% if section.anchor == '5' %} selected{% endif %}>5</option>
+        <option value="6" {% if section.anchor == '6' %} selected{% endif %}>6</option>
+    </select>
+    <select name="stage_{{ stage_num }}_{{ section_num }}_surface" title="Surface selection" class="form-control">
+        <option value="DRY"  {% if section.surface == 'DRY' %}  selected{% endif %}>DRY</option>
+        <option value="SNOW" {% if section.surface == 'SNOW' %} selected{% endif %}>SNOW</option>
+    </select>
+    <div class="input-group-append">
+        {% if section_num == 1 %}
+        <a class="btn btn-primary" href="#" data-toggle="tooltip" data-html="true"
+           title="A stage is composed of a list of zones sections</br>"
+        >?</a>
+        {% else %}
+        <a id="{{ oZone }}_removeBtn" href="#" class="btn btn-danger" onclick="_o{{oStage}}.removeSection({{ section_num }})"><i class="fas fa-trash-alt"></i></a>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+        let _sectionNum = {{ section_num }};
+
+        if (_sectionNum !== parseInt(_o{{oStage}}.sectionsCount.val())) {
+            $('#{{ oZone }}_removeBtn').hide();
+        }
+    });
+</script>
+
+{% endwith %}
+{% endwith %}

@@ -121,7 +121,8 @@ LOGGING = {
     },
     'loggers': {
         'main_logger': {
-            'handlers': ['console', 'errors_file', 'verbose_file'],
+            # 'handlers': ['console', 'errors_file', 'verbose_file'],
+            'handlers': ['console'],
             'level': os.environ.get('LOG_LEVEL', 'INFO'),
         },
     },

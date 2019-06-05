@@ -11,11 +11,15 @@ class Log(object):
         self._caller = caller
         self._executor = None
         self._redirect_to = None
-
+        self._redirect_to_kwargs = None
     """ Public """
 
     def debug(self, msg=None, *arg_msg, **kw_msg):
         logger.debug(self._expandParams(level='DEBUG', msg=msg, *arg_msg, **kw_msg))
+
+    def debugIndirect(self, msg=None, *arg_msg, **kw_msg):
+        rv = logger.findCaller()
+        logger.debug(self._expandParams(level='DEBUG', msg=msg, rv=rv, *arg_msg, **kw_msg))
 
     def info(self, msg=None, *arg_msg, **kw_msg):
         logger.info(self._expandParams(level='INFO', msg=msg, *arg_msg, **kw_msg))
@@ -41,15 +45,19 @@ class Log(object):
     def getRedirect(self):
         return self._redirect_to
 
-    def setRedirect(self, redirect_to):
-        self._redirect_to = redirect_to
+    def getRedirectKwargs(self):
+        return self._redirect_to_kwargs
 
-    def startView(self, executor=None, redirect_to=None):
+    def setRedirect(self, redirect_to, redirect_to_kwargs=None):
+        self._redirect_to = redirect_to
+        self._redirect_to_kwargs = redirect_to_kwargs
+
+    def startView(self, executor=None, redirect_to=None, redirect_to_kwargs=None):
         if executor is not None:
             self.setExecutor(executor)
 
         if redirect_to is not None:
-            self.setRedirect(redirect_to)
+            self.setRedirect(redirect_to, redirect_to_kwargs)
 
         self.infoIndirect('Start')
 

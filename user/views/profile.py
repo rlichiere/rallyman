@@ -4,14 +4,15 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
 from ..forms.profile import UserProfileForm, UserProfilePasswordChangeForm
-from main.generic.views import ViewHelper
+from main.generic.views import ViewHelper, PageView
 
 
-class UserProfileView(LoginRequiredMixin, ViewHelper, TemplateView):
+class UserProfileView(LoginRequiredMixin, ViewHelper, PageView, TemplateView):
     template_name = 'user/profile.html'
 
     def get_context_data(self, **kwargs):
         context = super(UserProfileView, self).get_context_data(**kwargs)
+        context['ariane'] = 'profile'
         context['form_fields'] = UserProfileForm(request=self.request)
         context['form_password'] = UserProfilePasswordChangeForm(request=self.request)
         return context

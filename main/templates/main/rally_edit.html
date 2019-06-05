@@ -1,0 +1,78 @@
+{% extends 'main/base.html' %}
+{% load widget_tweaks %}
+
+{% block page-header %}Edit rally stages{% endblock %}
+
+{% block page-body %}
+
+<form method="POST" action="{% url 'rally-edit' pk=rally.id %}?redirect=rally-edit&redirect_pk={{ rally.id }}">
+{% csrf_token %}
+    <input type="hidden" id="StagesCount" name="stages_count" value="{{ stages_count }}">
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Rally name</span>
+        </div>
+        <input type="text" value="{{ rally.label }}" class="form-control" title="Rally name" readonly="readonly">
+    </div>
+
+    <div id="StagesList">
+    <div class="panel">
+        {% for stage in stages %}
+            {% include 'main/rally_edit_stage.html' with stage_num=forloop.counter stage=stage %}
+            {% empty %}
+            {% include 'main/rally_edit_stage.html' with stage_num=1 %}
+        {% endfor %}
+    </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-lg-12">
+            <a href="#" class="btn btn-primary" onclick="stageEditor.addStage();">Add Stage</a>
+        </div>
+    </div>
+
+    <div class="panel-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+
+</form>
+
+<script>
+
+    let stageEditor = Object();
+    stageEditor.stagesCount = $('#StagesCount');
+
+    stageEditor.stagesList = $('#StagesList');
+
+    stageEditor.addStage = function () {
+        let _lp = 'stageEditor.addStage: ';
+        let url = '{% url 'rally-edit-add-stage' pk=rally.id %}';
+        url += '?stage_num=' + (parseInt(stageEditor.stagesCount.val()) + 1);
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success: function(data, status, xhr) {
+                stageEditor.stagesList.html(stageEditor.stagesList.html() + data);
+                stageEditor.stagesCount.val(parseInt(stageEditor.stagesCount.val()) + 1);
+            },
+            error: function(xhr, status, data) {
+                console.log(_lp+' ' + xhr.status + 'Error while calling url : ' + url + ' : ' + data);
+            }
+        });
+    }
+
+    stageEditor.removeStage = function (stage_num) {
+        $('#Stage_stage_num').remove();
+         stageEditor.stagesCount.val(parseInt(stageEditor.stagesCount.val()) - 1);
+
+    };
+
+    $(document).ready(function() {
+
+    });
+
+</script>
+
+{% endblock %}
