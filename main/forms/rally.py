@@ -23,6 +23,7 @@ class CreateRallyForm(forms.Form):
 class EditRallyStagesForm(object):
 
     def __init__(self, *args, **kwargs):
+        _lp = '%s.__init__:' % self.__class__.__name__
         self.stages = list()
         self._errors = dict()
 
@@ -37,7 +38,9 @@ class EditRallyStagesForm(object):
             # todo : add has_assistance if its input is set
             # _stage['has_assistance'] = True
 
-            _stageSectionsCount = int(_post.get('%s_sections_count' % _stageId))
+            print('%s _post : %s' % (_lp, _post))
+            print('%s param_name : %s' % (_lp, '%s_sections_count' % _stageId))
+            _stageSectionsCount = int(_post['%s_sections_count' % _stageId])
             _stage['sections_count'] = _stageSectionsCount
 
             _stage['sections'] = list()

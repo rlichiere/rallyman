@@ -16,13 +16,7 @@
             </div>
             {% render_field form_create.label class+='form-control' %}
             <div class="input-group-append">
-                <a class="btn btn-secondary" href="#"
-                   data-toggle="tooltip" data-html="true"
-                   title="<h1>Rally name</h1>
-                   <p>Choose a name for your rally.</p>"
-                >
-                    <i class="fas fa-question-circle"></i>
-                </a>
+                {% include 'main/generic/help_button.html' with title='Rally name' content='Choose a name for your rally.' %}
             </div>
         </div>
 
@@ -34,16 +28,7 @@
                 <div class="input-group-text">
                     {% render_field form_create.set_opened_at %}
                 </div>
-                <a class="btn btn-secondary" href="#"
-                   data-toggle="tooltip" data-html="true"
-                   title="<h1>Defer opening date</h1>
-                    <p>Check this option if you want to lock registrations until a custom <strong>deferred opening date</strong>.</p>
-                    <p>Registration will be available after the given date.
-                        <br />Otherwise, the registration will be opened as soon as the rally is created.
-                        <br />In both cases, registration closes when the rally starts.</p>"
-                >
-                    <i class="fas fa-question-circle"></i>
-                </a>
+                {% include 'main/generic/help_button.html' with title='Defer opening date' content='<p>Check this option if you want to lock registrations until a custom <strong>deferred opening date</strong>.</p><p>Registration will be available after the given date.<br />Otherwise, the registration will be opened as soon as the rally is created.<br />In both cases, registration closes when the rally starts.</p>' %}
             </div>
         </div>
         <div class="input-group" id="{{ form_create.opened_at.id_for_label }}_help">
@@ -61,17 +46,7 @@
             </div>
             {% render_field form_create.opened_at class+='form-control' %}
             <div class="input-group-append">
-                <a class="btn btn-secondary" href="#"
-                   data-toggle="tooltip" data-html="true"
-                   title="<h1>Date format</h1>
-                        <p>Please respect below date format:
-                            <br />YYYY-MM-DD HH:MM:SS</p>
-                        <p>Examples:
-                            <br />2018-12-31 23:59:59
-                            <br />2019-01-01 00:00:00</p>"
-                >
-                    <i class="fas fa-question-circle"></i>
-                </a>
+                {% include 'main/generic/help_button.html' with title='Date format' content='<p>Please respect below date format:<br />YYYY-MM-DD HH:MM:SS</p><p>Examples:<br />2018-12-31 23:59:59<br />2019-01-01 00:00:00</p>' %}
             </div>
         </div>
 

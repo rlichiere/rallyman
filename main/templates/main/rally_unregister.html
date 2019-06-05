@@ -1,20 +1,13 @@
 {% load widget_tweaks %}
 
 <style>
+
     th, td {
         text-align: center;
     }
 
-    pre.rly-data {
-        text-align: center;
-        font-weight: bold;
-        font-size: 1.1em;
-        margin-bottom: 0px;
-    }
-    pre.rly-title {
-        border: 1px #212529 solid;
-        font-size: 1.5em;
-    }
+    {% include 'main/shared/css_rally.html' %}
+
 </style>
 
 <form method="POST" action="{% url 'rally-unregister' pk=rally.id %}?redirect=main-lobby">

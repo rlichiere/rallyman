@@ -1,0 +1,20 @@
+{% comment %}
+    This generic template renders a quick help tooltiped button
+
+    Parameters:
+        title   <str> : Title of the tooltip
+        content <str> : Content of the tooltip
+        id      <str> : Optionnal. ID of the generated button
+        hide    <bool>: Optionnal. Hides the button if set, otherwise the button is visible by default.
+    Example:
+        {% include 'main/generic/help_button.html' with title='Some tooltip title' content='Some tooltip content.' %}
+{% endcomment %}
+<a href="#" class="btn btn-secondary" {% if id %}
+   id="{{ id }}"{% endif %}
+   data-toggle="tooltip" data-html="true"
+   title="<h1>{{ title }}</h1>
+       {{ content|safe }}" {% if hide %}
+   style="display: none"{% endif %}
+>
+    <i class="fas fa-question-circle"></i>
+</a>

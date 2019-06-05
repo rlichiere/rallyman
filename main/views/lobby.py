@@ -35,20 +35,15 @@ class LobbyView(PageView, TemplateView):
         _ralliesFilter = dict()
         _ralliesExclude = dict()
 
-        _hasFilter = False
-
         # manage creator filter
         if _rallyCreator == 'me':
             _ralliesFilter['creator'] = _executor
-            _hasFilter = True
         elif _rallyCreator == 'nm':
             _ralliesExclude['creator'] = _executor
-            _hasFilter = True
 
         # manage rally status filter
         if _rallyStatus not in ['-', '']:
             _ralliesFilter['status'] = _rallyStatus
-            _hasFilter = True
 
         # apply filters
         _rallies = _allRlys.exclude(**_ralliesExclude).filter(**_ralliesFilter)
@@ -65,7 +60,6 @@ class LobbyView(PageView, TemplateView):
         # order by database fields
         if _orderBy and _orderBy in ['label', 'status', 'creator', 'created_at', 'opened_at']:
             _rallies = _rallies.order_by('%s%s' % ('-' if _orderWay == 'd' else '', _orderBy))
-            _hasFilter = True
 
         # prepare pagination page size
         data_dict = {'available_page_sizes': _pgPageSize,
@@ -120,15 +114,21 @@ class LobbyView(PageView, TemplateView):
             # todo : manage ordering by logic data
             pass
 
-        context['has_filter'] = _hasFilter
-        context['form_filter'] = _form
+        context['pgps'] = _pgPageSize
+
         context['form_filter'] = _form
         context['rallies'] = _rallies
         context['pages_list'] = self.get_pages_list(_pgPageIndex, paginator.num_pages)
 
         url = self.request.get_full_path()
+
+        # calculates if a filter other than the navigation filter is used
         url = url.replace('?_pgpi=%s' % _pgPageIndex, '')
         url = url.replace('&_pgpi=%s' % _pgPageIndex, '')
+        url = url.replace('?_pgps=%s' % _pgPageSize, '')
+        url = url.replace('&_pgps=%s' % _pgPageSize, '')
+        context['has_filter'] = True if url.find('?') > 0 else False
+
         context['page_url'] = url
 
         self.log.endView()
