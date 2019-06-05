@@ -37,7 +37,7 @@
 
     <div class="panel-footer mt-4">
         <a href="#" class="btn btn-primary" onclick="stageEditor.addStage();">Add Stage</a>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Save roadbook</button>
     </div>
 
 </form>
@@ -48,6 +48,7 @@
     stageEditor.stagesCount = $('#StagesCount');
 
     stageEditor.stagesList = $('#StagesList');
+    stageEditor.stagesListSaved = stageEditor.stagesCount.val();
 
     stageEditor.addStage = function () {
         let _lp = 'stageEditor.addStage: ';
@@ -58,6 +59,7 @@
             success: function(data, status, xhr) {
                 stageEditor.stagesList.html(stageEditor.stagesList.html() + data);
                 stageEditor.stagesCount.val(parseInt(stageEditor.stagesCount.val()) + 1);
+                $('#Stage_' + (parseInt(stageEditor.stagesCount.val()) - 1) + '_removeStageBtn').hide();
             },
             error: function(xhr, status, data) {
                 console.log(_lp+' ' + xhr.status + 'Error while calling url : ' + url + ' : ' + data);
@@ -76,13 +78,12 @@
                 'stage_num': stage_num
             },
             success: function(data, status, xhr) {
-                console.log(_lp+'url ' + url + 'posted successfully.');
                 window.location.href = "{% url 'rally-edit' pk=rally.id %}";
             },
             error: function(xhr, status, data) {
                 console.log(_lp+' ' + xhr.status + ' Error while calling url : ' + url + ' : ' + data);
             }
-        })
+        });
     };
 
 </script>

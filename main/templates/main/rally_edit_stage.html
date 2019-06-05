@@ -4,7 +4,7 @@
 {% with 'Stage_'|concat:stage_num as oStage %}
 <input type="hidden" id="{{oStage}}_SectionsCount" name="{{oStage}}_sections_count" value="{% if stage.sections|length > 0 %}{{ stage.sections|length }}{% else %}1{% endif %}">
 
-<div class="panel mt-4">
+<div class="panel mt-4" id="{{ oStage }}_Stage">
     <div class="panel-header mb-2">
         <h4 class="modal-title">Stage {{ stage_num }}</h4>
     </div>
@@ -39,9 +39,17 @@
                 </div>
             </div>
 
-            {% if stage_num != 1 %}
+            {% if stage_num != 1 %}<!-- Avoid removeStageBtn for first stage because this stage is mandatory -->
             <div class="input-group ml-3">
-                <a class="btn btn-danger" href="#" onclick="stageEditor.removeStage({{ stage_num }})"><i class="fas fa-trash-alt"></i> Remove stage</a>
+                <a id="{{ oStage }}_removeStageBtnUnsaved" class="btn btn-warning mr-3" href="#"
+                   data-toggle="tooltip" data-html="true"
+                   data-title="You must <strong>Save the roadbook</strong> in order to preserve the configuration of this stage, otherwise it will be lost if you <strong>Remove unsaved stages</strong>"
+                   style="display: none"
+                ><i class="fas fa-exclamation-triangle"></i> Unsaved stage</a>
+                <a id="{{ oStage }}_removeStageBtn" class="btn btn-danger" href="#"
+                   onclick="stageEditor.removeStage({{ stage_num }})"
+                   style="display: none"
+                ><i class="fas fa-trash-alt"></i> <span id="{{ oStage }}_removeStageBtnLabel">Remove unsaved stages</span></a>
             </div>
             {% endif %}
         </div>
@@ -77,6 +85,23 @@
         _o{{oStage}}.sectionsCount.val(parseInt(_o{{oStage}}.sectionsCount.val()) - 1);
         $('#{{ oStage }}_' + _o{{oStage}}.sectionsCount.val() + '_removeBtn').show();
     };
+
+    $(document).ready(function() {
+
+        if (parseInt({{ stage_num }}) > stageEditor.stagesListSaved) {
+            $('#Stage_{{ stage_num }}_removeStageBtnUnsaved').show();
+        }
+
+        if (parseInt(stageEditor.stagesCount.val()) === parseInt(stageEditor.stagesListSaved)) {
+            $('#{{ oStage }}_removeStageBtnLabel').html('Remove stage');
+        }
+
+        if (parseInt({{ stage_num }}) === parseInt(stageEditor.stagesCount.val())) {
+            $('#Stage_{{ stage_num }}_removeStageBtn').show();
+        }
+
+        $('[data-toggle="tooltip"]').tooltip();
+    });
 
 </script>
 
