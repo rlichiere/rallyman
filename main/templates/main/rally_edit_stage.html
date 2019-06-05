@@ -65,19 +65,22 @@
 <script>
 
     let _o{{oStage}} = Object();
-    _o{{oStage}}.sectionsCount = $('#{{oStage}}_SectionsCount');
+    _o{{oStage}}.sectionsCountInput = $('#{{oStage}}_SectionsCount');
+    _o{{oStage}}.getSectionsCount = function() {
+        return parseInt(_o{{oStage}}.sectionsCountInput.val());
+    };
     _o{{oStage}}.sectionsList = $('#{{oStage}}_SectionsList');
 
     _o{{oStage}}.addSection = function() {
         let _lp = '_o{{oStage}}.addSection: ';
         let url = '{% url 'rally-edit-add-section' pk=rally.id stage_num=stage_num %}';
-        url += '?section_num=' + (parseInt(_o{{oStage}}.sectionsCount.val()) + 1);
+        url += '?section_num=' + (_o{{oStage}}.getSectionsCount() + 1);
         $.ajax({
             url: url,
             success: function(data, status, xhr) {
+                $('#{{ oStage }}_' + _o{{oStage}}.getSectionsCount() + '_removeBtn').hide();
+                _o{{oStage}}.sectionsCountInput.val(_o{{oStage}}.getSectionsCount() + 1);
                 _o{{oStage}}.sectionsList.append(data);
-                $('#{{ oStage }}_' + _o{{oStage}}.sectionsCount.val() + '_removeBtn').hide();
-                _o{{oStage}}.sectionsCount.val(parseInt(_o{{oStage}}.sectionsCount.val()) + 1);
             },
             error: function(xhr, status, data) {
                 console.log(_lp+' ' + xhr.status + 'Error while calling url : ' + url + ' : ' + data);
@@ -88,8 +91,8 @@
     _o{{oStage}}.removeSection = function(section_num) {
         let _sectionName = '#{{ oStage }}_' + section_num;
         $(_sectionName).remove();
-        _o{{oStage}}.sectionsCount.val(parseInt(_o{{oStage}}.sectionsCount.val()) - 1);
-        $('#{{ oStage }}_' + _o{{oStage}}.sectionsCount.val() + '_removeBtn').show();
+        _o{{oStage}}.sectionsCountInput.val(_o{{oStage}}.getSectionsCount() - 1);
+        $('#{{ oStage }}_' + _o{{oStage}}.getSectionsCount() + '_removeBtn').show();
     };
 
     $(document).ready(function() {

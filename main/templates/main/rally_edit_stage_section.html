@@ -40,7 +40,7 @@
     $(document).ready(function(){
         $('[data-toggle="tooltip"]').tooltip();
 
-        if (parseInt({{ section_num }}) !== parseInt(_o{{oStage}}.sectionsCount.val())) {
+        if (_o{{oStage}}.getSectionsCount() !== {{ section_num }}) {
             $('#{{ oZone }}_removeBtn').hide();
             $('#{{ oZone }}_removeBtnHelp').hide();
         }
