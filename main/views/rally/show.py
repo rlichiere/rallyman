@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
-from django.views.generic import TemplateView
-
 from ...generic.views import PageView
 from ...models import Rally
 
 
-class ShowRallyView(PageView, TemplateView):
+class ShowRallyView(PageView):
     template_name = 'main/rally_show.html'
 
     def __init__(self, *args, **kwargs):

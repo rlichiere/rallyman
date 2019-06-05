@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.safestring import mark_safe
 from django.views.generic import TemplateView, View
 
@@ -8,7 +9,7 @@ from ...models import Rally, Stage
 from ...forms.rally import EditRallyStagesForm
 
 
-class EditRallyView(PageView, TemplateView):
+class EditRallyView(LoginRequiredMixin, PageView):
     template_name = 'main/rally_edit.html'
 
     def __init__(self, *args, **kwargs):
@@ -59,7 +60,7 @@ class EditRallyView(PageView, TemplateView):
         return self.redirect_success(self.request, 'Rally stages edited successfully')
 
 
-class EditRallyAddStageView(ViewHelper, TemplateView):
+class EditRallyAddStageView(LoginRequiredMixin, ViewHelper, TemplateView):
     template_name = 'main/rally_edit_stage.html'
 
     def __init__(self, *args, **kwargs):
@@ -77,7 +78,7 @@ class EditRallyAddStageView(ViewHelper, TemplateView):
         return context
 
 
-class EditRallyRemoveStageView(ViewHelper, View):
+class EditRallyRemoveStageView(LoginRequiredMixin, ViewHelper, View):
     template_name = 'main/rally_edit_stage.html'
 
     def __init__(self, *args, **kwargs):
@@ -116,7 +117,7 @@ class EditRallyRemoveStageView(ViewHelper, View):
         return self.redirect_success(self.request, 'Rally stage %s removed successfully from rally %s' % (_stageNum, _rallyId))
 
 
-class EditRallyAddZoneView(ViewHelper, TemplateView):
+class EditRallyAddZoneView(LoginRequiredMixin, ViewHelper, TemplateView):
     template_name = 'main/rally_edit_stage_section.html'
 
     def __init__(self, *args, **kwargs):

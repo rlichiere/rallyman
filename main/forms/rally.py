@@ -38,8 +38,6 @@ class EditRallyStagesForm(object):
             # todo : add has_assistance if its input is set
             # _stage['has_assistance'] = True
 
-            print('%s _post : %s' % (_lp, _post))
-            print('%s param_name : %s' % (_lp, '%s_sections_count' % _stageId))
             _stageSectionsCount = int(_post['%s_sections_count' % _stageId])
             _stage['sections_count'] = _stageSectionsCount
 

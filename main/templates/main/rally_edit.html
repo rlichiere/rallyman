@@ -45,20 +45,23 @@
 <script>
 
     let stageEditor = Object();
-    stageEditor.stagesCount = $('#StagesCount');
+    stageEditor.stagesCountInput = $('#StagesCount');
+    stageEditor.stagesCount = function() {
+        return parseInt(stageEditor.stagesCountInput.val());
+    };
     stageEditor.stagesList = $('#StagesList');
-    stageEditor.stagesListSaved = stageEditor.stagesCount.val();
+    stageEditor.stagesListSaved = stageEditor.stagesCount();
 
     stageEditor.addStage = function () {
         let _lp = 'stageEditor.addStage: ';
         let url = '{% url 'rally-edit-add-stage' pk=rally.id %}';
-        url += '?stage_num=' + (parseInt(stageEditor.stagesCount.val()) + 1);
+        url += '?stage_num=' + (stageEditor.stagesCount() + 1);
         $.ajax({
             url: url,
             success: function(data, status, xhr) {
                 stageEditor.stagesList.append(data);
-                stageEditor.stagesCount.val(parseInt(stageEditor.stagesCount.val()) + 1);
-                let _previousStageId = 'Stage_' + (parseInt(stageEditor.stagesCount.val()) - 1);
+                stageEditor.stagesCountInput.val(stageEditor.stagesCount() + 1);
+                let _previousStageId = 'Stage_' + (stageEditor.stagesCount() - 1);
                 $('#' +_previousStageId + '_removeStageBtn').hide();
                 $('#' +_previousStageId + '_removeStageBtnUnsavedHelp').hide();
                 $('#' +_previousStageId + '_removeStageBtnHelp').hide();

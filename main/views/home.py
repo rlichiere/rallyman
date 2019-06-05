@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
-from django.views.generic import TemplateView
-
 from ..generic.views import PageView
 
 
-class HomeView(PageView, TemplateView):
+class HomeView(PageView):
     template_name = 'main/home.html'
 
     def get_context_data(self, **kwargs):

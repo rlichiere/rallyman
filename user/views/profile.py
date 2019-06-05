@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView
 
 from ..forms.profile import UserProfileForm, UserProfilePasswordChangeForm
 from main.generic.views import PageView
 
 
-class UserProfileView(LoginRequiredMixin, PageView, TemplateView):
+class UserProfileView(LoginRequiredMixin, PageView):
     template_name = 'user/profile.html'
 
     def get_context_data(self, **kwargs):
