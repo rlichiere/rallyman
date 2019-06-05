@@ -2,8 +2,7 @@
 {% load maintags %}
 
 {% with 'Stage_'|concat:stage_num as oStage %}
-{% with 'stage_'|concat:stage_num as lStage %}
-<input type="text" id="{{oStage}}_SectionsCount" name="{{oStage}}_sections_count" value="{% if stage.sections|length > 0 %}{{ stage.sections|length }}{% else %}1{% endif %}">
+<input type="hidden" id="{{oStage}}_SectionsCount" name="{{oStage}}_sections_count" value="{% if stage.sections|length > 0 %}{{ stage.sections|length }}{% else %}1{% endif %}">
 
 <div class="panel mt-4" id="{{ oStage }}_Stage">
     <div class="panel-header mb-2">
@@ -67,7 +66,7 @@
 
     var _o{{oStage}} = Object();
     _o{{oStage}}.sectionsCount = $('#{{oStage}}_SectionsCount');
-    _o{{oStage}}.sectionsList = $('#Stage_{{ stage_num }}_SectionsList');
+    _o{{oStage}}.sectionsList = $('#{{oStage}}_SectionsList');
 
     _o{{oStage}}.addSection = function() {
         let _lp = '_o{{oStage}}.addSection: ';
@@ -76,7 +75,7 @@
         $.ajax({
             url: url,
             success: function(data, status, xhr) {
-                _o{{oStage}}.sectionsList.html(_o{{oStage}}.sectionsList.html() + data);
+                _o{{oStage}}.sectionsList.append(data);
                 $('#{{ oStage }}_' + _o{{oStage}}.sectionsCount.val() + '_removeBtn').hide();
                 _o{{oStage}}.sectionsCount.val(parseInt(_o{{oStage}}.sectionsCount.val()) + 1);
             },
@@ -87,7 +86,7 @@
     };
 
     _o{{oStage}}.removeSection = function(section_num) {
-        let _sectionName = '#Stage_{{ stage_num }}_' + section_num;
+        let _sectionName = '#{{ oStage }}_' + section_num;
         $(_sectionName).remove();
         _o{{oStage}}.sectionsCount.val(parseInt(_o{{oStage}}.sectionsCount.val()) - 1);
         $('#{{ oStage }}_' + _o{{oStage}}.sectionsCount.val() + '_removeBtn').show();
@@ -96,7 +95,7 @@
     $(document).ready(function() {
 
         if (parseInt({{ stage_num }}) > stageEditor.stagesListSaved) {
-            $('#Stage_{{ stage_num }}_removeStageBtnUnsaved').show();
+            $('#{{ oStage }}_removeStageBtnUnsaved').show();
         }
 
         if (parseInt(stageEditor.stagesCount.val()) !== parseInt(stageEditor.stagesListSaved)) {
@@ -147,5 +146,4 @@
 
 </script>
 
-{% endwith %}
 {% endwith %}

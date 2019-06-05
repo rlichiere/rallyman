@@ -9,9 +9,9 @@
 <p>
     An error occurred while retrieving stages data of the rally.
 </p>
-    <div>Error details:
+<div>Error details:
     <pre class="error-details">{{ error }}</pre>
-    </div>
+</div>
 <p>
     Please contact an administrator if you can't solve the problem.
 </p>
@@ -46,7 +46,6 @@
 
     let stageEditor = Object();
     stageEditor.stagesCount = $('#StagesCount');
-
     stageEditor.stagesList = $('#StagesList');
     stageEditor.stagesListSaved = stageEditor.stagesCount.val();
 
@@ -57,11 +56,12 @@
         $.ajax({
             url: url,
             success: function(data, status, xhr) {
-                stageEditor.stagesList.html(stageEditor.stagesList.html() + data);
+                stageEditor.stagesList.append(data);
                 stageEditor.stagesCount.val(parseInt(stageEditor.stagesCount.val()) + 1);
-                $('#Stage_' + (parseInt(stageEditor.stagesCount.val()) - 1) + '_removeStageBtn').hide();
-                $('#Stage_' + (parseInt(stageEditor.stagesCount.val()) - 1) + '_removeStageBtnUnsavedHelp').hide();
-                $('#Stage_' + (parseInt(stageEditor.stagesCount.val()) - 1) + '_removeStageBtnHelp').hide();
+                let _previousStageId = 'Stage_' + (parseInt(stageEditor.stagesCount.val()) - 1);
+                $('#' +_previousStageId + '_removeStageBtn').hide();
+                $('#' +_previousStageId + '_removeStageBtnUnsavedHelp').hide();
+                $('#' +_previousStageId + '_removeStageBtnHelp').hide();
             },
             error: function(xhr, status, data) {
                 console.log(_lp+' ' + xhr.status + 'Error while calling url : ' + url + ' : ' + data);
