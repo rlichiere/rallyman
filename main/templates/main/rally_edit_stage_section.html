@@ -38,6 +38,13 @@
         ><i class="fas fa-question-circle"></i></a>
         {% else %}
         <a id="{{ oZone }}_removeBtn" href="#" class="btn btn-danger" onclick="_o{{oStage}}.removeSection({{ section_num }})"><i class="fas fa-trash-alt"></i></a>
+            <a class="btn btn-primary" href="#"
+               data-toggle="tooltip" data-html="true"
+               title="<h1>Remove the last section</h1>
+                    <p>Click the <strong>adjacent trash icon</strong> in order to <strong>remove the last section</strong> of the stage.</p>
+                    <p>If you want to <strong>remove multiple sections</strong>, you must <strong>remove them one by one</strong>.</p>
+                    <p>You must <strong>Submit</strong> your modifications in order to <strong>sections configuration modifications</strong>.</p>"
+            ><i class="fas fa-question-circle"></i></a>
         {% endif %}
     </div>
 </div>

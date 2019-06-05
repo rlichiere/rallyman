@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.utils.safestring import mark_safe
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, View
 
+from ...core.const.lobby.rallies import RallyStatus
 from ...generic.views import ViewHelper, PageView
 from ...models import Rally, Stage
 from ...forms.rally import EditRallyStagesForm
@@ -22,6 +23,8 @@ class EditRallyView(PageView, TemplateView):
         context['ariane'] = 'edit_rally'
         _rally = self.get_object_or_404(Rally, self.kwargs['pk'])
         context['rally'] = _rally
+        if _rally.status not in [RallyStatus.SCHEDULED, RallyStatus.OPENED]:
+            return self.set_context_error(self.request, 'This rally cannot be edited due to its status : %s' % _rally.status, context)
 
         _stages = Stage.objects.filter(rally=_rally.id)
         _stagesData = list()
@@ -72,6 +75,45 @@ class EditRallyAddStageView(ViewHelper, TemplateView):
 
         self.log.endView()
         return context
+
+
+class EditRallyRemoveStageView(ViewHelper, View):
+    template_name = 'main/rally_edit_stage.html'
+
+    def __init__(self, *args, **kwargs):
+        super(EditRallyRemoveStageView, self).__init__(*args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        _executor = self.request.user
+        self.log.startView(_executor,
+                           redirect_to=self.request.GET.get('redirect'),
+                           redirect_to_kwargs={'pk': self.request.GET.get('redirect_pk')})
+
+        _rallyId = kwargs.get('pk')
+        _rally = self.get_object_or_404(Rally, _rallyId)
+
+        _stageNum = self.request.POST['stage_num']
+
+        _stages = Stage.objects.filter(rally=_rally).order_by('position_in_roadbook').order_by('position_in_roadbook')
+        _stageIdx = 0
+        _stageFound = False
+        for _stage in _stages:
+            _stageIdx += 1
+
+            if _stageIdx == int(_stageNum):
+                _stage.delete()
+                _stageFound = True
+                continue
+
+            if _stageFound:
+                _stage.position_in_roadbook = _stage.position_in_roadbook - 1
+                _stage.save()
+
+        if not _stageFound:
+            return self.redirect_error(self.request, 'Stage %s not found for rally %s' % (_stageNum, _rallyId))
+
+        self.log.endView()
+        return self.redirect_success(self.request, 'Rally stage %s removed successfully from rally %s' % (_stageNum, _rallyId))
 
 
 class EditRallyAddZoneView(ViewHelper, TemplateView):

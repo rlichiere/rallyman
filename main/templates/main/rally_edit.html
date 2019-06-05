@@ -5,6 +5,17 @@
 
 {% block page-body %}
 
+{% if error %}
+<p>
+    You're not allowed to edit this rally.
+</p>
+    Back to:
+    <ul>
+    <li><a href="{% url 'main-home' %}">Home</a></li>
+    <li><a href="{% url 'main-home' %}">Lobby</a></li>
+    </ul>
+{% else %}
+
 <form method="POST" action="{% url 'rally-edit' pk=rally.id %}?redirect=rally-edit&redirect_pk={{ rally.id }}">
 {% csrf_token %}
     <input type="hidden" id="StagesCount" name="stages_count" value="{{ stages_count }}">
@@ -44,7 +55,6 @@
         url += '?stage_num=' + (parseInt(stageEditor.stagesCount.val()) + 1);
         $.ajax({
             url: url,
-            method: 'GET',
             success: function(data, status, xhr) {
                 stageEditor.stagesList.html(stageEditor.stagesList.html() + data);
                 stageEditor.stagesCount.val(parseInt(stageEditor.stagesCount.val()) + 1);
@@ -56,15 +66,26 @@
     };
 
     stageEditor.removeStage = function (stage_num) {
-        $('#Stage_stage_num').remove();
-         stageEditor.stagesCount.val(parseInt(stageEditor.stagesCount.val()) - 1);
-
+        let _lp = 'stageEditor.removeStage: ';
+        let url = "{% url 'rally-edit-remove-stage' pk=rally.id %}?redirect=rally-edit&redirect_pk={{ rally.id }}";
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token  }}',
+                'stage_num': stage_num
+            },
+            success: function(data, status, xhr) {
+                console.log(_lp+'url ' + url + 'posted successfully.');
+                window.location.href = "{% url 'rally-edit' pk=rally.id %}";
+            },
+            error: function(xhr, status, data) {
+                console.log(_lp+' ' + xhr.status + ' Error while calling url : ' + url + ' : ' + data);
+            }
+        })
     };
 
-    $(document).ready(function() {
-
-    });
-
 </script>
+{% endif %}
 
 {% endblock %}

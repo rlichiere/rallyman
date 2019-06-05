@@ -8,8 +8,8 @@
     <div class="panel-header mb-2">
         <h4 class="modal-title">Stage {{ stage_num }}</h4>
     </div>
-    <div class="panel-body">
 
+    <div class="panel-body">
         <div class="row" id="{{ oStage }}_SectionsList">
         {% for section in stage.sections %}
             {% include 'main/rally_edit_stage_section.html' with stage_num=stage_num section_num=forloop.counter section=section %}
@@ -17,33 +17,34 @@
             {% include 'main/rally_edit_stage_section.html' with stage_num=stage_num section_num=1 %}
         {% endfor %}
         </div>
+    </div>
 
-        <div class="row mb-3">
-            <div class="col-lg-12">
-                <div class="form-inline">
-                    <a href="#" class="btn btn-primary" onclick="_o{{oStage}}.addSection()">Add section</a>
-                    <div class="input-group ml-3">
-                        <div class="input-group-text">
-                            <input type="checkbox" id="{{oStage}}_has_assistance" name="{{oStage}}_has_assistance" title="Set assistance">
-                        </div>
-                        <div class="input-group-append">
-                            <label class="input-group-text" for="{{oStage}}_has_assistance">Ends with assistance</label>
-                            <a class="btn btn-primary" href="#"
-                               data-toggle="tooltip" data-html="true"
-                               title="<h1>Ends with assistance</h1>
-                                    <p>Check this option if you want to allow an assistance at the end of this stage.
-                                        <br />Players will be able to repair their car before the next stage.</p>
-                                    <p>Otherwise, players will go directly to the next stage without any repair possibility.</p>"
-                            ><i class="fas fa-question-circle"></i></a>
-                        </div>
-                    </div>
-                    <div class="input-group ml-3">
-                        <a class="btn btn-danger" href="#"><i class="fas fa-trash-alt"></i> Remove stage</a>
-                    </div>
+    <div class="panel-footer">
+        <div class="form-inline">
+            <a href="#" class="btn btn-primary" onclick="_o{{oStage}}.addSection()">Add section</a>
+
+            <div class="input-group ml-3">
+                <div class="input-group-text">
+                    <input type="checkbox" id="{{oStage}}_has_assistance" name="{{oStage}}_has_assistance" title="Set assistance">
+                </div>
+                <div class="input-group-append">
+                    <label class="input-group-text" for="{{oStage}}_has_assistance">Ends with assistance</label>
+                    <a class="btn btn-primary" href="#"
+                       data-toggle="tooltip" data-html="true"
+                       title="<h1>Ends with assistance</h1>
+                            <p>Check this option if you want to allow an assistance at the end of this stage.
+                                <br />Players will be able to repair their car before the next stage.</p>
+                            <p>Otherwise, players will go directly to the next stage without any repair possibility.</p>"
+                    ><i class="fas fa-question-circle"></i></a>
                 </div>
             </div>
-        </div>
 
+            {% if stage_num != 1 %}
+            <div class="input-group ml-3">
+                <a class="btn btn-danger" href="#" onclick="stageEditor.removeStage({{ stage_num }})"><i class="fas fa-trash-alt"></i> Remove stage</a>
+            </div>
+            {% endif %}
+        </div>
     </div>
 </div>
 
@@ -55,11 +56,10 @@
 
     _o{{oStage}}.addSection = function() {
         let _lp = '_o{{oStage}}.addSection: ';
-        let url = '{% url 'rally-edit-add-zone' pk=rally.id stage_num=stage_num %}';
+        let url = '{% url 'rally-edit-add-section' pk=rally.id stage_num=stage_num %}';
         url += '?section_num=' + (parseInt(_o{{oStage}}.sectionsCount.val()) + 1);
         $.ajax({
             url: url,
-            method: 'GET',
             success: function(data, status, xhr) {
                 _o{{oStage}}.sectionsList.html(_o{{oStage}}.sectionsList.html() + data);
                 $('#{{ oStage }}_' + _o{{oStage}}.sectionsCount.val() + '_removeBtn').hide();
@@ -77,6 +77,7 @@
         _o{{oStage}}.sectionsCount.val(parseInt(_o{{oStage}}.sectionsCount.val()) - 1);
         $('#{{ oStage }}_' + _o{{oStage}}.sectionsCount.val() + '_removeBtn').show();
     };
+
 </script>
 
 {% endwith %}

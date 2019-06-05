@@ -72,6 +72,8 @@ class LobbyView(PageView, TemplateView):
                      'selected_page_size': _pgPageSize}
         context['form_pgps'] = PaginationPageSizeForm(initial=data_dict)
 
+        context['rallies_total'] = _rallies.count()
+
         # select rallies of current pagination
         paginator = Paginator(_rallies, _pgPageSize)
         try:
