@@ -25,7 +25,7 @@
 
             <div class="input-group ml-3">
                 <div class="input-group-text">
-                    <input type="checkbox" id="{{oStage}}_has_assistance" name="{{oStage}}_has_assistance" title="Set assistance">
+                    <input type="checkbox" id="{{oStage}}_has_assistance" name="{{oStage}}_has_assistance" title="Set assistance" {% if stage.has_assistance %}checked{% endif %}>
                 </div>
                 <div class="input-group-append">
                     <label class="input-group-text" for="{{oStage}}_has_assistance">Ends with assistance</label>

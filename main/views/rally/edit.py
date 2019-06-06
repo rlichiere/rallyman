@@ -35,6 +35,7 @@ class EditRallyView(LoginRequiredMixin, MainTemplateView):
             _stageData = dict()
             _stageData['sections'] = _stage.get_roadbook
             _stageData['number_of_sections'] = len(_stageData['sections'])
+            _stageData['has_assistance'] = _stage.has_assistance
 
             _stagesData.append(_stageData)
 
