@@ -1,10 +1,13 @@
 # Rallyman
 
 Python/Django implementation of the famous board game **_[Rallyman](http://rallyman.fr/)_** created by **J.-C. Bouvier**.
-
 Thank you to him, may joy and happiness iridesce his life.
 
 This implementation is based on the 2nd edition of the game (November 2009), with the objective of covering all the rules of this version.
+
+Additional functionalities are planned and will concern the side events:
+no change will be made to the original rules governing the conduct of the games.
+
 
 Uses:
 * Python 2.7
