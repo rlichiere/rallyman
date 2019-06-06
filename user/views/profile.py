@@ -3,10 +3,10 @@ from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from ..forms.profile import UserProfileForm, UserProfilePasswordChangeForm
-from main.generic.views import PageTemplateView
+from main.generic.views import MainTemplateView
 
 
-class UserProfileView(LoginRequiredMixin, PageTemplateView):
+class UserProfileView(LoginRequiredMixin, MainTemplateView):
     template_name = 'user/profile.html'
 
     def get_context_data(self, **kwargs):

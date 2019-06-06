@@ -3,11 +3,11 @@ from django.core.paginator import Paginator
 
 from ..core.const.lobby.rallies import RallyStatus
 from ..forms.lobby import FilterRalliesForm, PaginationPageSizeForm
-from ..generic.views import PageTemplateView
+from ..generic.views import MainTemplateView
 from ..models import Rally, Participation, Stage
 
 
-class LobbyView(PageTemplateView):
+class LobbyView(MainTemplateView):
     template_name = 'main/lobby.html'
 
     def __init__(self, *args, **kwargs):

@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.utils.safestring import mark_safe
-from django.views.generic import TemplateView
 
 from ...core.const.rally import MAX_PARTICIPANTS_PER_RALLY
-from ...generic.views import ViewHelper
+from ...generic.views import MainTemplateView
 from ...forms.rally import RegisterToRallyForm
 from ...models import CarSkin, Participation, Rally
 
 
-class RegisterToRallyView(ViewHelper, TemplateView):
+class RegisterToRallyView(LoginRequiredMixin, MainTemplateView):
     template_name = 'main/rally_register.html'
 
     def __init__(self, *args, **kwargs):
@@ -70,7 +70,7 @@ class RegisterToRallyView(ViewHelper, TemplateView):
         return self.redirect_success(self.request, 'Participation registered successfully')
 
 
-class UnRegisterFromRallyView(ViewHelper, TemplateView):
+class UnRegisterFromRallyView(LoginRequiredMixin, MainTemplateView):
     template_name = 'main/rally_unregister.html'
 
     def __init__(self, *args, **kwargs):

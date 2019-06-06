@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime as dt
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.safestring import mark_safe
-from django.views.generic import TemplateView
 
 from ...core.const.lobby.rallies import RallyStatus
-from ...generic.views import ViewHelper
+from ...generic.views import MainTemplateView
 from ...models import Rally
 from ...forms.rally import CreateRallyForm
 
 
-class CreateRallyView(ViewHelper, TemplateView):
+class CreateRallyView(LoginRequiredMixin, MainTemplateView):
     template_name = 'main/rally_create.html'
 
     def __init__(self, *args, **kwargs):

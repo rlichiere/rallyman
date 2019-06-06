@@ -2,11 +2,9 @@
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, Http404
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, View
 
-from ..core.const.lobby.rallies import RallyStatus
 from ..core.logger import Log
-from ..models import Rally
 
 
 class ViewHelper(object):
@@ -62,36 +60,9 @@ class ViewHelper(object):
             raise Http404
 
 
-class PageTemplateView(ViewHelper, TemplateView):
+class MainView(ViewHelper, View):
+    pass
 
-    def get_context_data(self, **kwargs):
-        context = super(PageTemplateView, self).get_context_data(**kwargs)
-        # _status = [RallyStatus.OPENED, RallyStatus.STARTED]
-        # _userRallies = Rally.objects.filter(participation__player=self.request.user, status__in=_status)
 
-        # # dispatch rallies by status
-        # _dispatchedRallies = dict()
-        # for _rally in _userRallies:
-        #     if _rally.status not in _dispatchedRallies:
-        #         _dispatchedRallies[_rally.status] = list()
-        #
-        #     if _rally.creator == self.request.user:
-        #         _rally.user_is_creator = True
-        #
-        #     _dispatchedRallies[_rally.status].append(_rally)
-        # context['user_rallies'] = _dispatchedRallies
-        #
-        # # dispatch rallies by status
-        # _userManagedRallies = Rally.objects.filter(creator=self.request.user)
-        # _dispatchedManagedRallies = dict()
-        # for _rally in _userManagedRallies:
-        #     if _rally.status not in _dispatchedManagedRallies:
-        #         _dispatchedManagedRallies[_rally.status] = list()
-        #
-        #     if _rally.creator == self.request.user:
-        #         _rally.user_is_creator = True
-        #
-        #         _dispatchedManagedRallies[_rally.status].append(_rally)
-        # context['user_managed_rallies'] = _dispatchedManagedRallies
-
-        return context
+class MainTemplateView(ViewHelper, TemplateView):
+    pass
