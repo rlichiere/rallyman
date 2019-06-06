@@ -4,12 +4,12 @@ from django.utils.safestring import mark_safe
 from django.views.generic import TemplateView, View
 
 from ...core.const.lobby.rallies import RallyStatus
-from ...generic.views import ViewHelper, PageView
+from ...generic.views import ViewHelper, PageTemplateView
 from ...models import Rally, Stage
 from ...forms.rally import EditRallyStagesForm
 
 
-class EditRallyView(LoginRequiredMixin, PageView):
+class EditRallyView(LoginRequiredMixin, PageTemplateView):
     template_name = 'main/rally_edit.html'
 
     def __init__(self, *args, **kwargs):
@@ -21,6 +21,9 @@ class EditRallyView(LoginRequiredMixin, PageView):
                            redirect_to=self.request.GET.get('redirect'),
                            redirect_to_kwargs={'pk': self.request.GET.get('redirect_pk')})
         context = super(EditRallyView, self).get_context_data(**kwargs)
+
+        # check permissions
+
         context['ariane'] = 'edit_rally'
         _rally = self.get_object_or_404(Rally, self.kwargs['pk'])
         context['rally'] = _rally
@@ -60,7 +63,7 @@ class EditRallyView(LoginRequiredMixin, PageView):
         return self.redirect_success(self.request, 'Rally stages edited successfully')
 
 
-class EditRallyAddStageView(LoginRequiredMixin, ViewHelper, TemplateView):
+class EditRallyAddStageView(LoginRequiredMixin, PageTemplateView):
     template_name = 'main/rally_edit_stage.html'
 
     def __init__(self, *args, **kwargs):
@@ -117,7 +120,7 @@ class EditRallyRemoveStageView(LoginRequiredMixin, ViewHelper, View):
         return self.redirect_success(self.request, 'Rally stage %s removed successfully from rally %s' % (_stageNum, _rallyId))
 
 
-class EditRallyAddZoneView(LoginRequiredMixin, ViewHelper, TemplateView):
+class EditRallyAddZoneView(LoginRequiredMixin, PageTemplateView):
     template_name = 'main/rally_edit_stage_section.html'
 
     def __init__(self, *args, **kwargs):

@@ -6,6 +6,8 @@
 {% load_config data %}
 {% load_config locales %}
 {% load_config settings %}
+{% load_user_data user participated_rallies %}
+{% load_user_data user managed_rallies %}
 
 <html lang="en">
 <head>
@@ -94,7 +96,7 @@
                 <a class="nav-link {% if 'lobby' in ariane %}active{% endif %}" href="{% url 'main-lobby' %}">Lobby</a>
             </li>
 
-            {% if user_rallies|length > 0 %}
+            {% if participated_rallies|length > 0 %}
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle {% if 'show_rally' in ariane %}active{% endif %}" href="#" data-toggle="dropdown">
                     Played rallies
@@ -102,7 +104,7 @@
                 <div class="dropdown-menu">
 
                     <div class="dropdown-item-group">Started rallies:</div>
-                    {% for rally in user_rallies.STARTED %}
+                    {% for rally in participated_rallies.STARTED %}
                         <a class="dropdown-item" href="{% url 'rally-show' pk=rally.id %}">{{ rally.label }}</a>
                     {% empty %}
                         <a class="dropdown-item">No started rallies</a>
@@ -110,7 +112,7 @@
                     <hr />
 
                     <div class="dropdown-item-group">Participated rallies:</div>
-                    {% for rally in user_rallies.OPENED %}
+                    {% for rally in participated_rallies.OPENED %}
                         <a class="dropdown-item" href="{% url 'rally-show' pk=rally.id %}">{{ rally.label }}</a>
                     {% empty %}
                         <a class="dropdown-item">No opened rallies</a>
@@ -120,7 +122,7 @@
             </li>
             {% endif %}
 
-            {% if user_managed_rallies|length > 0 %}
+            {% if managed_rallies|length > 0 %}
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle {% if 'edit_rally' in ariane %}active{% endif %}" href="#" data-toggle="dropdown">
                     Managed rallies
@@ -128,7 +130,7 @@
                 <div class="dropdown-menu">
 
                     <div class="dropdown-item-group">Show started rallies:</div>
-                    {% for rally in user_managed_rallies.STARTED %}
+                    {% for rally in managed_rallies.STARTED %}
                         <a class="dropdown-item" href="{% url 'rally-show' pk=rally.id %}">{{ rally.label }}</a>
                     {% empty %}
                         <a class="dropdown-item">No started rallies</a>
@@ -136,7 +138,7 @@
                     <div class="dropdown-divider"></div>
 
                     <div class="dropdown-item-group">Edit opened rallies:</div>
-                    {% for rally in user_managed_rallies.OPENED %}
+                    {% for rally in managed_rallies.OPENED %}
                         <a class="dropdown-item" href="{% url 'rally-edit' pk=rally.id %}">{{ rally.label }}</a>
                     {% empty %}
                         <a class="dropdown-item">No opened rallies</a>
@@ -144,7 +146,7 @@
                     <div class="dropdown-divider"></div>
 
                     <div class="dropdown-item-group">Edit scheduled rallies:</div>
-                    {% for rally in user_managed_rallies.SCHEDULED %}
+                    {% for rally in managed_rallies.SCHEDULED %}
                         <a class="dropdown-item" href="{% url 'rally-edit' pk=rally.id %}">{{ rally.label }}</a>
                     {% empty %}
                         <a class="dropdown-item">No opened rallies</a>
