@@ -47,12 +47,12 @@
             <div class="input-group ml-3"><!-- Remove [unsaved] stage[s] button -->
                 <a id="{{ oStage }}_removeStageBtn" class="btn btn-danger" href="#"
                    onclick="stageEditor.removeStage({{ stage_num }})"
-                   style="display: none"
+                   style="display: none; border-top-right-radius: 0; border-bottom-right-radius: 0;"
                 >
                     <i class="fas fa-trash-alt"></i> <span id="{{ oStage }}_removeStageBtnLabel">Remove last stage</span>
                 </a>
                 <div class="input-group-append">
-                    {% include 'main/generic/help_button.html' with id=oStage|add:'_removeStageBtnUnsavedHelp' hide=True title='Remove unsaved stages' content='<p>Removes unsaved stages from the roadbook.</p><p>All stages that has not been saved yet will be removed from the roadbook.</p>' %}
+                    {% include 'main/generic/help_button.html' with id=oStage|add:'_removeStageBtnUnsavedHelp' hide=True style='border-top-right-radius:.25rem; border-bottom-right-radius:.25rem;' title='Remove unsaved stages' content='<p>Removes unsaved stages from the roadbook.</p><p>All stages that has not been saved yet will be removed from the roadbook.</p>' %}
                     {% include 'main/generic/help_button.html' with id=oStage|concat:'_removeStageBtnHelp' hide=True title='Remove last stage' content='<p>Removes <strong>Stage'|concat:stage_num|concat:'</strong> from the roadbook.</p>' %}
                 </div>
             </div>
