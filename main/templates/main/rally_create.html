@@ -1,6 +1,6 @@
 {% load widget_tweaks %}
 
-<form method="POST" action="{% url 'rally-create' %}?redirect=main-lobby">
+<form method="POST" action="{% url 'rally-create' %}?redirect=rally-edit" onsubmit="return createRally.onSubmit(this)">
 {% csrf_token %}
 
     <div class="modal-header">
@@ -10,9 +10,10 @@
 
     <div class="modal-body">
 
+        <div id="{{ form_create.label.id_for_label }}_invalidFeedback" class="invalid-feedback"></div>
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-                <span class="input-group-text">Rally name</span>
+                <span class="input-group-text form-control-label">Rally name</span>
             </div>
             {% render_field form_create.label class+='form-control' %}
             <div class="input-group-append">
@@ -28,12 +29,12 @@
                 <div class="input-group-text">
                     {% render_field form_create.set_opened_at %}
                 </div>
-                {% include 'main/generic/help_button.html' with title='Defer opening date' content='<p>Check this option if you want to lock registrations until a custom <strong>deferred opening date</strong>.</p><p>Registration will be available after the given date.<br />Otherwise, the registration will be opened as soon as the rally is created.<br />In both cases, registration closes when the rally starts.</p>' %}
+                {% include 'main/generic/help_button.html' with style='border-bottom-right-radius: 0;' title='Defer opening date' content='<p>Check this option if you want to lock registrations until a custom <strong>deferred opening date</strong>.</p><p>Registration will be available after the given date.<br />Otherwise, the registration will be opened as soon as the rally is created.<br />In both cases, registration closes when the rally starts.</p>' %}
             </div>
         </div>
         <div class="input-group" id="{{ form_create.opened_at.id_for_label }}_help">
             <div class="input-group-prepend">
-                <span class="input-group-text" style="border-top-left-radius: 0">
+                <span class="input-group-text" style="border-top-left-radius: 0; border-top-right-radius: .25rem; border-bottom-right-radius: .25rem;">
                     Registration will be open as soon as the rally is created
                 </span>
             </div>
@@ -45,11 +46,13 @@
                 </span>
             </div>
             {% render_field form_create.opened_at class+='form-control' %}
+            <input type="hidden" id="{{ form_create.opened_at.id_for_label }}_origin" name="{{ form_create.opened_at.id_for_label }}_origin" value=""/>
             <div class="input-group-append">
                 {% include 'main/generic/help_button.html' with title='Date format' content='<p>Please respect below date format:<br />YYYY-MM-DD HH:MM:SS</p><p>Examples:<br />2018-12-31 23:59:59<br />2019-01-01 00:00:00</p>' %}
             </div>
         </div>
-
+        <div id="{{ form_create.opened_at.id_for_label }}_invalidFeedback" class="invalid-feedback"></div>
+        <div id="form_invalidFeedback" class="invalid-feedback mt-3"></div>
     </div>
 
     <div class="modal-footer">
@@ -61,13 +64,111 @@
 
 <script>
 
+    var createRally = Object();
+    createRally.fieldLabel = $('#id_label');
+    createRally.fieldOpenedAt = $('#id_opened_at');
+    createRally.fieldSetOpenedAt = $('#id_set_opened_at');
+    createRally.fieldLabelInvalidFeedback = $('#id_label_invalidFeedback');
+    createRally.fieldOpenedAtInvalidFeedback = $('#id_opened_at_invalidFeedback');
+    createRally.formInvalidFeedback = $('#form_invalidFeedback');
+    createRally.fieldsMapping = {
+        'label': '{{ form_create.label.id_for_label }}',
+        'opened_at': '{{ form_create.opened_at.id_for_label }}',
+        'set_opened_at': '{{ form_create.set_opened_at.id_for_label }}',
+    };
+
+    createRally.resetFeedback = function() {
+        createRally.fieldLabel.removeClass('is-invalid');
+        createRally.fieldLabelInvalidFeedback.hide();
+        createRally.fieldLabelInvalidFeedback.html('');
+        createRally.fieldOpenedAt.removeClass('is-invalid');
+        createRally.fieldOpenedAtInvalidFeedback.hide();
+        createRally.fieldOpenedAtInvalidFeedback.html('');
+        createRally.formInvalidFeedback.hide();
+        createRally.formInvalidFeedback.html('');
+    };
+    createRally.onSubmit = function(elemForm) {
+        var _lp = 'createRally.onSubmit: ';
+
+        createRally.resetFeedback();
+
+        var _url = $(elemForm).attr('action');
+        var _data = {
+            'csrfmiddlewaretoken': '{{ csrf_token }}',
+            'label': createRally.fieldLabel.val(),
+            'opened_at': createRally.fieldOpenedAt.val(),
+            'set_opened_at': createRally.fieldSetOpenedAt.val(),
+        };
+        $.ajax({
+            url: _url,
+            method: 'POST',
+            data: _data,
+            success: function(data, status, xhr) {
+                if (xhr.status === 201) {
+                    window.location.href = data;
+                } else {
+                    let _msg = 'Unexpected status code : ' + xhr.status + ' ' + data;
+                    _msg += ', response : ' + xhr.responseText;
+                    createRally.formInvalidFeedback.html(_msg);
+                    createRally.formInvalidFeedback.show();
+                }
+                return true;
+            },
+            error: function(xhr, status, data) {
+                console.log(_lp+' error (' + xhr.status + '): ' + _url);
+                if (xhr.status === 400) {
+                    if (xhr.responseJSON) {
+
+                        // parse form errors
+                        let _errors = xhr.responseJSON.error;
+                        for (let _fieldName in _errors) {
+
+                            let _fieldErrors = _errors[_fieldName];
+                            let _fieldId = createRally.fieldsMapping[_fieldName];
+                            let elemFeedback = $('#' + _fieldId + '_invalidFeedback');
+                            let _fieldErrorsStr = '';
+                            for (let _idx in _fieldErrors) {
+                                let _fieldError = _fieldErrors[_idx];
+                                if (_idx > 1) {
+                                    _fieldErrorsStr += ', ';
+                                }
+                                _fieldErrorsStr += _fieldError;
+                            }
+                            elemFeedback.html(_fieldErrorsStr);
+                            elemFeedback.show();
+                            $('#' + _fieldId).addClass('is-invalid');
+                        }
+                    } else {
+                        // malformed error. Use received responseText.
+                        createRally.formInvalidFeedback.html(xhr.responseText);
+                        createRally.formInvalidFeedback.show();
+                    }
+                } else {
+                    let _err = 'Unexpected status (' + xhr.status + ') for ' + _url + ', data : ' + xhr.responseText;
+                    createRally.formInvalidFeedback.html(_err);
+                    createRally.formInvalidFeedback.show();
+                }
+            },
+        });
+        return false;
+    };
+
     $(document).ready(function() {
 
         let checkboxSetOpenAt = $('#{{ form_create.set_opened_at.id_for_label }}');
         let inputOpenAt = $('#{{ form_create.opened_at.id_for_label }}');
+        let inputOpenAtOrigin = $('#{{ form_create.opened_at.id_for_label }}_origin');
         let groupOpenAtHelp = $('#{{ form_create.opened_at.id_for_label }}_help');
 
+        // initialize open_at backup
+        inputOpenAtOrigin.val(inputOpenAt.val());
+
         checkboxSetOpenAt.click(function() {
+
+            // retrieve original value of field opened_at from backup
+            inputOpenAt.val(inputOpenAtOrigin.val());
+
+            // toggle UI according to the value of set_opened_at
             if ($(this).prop('checked')) {
                 groupOpenAtHelp.hide();
                 inputOpenAt.parent().show();

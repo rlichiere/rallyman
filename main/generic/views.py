@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+import httplib
+
 from django.contrib import messages
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.views.generic import TemplateView, View
 
 from ..core.logger import Log
@@ -51,6 +53,29 @@ class ViewHelper(object):
         self.log.error(message)
         messages.add_message(request, self.ERROR, message)
         return context
+
+    def return_success(self, request, message, status=None, redirect_to=None, redirect_kwargs=None):
+        _status = httplib.OK if status is None else status
+        self.log.infoIndirect(message)
+        messages.add_message(request, self.SUCCESS, message)
+
+        _redirectTo = 'main-home'
+        _redirectKwargs = {}
+        if redirect_to:
+            _redirectTo = redirect_to
+
+            if redirect_kwargs:
+                _redirectKwargs = redirect_kwargs
+
+        if _redirectTo.find('?') >= 0:
+            _viewName, _params = _redirectTo.rsplit('?', 1)
+        else:
+            _viewName = _redirectTo
+            _params = ''
+
+        _callbackUrl = reverse(_viewName, kwargs=_redirectKwargs)
+        _callbackUrl += _params
+        return HttpResponse(content=_callbackUrl, status=_status)
 
     def get_object_or_404(self, object_model, object_id):
         try:

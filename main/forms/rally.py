@@ -13,7 +13,7 @@ class CreateRallyForm(forms.Form):
                             validators=[
                                 RegexValidator(regex='^[a-zA-Z0-9 _-]*$',
                                                message='Accepted characters: a..z A..Z 0..9 _ - <space>')
-                            ])
+                            ], label='Label', help_text='Help for Label')
     set_opened_at = forms.BooleanField(required=False)
     opened_at = forms.DateTimeField()
 
