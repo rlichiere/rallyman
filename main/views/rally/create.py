@@ -2,6 +2,8 @@
 from datetime import datetime as dt
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+# from django.http import HttpResponse
+# from django.template import loader
 from django.utils.safestring import mark_safe
 
 from ...core.const.lobby.rallies import RallyStatus
@@ -35,7 +37,12 @@ class CreateRallyView(LoginRequiredMixin, MainTemplateView):
 
         _form = CreateRallyForm(self.request.POST, request=self.request)
         if not _form.is_valid():
-            return self.redirect_error(self.request, mark_safe('Form is not valid : %s' % _form.errors))
+            return self.redirect_error(self.request, mark_safe('Form is not valid: %s' % _form.errors))
+            # # # return self.response_error(self.request, _form.errors)
+            # # return self.set_context_error(self.request, _form.errors, context)
+            # context = {'form_create': _form}
+            # t = loader.get_template(self.template_name)
+            # return HttpResponse(t.render(context))
 
         _rally = Rally(label=_form.cleaned_data.get('label'), creator=_executor)
 

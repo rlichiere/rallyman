@@ -54,7 +54,7 @@ class EditRallyView(LoginRequiredMixin, MainTemplateView):
 
         _form = EditRallyStagesForm(self.request.POST, request=self.request, rally=_rally)
         if not _form.is_valid():
-            return self.redirect_error(self.request, mark_safe('Form is not valid : %s' % _form.errors))
+            return self.redirect_error(self.request, mark_safe('Form is not valid: %s' % _form.errors))
 
         _form.execute()
 

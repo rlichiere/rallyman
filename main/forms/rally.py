@@ -2,13 +2,18 @@
 from datetime import datetime as dt
 
 from django import forms
+from django.core.validators import RegexValidator
 
 from ..core import utils_str
 from ..models import CarSkin, Participation, Stage
 
 
 class CreateRallyForm(forms.Form):
-    label = forms.CharField(max_length=200)
+    label = forms.CharField(max_length=200,
+                            validators=[
+                                RegexValidator(regex='^[a-zA-Z0-9 _-]*$',
+                                               message='Accepted characters: a..z A..Z 0..9 _ - <space>')
+                            ])
     set_opened_at = forms.BooleanField(required=False)
     opened_at = forms.DateTimeField()
 
@@ -36,7 +41,8 @@ class EditRallyStagesForm(object):
             _stage = dict()
 
             # todo : add has_assistance if its input is set
-            # _stage['has_assistance'] = True
+            _pnHasAssistance = '%s_has_assistance' % _stageId
+            _stage['has_assistance'] = bool(_pnHasAssistance in _post.keys())
 
             _stageSectionsCount = int(_post['%s_sections_count' % _stageId])
             _stage['sections_count'] = _stageSectionsCount
@@ -87,8 +93,8 @@ class EditRallyStagesForm(object):
                 _stage = Stage(rally=self.rally, position_in_roadbook=_stageIndex)
                 _stage.save()
 
-            # todo : add has_assistance if its input is set
-            # _stage['has_assistance'] = True
+            # set has_assistance
+            _stage.has_assistance = bool(_stageField['has_assistance'])
 
             for _sectionField in _stageField['sections']:
                 _sectionZone = _sectionField['zone']
