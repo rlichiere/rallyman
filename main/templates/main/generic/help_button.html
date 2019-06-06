@@ -7,10 +7,11 @@
         id      <str> : Optionnal. ID of the generated button
         hide    <bool>: Optionnal. Hides the button if set, otherwise the button is visible by defaul
         style   <str> : Optionnal. Adds styles to the generated button
+        class   <str> : Optionnal. Adds clases to the generated button
     Example:
         {% include 'main/generic/help_button.html' with title='Some tooltip title' content='Some tooltip content.' %}
 {% endcomment %}
-<a href="#" class="btn btn-secondary" {% if id %}
+<a href="#" class="btn btn-secondary {% if class %}{{ class }}{% endif %}" {% if id %}
    id="{{ id }}"{% endif %}
    data-toggle="tooltip" data-html="true"
    title="<h1>{{ title }}</h1>

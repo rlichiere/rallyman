@@ -22,26 +22,26 @@
         </div>
 
         <div class="input-group">
-            <label class="input-group-text" style="border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0" for="{{ form_create.set_opened_at.id_for_label }}">
+            <label class="input-group-text btrr-0 bbrr-0 bblr-0" for="{{ form_create.set_opened_at.id_for_label }}">
                 Defer opening date
             </label>
             <div class="input-group-append">
                 <div class="input-group-text">
                     {% render_field form_create.set_opened_at %}
                 </div>
-                {% include 'main/generic/help_button.html' with style='border-bottom-right-radius: 0;' title='Defer opening date' content='<p>Check this option if you want to lock registrations until a custom <strong>deferred opening date</strong>.</p><p>Registration will be available after the given date.<br />Otherwise, the registration will be opened as soon as the rally is created.<br />In both cases, registration closes when the rally starts.</p>' %}
+                {% include 'main/generic/help_button.html' with class='bbrr-0' title='Defer opening date' content='<p>Check this option if you want to lock registrations until a custom <strong>deferred opening date</strong>.</p><p>Registration will be available after the given date.<br />Otherwise, the registration will be opened as soon as the rally is created.<br />In both cases, registration closes when the rally starts.</p>' %}
             </div>
         </div>
         <div class="input-group" id="{{ form_create.opened_at.id_for_label }}_help">
             <div class="input-group-prepend">
-                <span class="input-group-text" style="border-top-left-radius:0; border-top-right-radius:.25rem; border-bottom-right-radius:.25rem;">
+                <span class="input-group-text btlr-0 btrr-1 bbrr-1">
                     Registration will be open as soon as the rally is created
                 </span>
             </div>
         </div>
         <div class="input-group">
             <div class="input-group-prepend">
-                <span class="input-group-text" style="border-top-left-radius: 0">
+                <span class="input-group-text btlr-0">
                     Registration will be open from
                 </span>
             </div>
