@@ -55,7 +55,7 @@ Console.init = function() {
 
             this._eContainer.show();
         }
-        this.log('Console is ready.')
+        this.log('Console is ready.');
     }
 };
 Console.log = function(message) {
@@ -79,6 +79,7 @@ Console.log = function(message) {
 
 
 /* PRIVATE */
+
 
 Console._useStd = true;
 Console._useUI = false;

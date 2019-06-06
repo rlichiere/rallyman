@@ -237,3 +237,32 @@ python manage.py runserver localhost:8000
 
 ## Changelog
 
+
+
+
+## Todo
+
+* Mandatory
+  * add a Remove Rally button (in a lobby column ? elsewhere ?)
+  * add Rally update form (label, opened_at, started_at)
+  * Console:
+    * implement _Close console_ button
+    * implement _Increase_/_Reduce_ console height buttons
+* Quick
+  * implement the configuration loader
+
+* Later
+  * GameUI
+    * implement the game layout 
+    * implement the map layout (must be able to combine several zones)
+  * GameLogic
+    * implement the game process:
+      1. Initialize game data
+      2. Place participants on track
+      3. Play 1 turn of dices to define the start order of the participants
+      4. Start the game by giving the hand to the first player on track
+  --> 5. Manage this player play
+  |   6. Elect the next participant (the next car on the track)
+  |-< 7. Repeat until all cars have finished the stage
+      8. Process the results and close the game
+
