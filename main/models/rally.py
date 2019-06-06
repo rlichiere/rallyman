@@ -25,5 +25,8 @@ class Rally(models.Model):
     creator = models.ForeignKey(help_text='Creator of the rally.',
                                 to=User)
 
+    class Meta:
+        verbose_name_plural = "rallies"
+
     def __str__(self):
         return self.label
