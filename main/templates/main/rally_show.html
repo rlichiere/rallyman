@@ -1,7 +1,9 @@
 {% extends 'main/base.html' %}
 {% load widget_tweaks %}
 
-{% block page-header %}Rally {{ rally.label }}{% endblock %}
+{% block page-title %}Rally {{ rally.label }}{% endblock %}
+
+{% block page-header %}Rally: {{ rally.label }}{% endblock %}
 
 {% block page-body %}
 

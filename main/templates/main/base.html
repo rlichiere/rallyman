@@ -13,7 +13,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Rallyman: {% block page-title %}{% endblock %}</title>
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -30,80 +30,13 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
+    <!-- Main Base CSS -->
+    <link rel="stylesheet" href="{% static 'main/css/base.css' %}">
+
+    <!-- Main Base JavaScript -->
+    <script src="{% static 'main/js/utils_console.js' %}"></script>
+
     <style type="text/css">
-
-        /* Navigation */
-        .tooltip div.tooltip-inner {
-            min-width: 100px;
-            max-width: 400px;
-        }
-        .tooltip div.tooltip-inner h1 {
-            font-size: 1.2rem;
-        }
-        .tooltip div.tooltip-inner p {
-            text-align: left;
-        }
-        .dropdown-item-group {
-            margin-left: 10px;
-            font-weight: bold;
-        }
-
-        /* Page layout */
-        .main-page-content {
-            /* PageContent must adapt to the height of navbar and footer in accordance with their respective formulas */
-            margin-top: 56px;     /* = navbar height */
-            margin-bottom: 120px; /* = footerHeight + 20px */
-        }
-        footer {
-            position: fixed;
-            height: 100px;        /* Default height of footer */
-            bottom: 0;
-            width: 100%;
-        }
-        #MainPageConsole {
-            padding: 3px;
-            border: 1px #ced4da solid;
-            background-color: #e9ecef;
-            font-family: "Courier New", Courier, serif;
-            font-size: 0.8em;
-
-            /* default */
-            display: none;
-        }
-
-        /* Shortcuts */
-        a.btrr-0, label.btrr-0, span.btrr-0 {
-            border-top-right-radius: 0 !important;
-        }
-        a.btrr-1, label.btrr-1, span.btrr-1 {
-            border-top-right-radius: .25rem !important;
-        }
-        a.bbrr-0, label.bbrr-0, span.bbrr-0 {
-            border-bottom-right-radius: 0 !important;
-        }
-        a.bbrr-1, label.bbrr-1, span.bbrr-1 {
-            border-bottom-right-radius: .25rem !important;
-        }
-        a.bblr-0, label.bblr-0, span.bblr-0 {
-            border-bottom-left-radius: 0 !important;
-        }
-        a.bblr-1, label.bblr-1, span.bblr-1 {
-            border-bottom-left-radius: .25rem !important;
-        }
-        a.btlr-0, label.btlr-0, span.btlr-0 {
-            border-top-left-radius: 0 !important;
-        }
-        a.btlr-1, label.btlr-1, span.btlr-1 {
-            border-top-left-radius: .25rem !important;
-        }
-
-        /* Errors */
-        pre.error-details {
-            color: #721c24;;
-            border: 1px #f5c6cb solid;
-            background-color: #f8d7da;
-            padding: 7px;
-        }
 
     </style>
     {% block head %}{% endblock %}
@@ -233,71 +166,18 @@
         </div>
     </div>
 
-    <footer class="fixed-bottom">
-        <div>{% block page-footer %}{% endblock %}</div>
-        <div id="MainPageConsole">
-            <div id="MainPageConsoleContent"></div>
-        </div>
+    <footer class="fixed-bottom" id="MainPageConsole">
+        <div id="MainPageConsoleContent"></div>
     </footer>
 
     <script>
-        let Console = Object();
-
-        /* PUBLIC */
-
-        /* Configuration */
+        Console.setElementContainer($('#MainPageConsole'));
+        Console.setElementContent($('#MainPageConsoleContent'));
         Console.useConsole = true;
-
-        Console.useStdOutput = function(on) {
-            Console._useStdOutput = Boolean(on);
-        };
-        Console.useUIOutput = function(on) {
-            Console._useUIOutput = Boolean(on);
-        };
-
-        /* Exploitation */
-        Console.init = function() {
-            if (this.useConsole) {
-
-                if (this._useUIOutput) {
-
-                    // todo : adapt css to the console height
-
-                    this._elemConsole.show();
-                }
-                this.log('Console is ready.')
-            }
-        };
-        Console.log = function(message) {
-            if (this.useConsole) {
-                if (this._useStdOutput) {
-                    console.log(message);
-                }
-
-                let _html;
-                if (this._useUIOutput) {
-                    _html = this._elemConsoleContent.html();
-                    if (_html !== '') {
-                        _html += '<br />';
-                    }
-                    _html += message;
-                    console.log(_html);
-                    this._elemConsoleContent.html(_html);
-                }
-            }
-        };
-
-        /* Elements */
-        Console._elemConsole = $('#MainPageConsole');
-        Console._elemConsoleContent = $('#MainPageConsoleContent');
-
-        /* PRIVATE */
-        Console._useStdOutput = true;
-        Console._useUIOutput = false;
+        Console.useUIOutput(true);
+        Console.init();
 
         $(document).ready(function(){
-
-            Console.init();
 
             $('[data-toggle="tooltip"]').tooltip();
 
