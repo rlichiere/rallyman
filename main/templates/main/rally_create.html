@@ -88,12 +88,12 @@
         createRally.formInvalidFeedback.html('');
     };
     createRally.onSubmit = function(elemForm) {
-        var _lp = 'createRally.onSubmit: ';
+        const _lp = 'createRally.onSubmit: ';
 
         createRally.resetFeedback();
 
-        var _url = $(elemForm).attr('action');
-        var _data = {
+        const _url = $(elemForm).attr('action');
+        const _data = {
             'csrfmiddlewaretoken': '{{ csrf_token }}',
             'label': createRally.fieldLabel.val(),
             'opened_at': createRally.fieldOpenedAt.val(),
@@ -120,15 +120,15 @@
                     if (xhr.responseJSON) {
 
                         // parse form errors
-                        let _errors = xhr.responseJSON.error;
+                        const _errors = xhr.responseJSON.error;
                         for (let _fieldName in _errors) {
 
-                            let _fieldErrors = _errors[_fieldName];
-                            let _fieldId = createRally.fieldsMapping[_fieldName];
-                            let elemFeedback = $('#' + _fieldId + '_invalidFeedback');
+                            const _fieldErrors = _errors[_fieldName];
+                            const _fieldId = createRally.fieldsMapping[_fieldName];
+                            const elemFeedback = $('#' + _fieldId + '_invalidFeedback');
                             let _fieldErrorsStr = '';
                             for (let _idx in _fieldErrors) {
-                                let _fieldError = _fieldErrors[_idx];
+                                const _fieldError = _fieldErrors[_idx];
                                 if (_idx > 1) {
                                     _fieldErrorsStr += ', ';
                                 }
@@ -144,7 +144,7 @@
                         createRally.formInvalidFeedback.show();
                     }
                 } else {
-                    let _err = 'Unexpected status (' + xhr.status + ') for ' + _url + ', data : ' + xhr.responseText;
+                    const _err = 'Unexpected status (' + xhr.status + ') for ' + _url + ', data : ' + xhr.responseText;
                     createRally.formInvalidFeedback.html(_err);
                     createRally.formInvalidFeedback.show();
                 }
@@ -155,15 +155,20 @@
 
     $(document).ready(function() {
 
-        let checkboxSetOpenAt = $('#{{ form_create.set_opened_at.id_for_label }}');
-        let inputOpenAt = $('#{{ form_create.opened_at.id_for_label }}');
-        let inputOpenAtOrigin = $('#{{ form_create.opened_at.id_for_label }}_origin');
-        let groupOpenAtHelp = $('#{{ form_create.opened_at.id_for_label }}_help');
+        const checkboxSetOpenAt = $('#{{ form_create.set_opened_at.id_for_label }}');
+        const inputOpenAt = $('#{{ form_create.opened_at.id_for_label }}');
+        const inputOpenAtOrigin = $('#{{ form_create.opened_at.id_for_label }}_origin');
+        const groupOpenAtHelp = $('#{{ form_create.opened_at.id_for_label }}_help');
 
         // initialize open_at backup
         inputOpenAtOrigin.val(inputOpenAt.val());
 
         checkboxSetOpenAt.click(function() {
+
+            if (! $(this).prop('checked')) {
+                createRally.fieldOpenedAtInvalidFeedback.hide();
+                createRally.fieldOpenedAt.removeClass('is-invalid');
+            }
 
             // retrieve original value of field opened_at from backup
             inputOpenAt.val(inputOpenAtOrigin.val());

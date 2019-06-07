@@ -59,7 +59,7 @@ class CreateRallyView(LoginRequiredMixin, MainTemplateView):
 
         self.log.endView()
         return self.return_success(request=self.request,
-                                   message='Rally %s created' % _rally.id,
+                                   message='Rally #%s created : %s' % (_rally.id, _rally.label),
                                    status=httplib.CREATED,
                                    redirect_to=_redirect,
                                    redirect_kwargs={'pk': _rally.id})

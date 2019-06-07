@@ -1,0 +1,45 @@
+{% load widget_tweaks %}
+
+{% with confirmCbxId='deleteRally_confirmCbx' %}
+
+<style>
+    {% include 'main/shared/css_rally.html' %}
+</style>
+
+<form method="POST" action="{% url 'rally-delete' pk=rally.id %}?redirect=main-lobby">
+{% csrf_token %}
+
+    <div class="modal-header">
+        <h4 class="modal-title">Delete a Rally</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+    </div>
+
+    <div class="modal-body">
+
+        <div class="mb-4">
+            You're about to delete the rally:
+            <pre class="rly-data rly-title" style="margin-top: 5px">{{ rally.label }}</pre>
+
+            The roadbook data and participations will be definitively lost.
+        </div>
+
+        <div class="input-group">
+            <label for="{{ confirmCbxId }}" class="input-group-text btrr-0 bbrr-0">
+                Please confirm the deletion of this rally
+            </label>
+            <div class="input-group-append">
+                <div class="input-group-text">
+                    <input type="checkbox" id="{{ confirmCbxId }}" required="required"/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-danger">Submit</button>
+    </div>
+
+</form>
+
+{% endwith %}

@@ -84,7 +84,9 @@ class LobbyView(MainTemplateView):
 
             _checkIfJoignable = True
             _checkIfQuitable = True
+            _checkIfDeletable = True
             try:
+
                 if _rally.status in [RallyStatus.SCHEDULED, RallyStatus.STARTED]:
                     _checkIfJoignable = False
 
@@ -92,17 +94,20 @@ class LobbyView(MainTemplateView):
                     _checkIfJoignable = False
                     _checkIfQuitable = False
 
+                if _rally.status in [RallyStatus.STARTED, RallyStatus.FINISHED]:
+                    _checkIfDeletable = False
+
                 if _executor.is_anonymous:
                     raise Participation.DoesNotExist
 
                 _ = _rlyParts.get(player=_executor)
 
-                if _checkIfQuitable:
-                    setattr(_rally, 'is_quitable', True)
+                setattr(_rally, 'is_quitable', _checkIfQuitable)
 
             except Participation.DoesNotExist:
-                if _checkIfJoignable:
-                    setattr(_rally, 'is_joignable', True)
+                setattr(_rally, 'is_joignable', _checkIfJoignable)
+
+            setattr(_rally, 'is_deletable', _checkIfDeletable)
 
             _stages = _allStages.filter(rally=_rally)
             setattr(_rally, 'stages', _stages)
