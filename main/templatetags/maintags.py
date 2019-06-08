@@ -75,6 +75,8 @@ class GetLoadDataNode(template.Node):
         _log = Log(self)
 
         _user = self._user.resolve(context)
+        if _user.is_anonymous:
+            return ''
 
         # check that given dataset is expected
         if self._dataSet not in self._mappings.keys():

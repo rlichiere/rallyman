@@ -1,8 +1,7 @@
 {% extends 'main/base.html' %}
 {% load widget_tweaks %}
 
-{% block page-title %}Profile{% endblock %}
-{% block page-header %}Profile{% endblock %}
+a{% block page-header %}Profile{% endblock %}
 
 {% block page-body %}
 
@@ -11,9 +10,17 @@
 <table class="table table-responsive">
     <tr>
         <th>
-            <label for="{{ form_fields.email.id_for_label }}">Email&nbsp;:</label>
+            <label for="user_login">Login&nbsp;:</label>
         </th>
         <td colspan="3">
+            <input type="text" value="{{ user.username }}" id="user_login" class="form-control" readonly>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <label for="{{ form_fields.email.id_for_label }}">Email&nbsp;:</label>
+        </th>
+        <td >
             {% render_field form_fields.email class+='form-control' %}
         </td>
     </tr>
