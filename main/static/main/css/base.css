@@ -3,14 +3,14 @@
 
 
 /* Page layout */
-body > div.main-page-content {
+#main-page-content {
     /* PageContent must adapt to the height of navbar and footer in accordance with their respective formulas */
     margin-top: 56px;      /* = navbar height */
-    margin-bottom: 100px;  /* = footerHeight */
+    margin-bottom: 0;  /* = footerHeight */
 }
 
 /* Console */
-body > footer#ConsoleContainer {
+#ConsoleContainer {
     position: fixed;
     bottom: 0;
     width: 100%;
@@ -23,13 +23,15 @@ body > footer#ConsoleContainer {
     /* default */
     display: none;
 }
-body > footer#ConsoleContainer #ConsoleContent {
+#ConsoleContent {
     padding: 3px;
     overflow-y: auto;
     scroll-behavior: auto;
     height: 100px;      /* = footerHeight */
 }
-
+#ConsoleContainer > div.float-right > ul.nav > li > button.close > i {
+    font-size: .7em;
+}
 
 /* Tooltips */
 .tooltip div.tooltip-inner {

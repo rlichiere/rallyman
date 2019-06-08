@@ -243,7 +243,6 @@ python manage.py runserver localhost:8000
 ## Todo
 
 * Mandatory
-  * add a Remove Rally button (in a lobby column ? elsewhere ?)
   * add Rally update form (label, opened_at, started_at)
   * Console:
     * implement _Close console_ button

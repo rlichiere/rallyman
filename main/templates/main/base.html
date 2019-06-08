@@ -130,7 +130,7 @@
         </ul>
     </nav>
 
-    <div class="main-page-content">
+    <div id="main-page-content">
         <!-- Potential alert messages -->
         {% if messages %}
         <div class="row">
@@ -167,16 +167,20 @@
     </div>
 
     <footer class="fixed-bottom" id="ConsoleContainer">
-        <button type="button" class="close fixed-right">×</button>
+        <div class="float-right fixed-bottom pr-1 mb-2">
+            <ul class="nav flex-column">
+                <li><button type="button" class="close" role="close"><i class="fas fa-times"></i></button></li>
+                <li><button type="button" class="close" role="increase"><i class="fas fa-angle-double-up"></i></button></li>
+                <li><button type="button" class="close" role="decrease"><i class="fas fa-angle-double-down"></i></button></li>
+            </ul>
+        </div>
         <div id="ConsoleContent"></div>
     </footer>
 
     <script>
-        Console.setElementContainer($('#ConsoleContainer'));
-        Console.setElementContent($('#ConsoleContent'));
-        Console.useConsole = true;
-        Console.useUIOutput(true);
-        Console.init();
+
+        Console.useUIOutput();
+        Console.initialize('ConsoleContainer', 'ConsoleContent', 'main-page-content');
 
         $(document).ready(function(){
 
