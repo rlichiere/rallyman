@@ -129,13 +129,12 @@
         <thead>
             <tr>
                 <th class="orderable" onclick="orderByColumnClicked('label');">Rally name</th>
-                <th>Number of participants</th>
-                <th>Number of stages</th>
+                <th>Participants</th>
+                <th>Stages</th>
                 <th class="orderable" onclick="orderByColumnClicked('status');">Rally status</th>
-                <th class="orderable" onclick="orderByColumnClicked('creator');">Creator of the rally</th>
-                <th class="orderable" onclick="orderByColumnClicked('created_at');">Rally created at</th>
+                <th class="orderable" onclick="orderByColumnClicked('creator');">Created by</th>
                 <th class="orderable" onclick="orderByColumnClicked('opened_at');">Rally opens at</th>
-
+                <th class="orderable" onclick="orderByColumnClicked('started_at');">Rally starts at</th>
                 {% if not user.is_anonymous %}
                 <th>Join</th>
                 <th>Quit</th>
@@ -187,8 +186,8 @@
                 </td>
                 <td>{{ rally.status|lower|capfirst }}</td>
                 <td>{{ rally.creator.get_full_name }}</td>
-                <td>{{ rally.created_at }}</td>
                 <td>{{ rally.opened_at }}</td>
+                <td>{{ rally.started_at }}</td>
 
                 {% if not user.is_anonymous %}
                 <td>
