@@ -1,0 +1,96 @@
+
+/* Navigation */
+
+
+/* Page layout */
+#main-page-content {
+    /* PageContent must adapt to the height of navbar and footer in accordance with their respective formulas */
+    margin-top: 56px;      /* = navbar height */
+    margin-bottom: 0;  /* = footerHeight */
+}
+
+/* Console */
+#ConsoleContainer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+
+    border: 1px #ced4da solid;
+    background-color: #e9ecef;
+    font-family: "Courier New", Courier, serif;
+    font-size: 0.8em;
+
+    /* default */
+    display: none;
+}
+#ConsoleContent {
+    padding: 3px;
+    overflow-y: auto;
+    scroll-behavior: auto;
+    height: 100px;      /* = footerHeight */
+}
+#ConsoleContainer > div.float-right > ul.nav > li > button.close > i {
+    font-size: .7em;
+}
+
+/* Tooltips */
+.tooltip div.tooltip-inner {
+    min-width: 100px;
+    max-width: 400px;
+}
+.tooltip div.tooltip-inner h1 {
+    font-size: 1.2rem;
+}
+.tooltip div.tooltip-inner p {
+    text-align: left;
+}
+
+body > nav.navbar > ul.navbar-nav > li.dropdown > div.dropdown-menu > div.dropdown-item-group {
+    margin-left: 10px;
+    font-weight: bold;
+}
+body > nav.navbar > ul.navbar-nav > li.dropdown > div.dropdown-menu > a.dropdown-item {
+    line-height: 1.1em;
+}
+
+/* Errors */
+pre.error-details {
+    color: #721c24;;
+    border: 1px #f5c6cb solid;
+    background-color: #f8d7da;
+    padding: 7px;
+}
+
+
+/* Shortcuts */
+a.btrr-0, label.btrr-0, span.btrr-0 {
+    border-top-right-radius: 0 !important;
+}
+a.btrr-1, label.btrr-1, span.btrr-1 {
+    border-top-right-radius: .25rem !important;
+}
+a.bbrr-0, label.bbrr-0, span.bbrr-0 {
+    border-bottom-right-radius: 0 !important;
+}
+a.bbrr-1, label.bbrr-1, span.bbrr-1 {
+    border-bottom-right-radius: .25rem !important;
+}
+a.bblr-0, label.bblr-0, span.bblr-0 {
+    border-bottom-left-radius: 0 !important;
+}
+a.bblr-1, label.bblr-1, span.bblr-1 {
+    border-bottom-left-radius: .25rem !important;
+}
+a.btlr-0, label.btlr-0, span.btlr-0 {
+    border-top-left-radius: 0 !important;
+}
+a.btlr-1, label.btlr-1, span.btlr-1 {
+    border-top-left-radius: .25rem !important;
+}
+
+
+div.rallies-list > table > tbody > tr > td,
+div.rallies-list > table > tbody > tr > td > a.btn-sm
+{
+    line-height: 1.1em;
+}

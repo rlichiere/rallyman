@@ -1,14 +1,13 @@
 {% extends 'main/base.html' %}
 {% load widget_tweaks %}
 
+{% block page-title %}Lobby{% endblock %}
+
 {% block page-header %}Lobby{% endblock %}
 
 {% block page-body %}
 
 <style>
-    .rallies-list {
-        margin-bottom: 15px;
-    }
     .rallies-list td, .rallies-list th {
         text-align: center;
     }
@@ -86,6 +85,13 @@
         <div style="display:none;">
             {% render_field form_pgps.selected_page_size class="form-control" %}
         </div>
+
+        <div class="float-right">
+            <a id="btnCreateModal" href="{% url 'rally-create' %}" class="btn btn-primary" data-toggle="modal" data-target="#GenericModal">
+                <i class="far fa-plus-square"></i> Create Rally
+            </a>
+        </div>
+
     </div>
 
     <!-- List -->
@@ -102,7 +108,9 @@
                 <th class="orderable" onclick="orderByColumnClicked('opened_at');">Rally opens at</th>
 
                 {% if not user.is_anonymous %}
-                <th>Action</th>
+                <th>Join</th>
+                <th>Quit</th>
+                <th>Delete</th>
                 {% endif %}
             </tr>
         </thead>
@@ -111,7 +119,7 @@
             <tr>
                 <td>{{ rally.label }}</td>
                 <td>
-                    <a href="#" class="btn btn-secondary"
+                    <a href="#" class="btn btn-secondary btn-sm"
                     {% if rally.participants_count > 0 %}
                         data-toggle="tooltip" data-html="true"
                         data-title="<div class='rallies-list-tooltip'>
@@ -128,7 +136,7 @@
                     </a>
                 </td>
                 <td>
-                    <a href="#" class="btn btn-secondary"
+                    <a href="#" class="btn btn-secondary btn-sm"
                     {% if rally.stages_count > 0 %}
                         data-toggle="tooltip" data-html="true"
                         data-title="<div class='rallies-list-tooltip'>
@@ -153,18 +161,26 @@
                 {% if not user.is_anonymous %}
                 <td>
                     {% if rally.is_joignable %}
-                    <a id="btnJoinModal_{{ rally.id }}" href="{% url 'rally-register' pk=rally.id %}" class="btn btn-primary"
+                    <a id="btnJoinModal_{{ rally.id }}" href="{% url 'rally-register' pk=rally.id %}" class="btn btn-primary btn-sm"
                         data-toggle="modal" data-target="#GenericModal">
-                        <i class="far fa-calendar-plus"></i> Join
+                        <i class="fas fa-sign-in-alt"></i>
                     </a>
                     {% endif %}
-
+                </td>
+                <td>
                     {% if rally.is_quitable %}
-                    <a id="btnQuitModal_{{ rally.id }}" href="{% url 'rally-unregister' pk=rally.id %}" class="btn btn-primary"
+                    <a id="btnQuitModal_{{ rally.id }}" href="{% url 'rally-unregister' pk=rally.id %}" class="btn btn-warning btn-sm"
                         data-toggle="modal" data-target="#GenericModal">
-                        <i class="far fa-calendar-minus"></i> Quit
+                        <i class="fas fa-sign-out-alt"></i>
                     </a>
-
+                    {% endif %}
+                </td>
+                <td>
+                    {% if rally.is_deletable and rally.creator == user %}
+                    <a id="btnDeleteModal_{{ rally.id }}" href="{% url 'rally-delete' pk=rally.id %}" class="btn btn-danger btn-sm"
+                        data-toggle="modal" data-target="#GenericModal">
+                        <i class="far fa-trash-alt"></i>
+                    </a>
                     {% endif %}
                 </td>
                 {% endif %}
@@ -221,10 +237,6 @@
             {% endif %}
             </ul>
         </div>
-
-        <a id="btnCreateModal" href="{% url 'rally-create' %}" class="btn btn-primary" data-toggle="modal" data-target="#GenericModal">
-            <i class="far fa-plus-square"></i> Create Rally
-        </a>
     </div>
 
 </div>
@@ -347,6 +359,13 @@
         {% if rally.is_quitable %}
         let btnQuitModal_{{ rally.id }} = $('#btnQuitModal_{{ rally.id }}');
         btnQuitModal_{{ rally.id }}.click(function() {
+            loadElementContentFromUrl('GenericModalContent', $(this).prop('href'));
+        });
+        {% endif %}
+
+        {% if rally.is_deletable and rally.creator == user %}
+        let btnDeleteModal_{{ rally.id }} = $('#btnDeleteModal_{{ rally.id }}');
+        btnDeleteModal_{{ rally.id }}.click(function() {
             loadElementContentFromUrl('GenericModalContent', $(this).prop('href'));
         });
         {% endif %}

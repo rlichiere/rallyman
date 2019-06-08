@@ -1,16 +1,24 @@
 {% extends 'main/base.html' %}
 {% load widget_tweaks %}
 
+{% block page-title %}Profile{% endblock %}
 {% block page-header %}Profile{% endblock %}
 
 {% block page-body %}
-
 
 <form method="post" action="{% url 'user-profile' %}">
 <table class="table table-responsive">
     <tr>
         <th>
-            <label for="{{ form_fields.email.id_for_label }}">Email&nbsp;:</label>
+            <label for="user_login">Login</label>
+        </th>
+        <td colspan="3">
+            <input type="text" value="{{ user.username }}" id="user_login" class="form-control" readonly>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <label for="{{ form_fields.email.id_for_label }}">Email</label>
         </th>
         <td colspan="3">
             {% render_field form_fields.email class+='form-control' %}
@@ -18,13 +26,13 @@
     </tr>
     <tr>
         <th>
-            <label for="{{ form_fields.first_name.id_for_label }}">First name&nbsp;:</label>
+            <label for="{{ form_fields.first_name.id_for_label }}">First name</label>
         </th>
         <td>
             {% render_field form_fields.first_name class+='form-control' %}
         </td>
         <th>
-            <label for="{{ form_fields.last_name.id_for_label }}">Last name&nbsp;:</label>
+            <label for="{{ form_fields.last_name.id_for_label }}">Last name</label>
         </th>
         <td>
             {% render_field form_fields.last_name class+='form-control' %}
@@ -45,13 +53,13 @@
 <table class="table table-responsive">
     <tr>
         <th>
-            <label for="{{ form_password.password.id_for_label }}" class="mr-sm-2">Password&nbsp;:</label>
+            <label for="{{ form_password.password.id_for_label }}" class="mr-sm-2">Password</label>
         </th>
         <td>
             {% render_field form_password.password class+='form-control mb-2 mr-sm-2' %}
         </td>
         <th>
-            <label for="{{ form_password.password_check.id_for_label }}" class="mr-sm-2">Confirmation&nbsp;:</label>
+            <label for="{{ form_password.password_check.id_for_label }}" class="mr-sm-2">Confirmation</label>
         </th>
         <td>
             {% render_field form_password.password_check class+='form-control mb-2 mr-sm-2' %}
