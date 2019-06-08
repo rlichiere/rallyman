@@ -8,13 +8,14 @@
 {% block page-body %}
 
 <style>
+
     .rallies-list td, .rallies-list th {
         text-align: center;
     }
 
-    .rallies-list > table {
-        margin-top: 7px;
-    }
+    {#.rallies-list > table {#}
+    {#    margin-top: 7px;#}
+    {#}#}
     .rallies-list th.orderable {
         cursor: pointer;
     }
@@ -23,46 +24,74 @@
         text-align: left;
     }
 
-    #btnReset {
+    #btnResetContainer {
         display: none;
-        margin-left: 7px
+        {#margin-left: 7px;#}
     }
     #btnRefresh {
-        margin-left: 7px
+        {#margin-left: 7px;#}
     }
 
-    #formFilter label {
-        margin-right: 5px;
-    }
 </style>
 
 <div class="row">
 
     <!-- Filter -->
-    <div class="col-lg-12 mb-4">
+    <div class="col-lg-12 mb-3">
         <form class="form-inline" method="get" action="{% url 'main-lobby' %}" id="formFilter">
-            Filter by:
-            <div class="form-group ml-4">
-                <label for="{{ form_filter.rly_stat.id_for_label }}">Rally status</label>
-                {% render_field form_filter.rly_stat class+='form-control' %}
+            Filter by
+            <div class="form-group ml-2">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <label for="{{ form_filter.rly_stat.id_for_label }}" class="input-group-text">Rally status</label>
+                    </div>
+                    {% render_field form_filter.rly_stat class+='form-control' %}
+                </div>
             </div>
 
             {% if not user.is_anonymous %}
-            <div class="form-group ml-4">
-                <label for="{{ form_filter.usr_part.id_for_label }}">Rallies I participate in</label>
-                {% render_field form_filter.usr_part class+='form-control' %}
+            <div class="form-group ml-2">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <label for="{{ form_filter.usr_part.id_for_label }}" class="input-group-text">Rallies I participate in</label>
+                    </div>
+                    {% render_field form_filter.usr_part class+='form-control' %}
+                </div>
             </div>
             {% endif %}
 
             {% if not user.is_anonymous %}
-            <div class="form-group ml-4">
-                <label for="{{ form_filter.rly_crea.id_for_label }}">Rally creator</label>
-                {% render_field form_filter.rly_crea class+='form-control' %}
+            <div class="form-group ml-2">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <label for="{{ form_filter.rly_crea.id_for_label }}" class="input-group-text">Rally creator</label>
+                    </div>
+                    {% render_field form_filter.rly_crea class+='form-control' %}
+                </div>
             </div>
             {% endif %}
 
-            <button id="btnRefresh" type="submit" class="btn btn-primary ml-4">Refresh</button>
-            <button id="btnReset" class="btn btn-warning">Reset</button>
+            <div class="form-group ml-2">
+                <div class="input-group">
+                    <a id="btnRefresh" type="submit" class="btn btn-primary btrr-0 bbrr-0" href="#" onclick="document.getElementById('formFilter').submit()">
+                        <i class="fas fa-sync"></i> Apply filter
+                    </a>
+                    <div class="input-group-append">
+                        {% include 'main/generic/help_button.html' with title='Apply filter' content='Applies the selected filters to the list of rallies.' %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group ml-2" id="btnResetContainer">
+                <div class="input-group">
+                    <a id="btnReset" class="btn btn-warning btrr-0 bbrr-0" href="#" role="reset">
+                        <i class="fas fa-ban"></i> Reset filter
+                    </a>
+                    <div class="input-group-append">
+                        {% include 'main/generic/help_button.html' with title='Reset filter' content='Resets the filter and reloads the default list of rallies.' %}
+                    </div>
+                </div>
+            </div>
 
             <div style="display:none;">
                 {% render_field form_filter.ord_b %}
@@ -96,7 +125,7 @@
 
     <!-- List -->
     <div class="rallies-list col-lg-12">
-        <table class="table table-sm" style="display: table">
+        <table class="table table-sm mt-3" style="display: table">
         <thead>
             <tr>
                 <th class="orderable" onclick="orderByColumnClicked('label');">Rally name</th>
@@ -111,6 +140,9 @@
                 <th>Join</th>
                 <th>Quit</th>
                 <th>Delete</th>
+                {% endif %}
+                {% if user.is_superuser %}
+                    <th>Admin</th>
                 {% endif %}
             </tr>
         </thead>
@@ -185,9 +217,16 @@
                 </td>
                 {% endif %}
 
+                {% if user.is_superuser %}
+                <td>
+                    <a href="/admin/main/rally/{{ rally.id }}/change/" class="btn btn-primary btn-sm" target="_blank">
+                        <i class="fas fa-user-shield"></i>
+                    </a>
+                </td>
+                {% endif %}
             </tr>
         {% empty %}
-            <tr><td colspan="10">No rallies found.</td></tr>
+            <tr><td colspan="{% if user.is_superuser %}11{% else %}10{% endif %}">No rallies found.</td></tr>
         {% endfor %}
         </tbody>
         </table>
@@ -263,7 +302,9 @@
         $('#filter_form').submit();
     }
 
-    let btnReset = $('#formFilter #btnReset');
+    let btnResetContainer = $('#formFilter #btnResetContainer');
+    {#let btnReset = $('#formFilter #btnReset');#}
+    let btnReset = $('#formFilter #btnResetContainer [role="reset"]');
     let inputFilterUserParticipation = $('#{{ form_filter.usr_part.id_for_label }}');
     let inputFilterRallyStatus = $('#{{ form_filter.rly_stat.id_for_label }}');
     let inputFilterRallyCreator = $('#{{ form_filter.rly_crea.id_for_label }}');
@@ -315,13 +356,13 @@
     $(document).ready(function() {
 
         inputFilterUserParticipation.change(function() {
-            btnReset.show();
+            btnResetContainer.show();
         });
         inputFilterRallyStatus.change(function() {
-            btnReset.show();
+            btnResetContainer.show();
         });
         inputFilterRallyCreator.change(function() {
-            btnReset.show();
+            btnResetContainer.show();
         });
 
         btnReset.click(function() {
@@ -375,7 +416,7 @@
 
 
         if (isResetRequired()) {
-            btnReset.show();
+            btnResetContainer.show();
         }
 
     });

@@ -2,6 +2,7 @@
 from rallyman import settings as _main_settings
 
 from ..core import const as _main_const
+from ..core import crons as _crons
 from ..core import utils_dict as _utils_dict
 
 
@@ -38,3 +39,13 @@ settings = _main_settings
 
 def get(path, default=None):
     return _utils_dict.access(data, path, default)
+
+
+""" Crons """
+
+crons = {
+    'rallies_status': _crons.RalliesStatusCron(),
+}
+
+for _cronName, _cron in crons.iteritems():
+    _cron.start()
