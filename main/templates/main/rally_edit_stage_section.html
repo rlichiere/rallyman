@@ -1,6 +1,8 @@
 {% load widget_tweaks %}
 {% load maintags %}
 
+{% load_config const %}
+
 {% with 'Stage_'|concat:stage_num as oStage %}
 {% with 'Stage_'|concat:stage_num|concat:'_'|concat:section_num as oZone %}
 
@@ -9,22 +11,19 @@
         <span class="input-group-text">Section {{ section_num }}</span>
     </div>
     <select name="stage_{{ stage_num }}_{{ section_num }}_zone" title="Zone selection" class="form-control">
-        <option value="C" {% if section.zone == 'C' %} selected{% endif %}>C</option>
-        <option value="J" {% if section.zone == 'J' %} selected{% endif %}>J</option>
-        <option value="L" {% if section.zone == 'L' %} selected{% endif %}>L</option>
-        <option value="V" {% if section.zone == 'V' %} selected{% endif %}>V</option>
+    {% for zone in const.zone.Zones.as_list %}
+        <option value="{{ zone }}" {% if section.zone == zone %} selected{% endif %}>{{ zone }}</option>
+    {% endfor %}
     </select>
     <select name="stage_{{ stage_num }}_{{ section_num }}_anchor" title="Zone anchor" class="form-control">
-        <option value="1" {% if section.anchor == '1' %} selected{% endif %}>1</option>
-        <option value="2" {% if section.anchor == '2' %} selected{% endif %}>2</option>
-        <option value="3" {% if section.anchor == '3' %} selected{% endif %}>3</option>
-        <option value="4" {% if section.anchor == '4' %} selected{% endif %}>4</option>
-        <option value="5" {% if section.anchor == '5' %} selected{% endif %}>5</option>
-        <option value="6" {% if section.anchor == '6' %} selected{% endif %}>6</option>
+    {% for anchor in const.zone.ZoneAnchors.as_list %}
+        <option value="{{ anchor }}" {% if section.anchor|concat:'' == anchor|concat:'' %} selected{% endif %}>{{ anchor }}</option>
+    {% endfor %}
     </select>
     <select name="stage_{{ stage_num }}_{{ section_num }}_surface" title="Surface selection" class="form-control">
-        <option value="DRY"  {% if section.surface == 'DRY' %}  selected{% endif %}>DRY</option>
-        <option value="SNOW" {% if section.surface == 'SNOW' %} selected{% endif %}>SNOW</option>
+    {% for surface in const.zone.ZoneSurfaces.as_list %}
+        <option value="{{ surface }}"  {% if section.surface == surface %}  selected{% endif %}>{{ surface }}</option>
+    {% endfor %}
     </select>
     <div class="input-group-append">
         {% if section_num == 1 %}

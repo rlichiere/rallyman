@@ -46,11 +46,8 @@
 
     <!-- Navigation menu -->
     <nav class="navbar navbar-expand bg-dark fixed-top navbar-dark">
-        <a class="navbar-brand" href="#">Rallyman</a>
+        <a class="navbar-brand" href="{% url 'main-home' %}">Rallyman</a>
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link {% if 'home' in ariane %}active{% endif %}" href="{% url 'main-home' %}">Home</a>
-            </li>
             <li class="nav-item">
                 <a class="nav-link {% if 'lobby' in ariane %}active{% endif %}" href="{% url 'main-lobby' %}">Lobby</a>
             </li>

@@ -52,6 +52,21 @@
             </div>
         </div>
         <div id="{{ form_create.opened_at.id_for_label }}_invalidFeedback" class="invalid-feedback"></div>
+
+        <div class="input-group mt-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    Rally will start at
+                </span>
+            </div>
+            {% render_field form_create.started_at class+='form-control' %}
+            <input type="hidden" id="{{ form_create.started_at.id_for_label }}_origin" name="{{ form_create.started_at.id_for_label }}_origin" value=""/>
+            <div class="input-group-append">
+                {% include 'main/generic/help_button.html' with title='Date format' content='<p>Please respect below date format:<br />YYYY-MM-DD HH:MM:SS</p><p>Examples:<br />2018-12-31 23:59:59<br />2019-01-01 00:00:00</p>' %}
+            </div>
+        </div>
+        <div id="{{ form_create.started_at.id_for_label }}_invalidFeedback" class="invalid-feedback"></div>
+
         <div id="form_invalidFeedback" class="invalid-feedback mt-3"></div>
     </div>
 
@@ -65,9 +80,10 @@
 <script>
 
     var createRally = Object();
-    createRally.fieldLabel = $('#id_label');
-    createRally.fieldOpenedAt = $('#id_opened_at');
-    createRally.fieldSetOpenedAt = $('#id_set_opened_at');
+    createRally.fieldLabel = $('#{{ form_create.label.id_for_label }}');
+    createRally.fieldOpenedAt = $('#{{ form_create.opened_at.id_for_label }}');
+    createRally.fieldSetOpenedAt = $('#{{ form_create.set_opened_at.id_for_label }}');
+    createRally.fieldStartedAt = $('#{{ form_create.started_at.id_for_label }}');
     createRally.fieldLabelInvalidFeedback = $('#id_label_invalidFeedback');
     createRally.fieldOpenedAtInvalidFeedback = $('#id_opened_at_invalidFeedback');
     createRally.formInvalidFeedback = $('#form_invalidFeedback');
@@ -75,6 +91,7 @@
         'label': '{{ form_create.label.id_for_label }}',
         'opened_at': '{{ form_create.opened_at.id_for_label }}',
         'set_opened_at': '{{ form_create.set_opened_at.id_for_label }}',
+        'started_at': '{{ form_create.started_at.id_for_label }}',
     };
 
     createRally.resetFeedback = function() {
@@ -84,6 +101,7 @@
         createRally.fieldOpenedAt.removeClass('is-invalid');
         createRally.fieldOpenedAtInvalidFeedback.hide();
         createRally.fieldOpenedAtInvalidFeedback.html('');
+        createRally.fieldStartedAt.removeClass('is-invalid');
         createRally.formInvalidFeedback.hide();
         createRally.formInvalidFeedback.html('');
     };
@@ -98,6 +116,7 @@
             'label': createRally.fieldLabel.val(),
             'opened_at': createRally.fieldOpenedAt.val(),
             'set_opened_at': createRally.fieldSetOpenedAt.val(),
+            'started_at': createRally.fieldStartedAt.val(),
         };
         $.ajax({
             url: _url,
@@ -125,6 +144,7 @@
 
                             const _fieldErrors = _errors[_fieldName];
                             const _fieldId = createRally.fieldsMapping[_fieldName];
+                            console.log('_fieldId : ' + _fieldId);
                             const elemFeedback = $('#' + _fieldId + '_invalidFeedback');
                             let _fieldErrorsStr = '';
                             for (let _idx in _fieldErrors) {
@@ -135,8 +155,14 @@
                                 _fieldErrorsStr += _fieldError;
                             }
                             elemFeedback.html(_fieldErrorsStr);
+                            console.log('field error set');
+
                             elemFeedback.show();
+                            console.log('field error shown');
                             $('#' + _fieldId).addClass('is-invalid');
+
+                            console.log('concerned field is-invalid');
+
                         }
                     } else {
                         // malformed error. Use received responseText.
