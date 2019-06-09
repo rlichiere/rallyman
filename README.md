@@ -255,11 +255,11 @@ python manage.py runserver localhost:8000
   * GameLogic
     * implement the game process:
       1. Initialize game data
-      2. Place participants on track
-      3. Play 1 turn of dices to define the start order of the participants
-      4. Start the game by giving the hand to the first player on track
-  --> 5. Manage this player play
-  |   6. Elect the next participant (the next car on the track)
-  |-< 7. Repeat until all cars have finished the stage
-      8. Process the results and close the game
+      1. Place participants on track
+      1. Play 1 turn of dices to define the start order of the participants
+      1. Start the game by giving the hand to the first player on track
+      1. Manage this player play
+      1. Elect the next participant (the next car on the track)
+      1. Repeat from e. until all cars have finished the stage
+      1. Process the results and close the game
 
