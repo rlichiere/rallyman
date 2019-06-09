@@ -38,7 +38,7 @@
         {% endfor %}
     </div>
 
-    <div class="panel-footer mt-4">
+    <div class="panel-footer mt-4 mb-3">
         <a href="#" class="btn btn-primary" onclick="stageEditor.addStage();">Add Stage</a>
         <button type="submit" class="btn btn-primary">Save roadbook</button>
     </div>
@@ -62,9 +62,11 @@
         let url = '{% url 'rally-edit-add-stage' pk=rally.id %}';
         let _this = stageEditor;
         url += '?stage_num=' + (_this.getStagesCount() + 1);
+        Debug.storeAjaxCall(url);
         $.ajax({
             url: url,
             success: function(data, status, xhr) {
+                Debug.storeAjaxResult(url, xhr, status, data);
                 let _stageId = 'Stage_' + _this.getStagesCount();
                 $('#' + _stageId + '_removeStageBtn').hide();
                 $('#' + _stageId + '_removeStageBtnUnsavedHelp').hide();
@@ -73,26 +75,29 @@
                 _this.stagesList.append(data);
             },
             error: function(xhr, status, data) {
-                console.log(_lp+' ' + xhr.status + 'Error while calling url : ' + url + ' : ' + data);
+                Debug.storeAjaxResult(url, xhr, status, data);
             }
         });
     };
 
     stageEditor.removeStage = function (stage_num) {
         let _lp = 'stageEditor.removeStage: ';
-        let url = "{% url 'rally-edit-remove-stage' pk=rally.id %}?redirect=rally-edit&redirect_pk={{ rally.id }}";
+        let _url = "{% url 'rally-edit-remove-stage' pk=rally.id %}?redirect=rally-edit&redirect_pk={{ rally.id }}";
+        let _data = {
+            'csrfmiddlewaretoken': '{{ csrf_token  }}',
+            'stage_num': stage_num
+        };
+        Debug.storeAjaxCall(_url, _data);
         $.ajax({
-            url: url,
+            url: _url,
             method: 'POST',
-            data: {
-                'csrfmiddlewaretoken': '{{ csrf_token  }}',
-                'stage_num': stage_num
-            },
+            data: _data,
             success: function(data, status, xhr) {
+                Debug.storeAjaxResult(_url, xhr, status, data);
                 window.location.href = "{% url 'rally-edit' pk=rally.id %}";
             },
             error: function(xhr, status, data) {
-                console.log(_lp+' ' + xhr.status + ' Error while calling url : ' + url + ' : ' + data);
+                Debug.storeAjaxResult(_url, xhr, status, data);
             }
         });
     };

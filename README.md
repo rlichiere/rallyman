@@ -244,8 +244,17 @@ python manage.py runserver localhost:8000
 
 * Mandatory
   * add Rally update form (label, opened_at, started_at)
-    
+  * implement JS Debug object to manage:
+    * easy access to stored data
+
 * Quick
+  * add a debug menu to manage:
+    * console features (show)
+      * choose logging level: verbose/debug/info/warning/error
+      * search errors button
+    * ping of backend availability
+      * on/off
+      * refresh delay change
   * implement the configuration loader
 
 * Later

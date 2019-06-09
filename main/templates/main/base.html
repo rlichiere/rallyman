@@ -37,6 +37,7 @@
 
     <!-- Main JavaScript -->
     <script src="{% static 'main/js/console.js' %}"></script>
+    <script src="{% static 'main/js/debug.js' %}"></script>
 
     <style type="text/css">
 
@@ -166,7 +167,7 @@
     </div>
 
     <footer class="fixed-bottom" id="ConsoleContainer">
-        <div class="float-right fixed-bottom pr-1 mb-2">
+        <div class="float-right fixed-bottom pr-1 mb-2 mr-3">
             <ul class="nav flex-column">
                 <li><button type="button" class="close" role="close"><i class="fas fa-times"></i></button></li>
                 <li><button type="button" class="close" role="reduce" style="font-size: 1.6em"><i class="fas fas fa-minus"></i></button></li>
@@ -179,8 +180,11 @@
 
     <script>
 
+        Debug.initialize(Console, DebugLevels.DEBUG);
+
         Console.useUIOutput();
-        Console.initialize('ConsoleContainer', 'ConsoleContent', 'main-page-content');
+        Console.initialize('ConsoleContainer', 'ConsoleContent', 'main-page-content', Debug);
+
 
         $(document).ready(function(){
 

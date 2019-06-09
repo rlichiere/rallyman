@@ -118,11 +118,13 @@
             'set_opened_at': createRally.fieldSetOpenedAt.val(),
             'started_at': createRally.fieldStartedAt.val(),
         };
+        Debug.storeAjaxCall(_url, _data);
         $.ajax({
             url: _url,
             method: 'POST',
             data: _data,
             success: function(data, status, xhr) {
+                Debug.storeAjaxResult(_url, xhr, status, data);
                 if (xhr.status === 201) {
                     window.location.href = data;
                 } else {
@@ -134,7 +136,7 @@
                 return true;
             },
             error: function(xhr, status, data) {
-                console.log(_lp+' error (' + xhr.status + '): ' + _url);
+                Debug.storeAjaxResult(_url, xhr, status, data);
                 if (xhr.status === 400) {
                     if (xhr.responseJSON) {
 
@@ -144,7 +146,8 @@
 
                             const _fieldErrors = _errors[_fieldName];
                             const _fieldId = createRally.fieldsMapping[_fieldName];
-                            console.log('_fieldId : ' + _fieldId);
+                            Debug.verbose(_lp + '_fieldId : ' + _fieldId);
+
                             const elemFeedback = $('#' + _fieldId + '_invalidFeedback');
                             let _fieldErrorsStr = '';
                             for (let _idx in _fieldErrors) {
@@ -155,14 +158,13 @@
                                 _fieldErrorsStr += _fieldError;
                             }
                             elemFeedback.html(_fieldErrorsStr);
-                            console.log('field error set');
+                            Debug.verbose(_lp + 'field error set');
 
                             elemFeedback.show();
-                            console.log('field error shown');
+                            Debug.verbose(_lp + 'field error shown');
                             $('#' + _fieldId).addClass('is-invalid');
 
-                            console.log('concerned field is-invalid');
-
+                            Debug.verbose(_lp + 'concerned field is-invalid');
                         }
                     } else {
                         // malformed error. Use received responseText.

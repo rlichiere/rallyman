@@ -1,5 +1,3 @@
-
-
 /* Console
 *
 * Replace and improve the standard console.log
@@ -7,14 +5,13 @@
 * By default, Console is configured to act the same way as the standard console: messages given via Console.log are directed to the standard output.
 * However, for reasons of flexibility and performance, messages are not produced by default.
 * Message production can be activated via the `.useConsole` option.
-*   Console.useConsole = true;
+*   Console.useConsole();
 *
 * In addition, it is possible to direct the messages to an UI console:
-*   - Declare the HTML elements that should support the integration of the console via `.setElementContainer()` and `.setElementContent()`
-*       Console.setElementContainer($('#some_container_element'));
-*       Console.setElementContent($('#some_element_for_content'));
+*   - Declare the HTML elements that should support the integration of the console via `.initialize`
+*       Console.initialize($('#some_container_element'), $('#some_element_for_content'), $('#some_element_to_compensate'));
 *   - Activate the UI output by calling `.useUIOutput()`
-*       Console.useUIOutput(true)
+*       Console.useUIOutput()
 * */
 const Console = Object();
 
@@ -31,7 +28,7 @@ Console._contentId = null;
 Console._contentObj = null;
 Console._compensedId = null;
 Console._compensedObj = null;
-
+Console._debug = null;
 
 /* PUBLIC */
 
@@ -55,7 +52,8 @@ Console.useUIOutput = function(show) {
 
 /* Initialization */
 
-Console.initialize = function(containerId, contentId, compensedId) {
+Console.initialize = function(containerId, contentId, compensedId, debug) {
+    this._debug = debug;
     if (containerId) {
         this._containerId = containerId;
         this._containerObj = $('#' + this._containerId);
@@ -86,6 +84,7 @@ Console.initialize = function(containerId, contentId, compensedId) {
     $('#'+_this._containerId + ' div.float-right > ul.nav > li > button.close[role="increase"]').click(function() {
         // increase console height
         _this._containerObj.css('height', '+=30px');
+        _this._contentObj.css('height', '+=30px');
         _this._compensedObj.css('margin-bottom', '+=30px');
         $('#'+_this._containerId + ' div.float-right > ul.nav > li > button.close[role="reduce"]').css('margin-bottom', '+=30px');
     });
@@ -94,6 +93,7 @@ Console.initialize = function(containerId, contentId, compensedId) {
         // decrease console height
         if  (_consoleHeight > 100) {
             _this._containerObj.css('height', '-=30px');
+            _this._contentObj.css('height', '-=30px');
             _this._compensedObj.css('margin-bottom', '-=30px');
             $('#'+_this._containerId + ' div.float-right > ul.nav > li > button.close[role="reduce"]').css('margin-bottom', '-=30px');
         }
@@ -103,7 +103,7 @@ Console.initialize = function(containerId, contentId, compensedId) {
         if (this._useUI) {
             this.show();
         }
-        this.log('Console is ready.');
+        this._debug.info('Console is ready.');
     }
 };
 
@@ -129,7 +129,6 @@ Console.log = function(message) {
                 _html += '<br />';
             }
             _html += message;
-            console.log(_html);
             this._contentObj.html(_html);
         }
 
