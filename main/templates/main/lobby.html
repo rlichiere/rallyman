@@ -109,11 +109,13 @@
         <div style="display:none;">
             {% render_field form_pgps.selected_page_size class="form-control" %}
         </div>
+        {% if not user.is_anonymous %}
         <div class="form-group ml-2 float-right">
             <a id="btnCreateModal" href="{% url 'rally-create' %}" class="btn btn-primary" data-toggle="modal" data-target="#GenericModal">
                 <i class="far fa-plus-square"></i> Create Rally
             </a>
         </div>
+        {% endif %}
     </div>
 
     <!-- List -->
