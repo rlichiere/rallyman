@@ -38,6 +38,9 @@ class RegisterToRallyView(LoginRequiredMixin, MainTemplateView):
         setattr(_rally, 'available_slots_count', _availableSlotsCount)
         context['participations'] = _participations
 
+        context['car_skins'] = CarSkin.objects.all()
+        context['default_car_skin'] = CarSkin.objects.last()
+
         self.log.endView()
         return context
 
