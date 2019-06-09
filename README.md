@@ -244,9 +244,7 @@ python manage.py runserver localhost:8000
 
 * Mandatory
   * add Rally update form (label, opened_at, started_at)
-  * Console:
-    * implement _Close console_ button
-    * implement _Increase_/_Reduce_ console height buttons
+    
 * Quick
   * implement the configuration loader
 

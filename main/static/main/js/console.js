@@ -76,17 +76,26 @@ Console.initialize = function(containerId, contentId, compensedId) {
         _this._containerObj.hide();
         _this._compensedObj.css('margin-bottom', '-=' + _consoleHeight + 'px');
     });
+    $('#'+_this._containerId + ' div.float-right > ul.nav > li > button.close[role="reduce"]').click(function() {
+        // increase console height
+        _this._containerObj.css('height', '100px');
+        _this._compensedObj.css('margin-bottom', '100px');
+        $(this).css('margin-bottom', '0');
+
+    });
     $('#'+_this._containerId + ' div.float-right > ul.nav > li > button.close[role="increase"]').click(function() {
         // increase console height
         _this._containerObj.css('height', '+=30px');
         _this._compensedObj.css('margin-bottom', '+=30px');
+        $('#'+_this._containerId + ' div.float-right > ul.nav > li > button.close[role="reduce"]').css('margin-bottom', '+=30px');
     });
     $('#'+this._containerId + ' div.float-right > ul.nav > li > button.close[role="decrease"]').click(function() {
         let _consoleHeight = _this._containerObj.height();
         // decrease console height
         if  (_consoleHeight > 100) {
             _this._containerObj.css('height', '-=30px');
-            _this._compensedObj.css('margin-bottom', '+=30px');
+            _this._compensedObj.css('margin-bottom', '-=30px');
+            $('#'+_this._containerId + ' div.float-right > ul.nav > li > button.close[role="reduce"]').css('margin-bottom', '-=30px');
         }
     });
 
