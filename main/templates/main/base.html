@@ -180,11 +180,9 @@
 
     <script>
 
-        Debug.initialize(Console, DebugLevels.DEBUG);
-
-        Console.useUIOutput();
+        Debug.initialize(Console, DebugLevels.{{ data.debug.client.level }});
+        Console.useUIOutput({{ data.debug.client.console.useUIOutput|lower }});
         Console.initialize('ConsoleContainer', 'ConsoleContent', 'main-page-content', Debug);
-
 
         $(document).ready(function(){
 

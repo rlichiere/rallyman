@@ -1,0 +1,7 @@
+
+debug:
+  client:
+    level: 'DEBUG'
+    console:
+      useUIOutput: True
+  fail_on_warning: False
