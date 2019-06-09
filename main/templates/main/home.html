@@ -6,9 +6,9 @@
 
 {% block page-body %}
 
-<h4 style="margin-bottom: 25px">It's rally time!</h4>
+<h4>It's rally time!</h4>
 
-<p>
+<p class="mt-4">
     At the wheel of your rally car, fight in wild stages!
 </p>
 <p>
@@ -20,31 +20,56 @@
 <div class="alert alert-warning alert-dismissible" role="alert">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     As an unregistered user, you can only access to a limited number of features.<br />
-    We invite you to <a href="{% url 'auth-signup' %}">register</a> in order to fully enjoy the game.
+    We invite you to <a href="{% url 'auth-signup' %}">sign-up</a> in order to fully enjoy the game.
 </div>
 {% endif %}
 
-<ul>
-    <li>
-        <a href="{% url 'main-lobby' %}?rly_stat={{ const.lobby.rallies.RallyStatus.STARTED }}">
-            Spectate a running rally
-        </a>
-    </li>
-    <li>
-        <a {% if not user.is_anonymous %}href="{% url 'main-lobby' %}?rly_stat={{ const.lobby.rallies.RallyStatus.OPENED }}&usr_part=False" {% else %}title="You must register in order to Join a rally"{% endif %}>
-            Join a opened rally
-        </a>
-    </li>
-    <li>
-        <a {% if not user.is_anonymous %}href="{% url 'main-lobby' %}?rly_stat={{ const.lobby.rallies.RallyStatus.STARTED }}" {% else %}title="You must register in order to Create a rally"{% endif %}>
-            Create a new rally
-        </a>
-    </li>
-    <li>
-        <a {% if not user.is_anonymous %}href="{% url 'main-lobby' %}?rly_crea=me" {% else %}title="You must register in order to Manage your rallies"{% endif %}>
-            Manage the rallies you have created
-        </a>
-    </li>
-</ul>
+<nav>
+    <a href="{% url 'main-lobby' %}?rly_stat={{ const.lobby.rallies.RallyStatus.STARTED }}" class="btn btn-primary">
+        Spectate a running rally
+    </a>
+
+    <a
+        {% if not user.is_anonymous %}
+            href="{% url 'main-lobby' %}?rly_stat={{ const.lobby.rallies.RallyStatus.OPENED }}&usr_part=False" class="btn btn-primary"
+        {% else %}
+            href="#" class="btn btn-secondary" data-toggle="tooltip" title="You must sign-up in order to Join a rally"
+        {% endif %}
+    >
+        Join a opened rally
+    </a>
+
+    <a
+        {% if user.is_anonymous %}
+            class="btn btn-secondary" href='#' data-toggle="tooltip" title="You must sign-up in order to Create a rally"
+        {% else %}
+            id="btnCreateModal" class="btn btn-primary" href="{% url 'rally-create' %}" data-toggle="modal" data-target="#GenericModal"
+        {% endif %}
+    >
+        Create a new rally
+    </a>
+
+    <a
+        {% if user.is_anonymous %}
+            href="#" class="btn btn-secondary" data-toggle="tooltip" title="You must sign-up in order to Manage your rallies"
+        {% else %}
+            href="{% url 'main-lobby' %}?rly_crea=me" class="btn btn-primary"
+        {% endif %}
+    >
+        Manage the rallies you have created
+    </a>
+</nav>
+
+{% endblock %}
+
+{% block extra_script %}
+
+<script>
+
+    $('#btnCreateModal').click(function() {
+        loadElementContentFromUrl('GenericModalContent', $(this).prop('href'));
+    });
+
+</script>
 
 {% endblock %}

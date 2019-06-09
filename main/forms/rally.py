@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime as dt
+from datetime import timedelta
 
 from django import forms
 from django.core.validators import RegexValidator
 
-from ..core import utils_str
+from ..core import utils_date, utils_str
+from ..core.const import rally as const_rally
 from ..models import CarSkin, Participation, Stage
 
 
@@ -16,13 +18,28 @@ class CreateRallyForm(forms.Form):
                             ], label='Label', help_text='Help for Label')
     set_opened_at = forms.BooleanField(required=False)
     opened_at = forms.DateTimeField()
+    started_at = forms.DateTimeField()
 
     def __init__(self, *args, **kwargs):
         request = kwargs.pop('request')
         super(CreateRallyForm, self).__init__(*args, **kwargs)
 
         self.fields['label'].initial = utils_str.get_random_phrase()
-        self.fields['opened_at'].initial = dt.now()
+        _now = dt.now()
+        self.fields['opened_at'].initial = utils_date.round_to_next_minutes(_now,
+                                                                            const_rally.ROUND_OPENED_AT_MINUTES)
+
+        _rounded = utils_date.round_to_next_minutes(_now, const_rally.ROUND_STARTED_AT_MINUTES)
+        self.fields['started_at'].initial = _rounded + timedelta(minutes=const_rally.DELAY_STARTED_AT_MINUTES)
+
+    def clean_started_at(self):
+        _startedAt = self.cleaned_data['started_at']
+        _openedAt = self.cleaned_data['opened_at']
+
+        if _openedAt > _startedAt:
+            raise forms.ValidationError('Start date must be later than Open date')
+
+        return self.cleaned_data['started_at']
 
 
 class EditRallyStagesForm(object):
@@ -124,4 +141,24 @@ class RegisterToRallyForm(forms.Form):
         for _skinChoice in _skinsChoices:
             if _skinChoice[0] not in _usedSkinsIds:
                 _remainingChoices.append(_skinChoice)
+
+        self.fields['car_skin'].choices = _remainingChoices
+
+
+class InviteToRallyForm(forms.Form):
+    car_skin = forms.ChoiceField(choices=CarSkin.as_choices(CarSkin.availableSkins()))
+
+    def __init__(self, *args, **kwargs):
+        request = kwargs.pop('request')
+        _rallyId = kwargs.pop('rally_id')
+        super(InviteToRallyForm, self).__init__(*args, **kwargs)
+
+        # initialize car_skins field with remaining skins for the given rally
+        _usedSkinsIds = Participation.objects.filter(rally=_rallyId).values_list('car_skin', flat=True)
+        _skinsChoices = self.fields['car_skin'].choices
+        _remainingChoices = list()
+        for _skinChoice in _skinsChoices:
+            if _skinChoice[0] not in _usedSkinsIds:
+                _remainingChoices.append(_skinChoice)
+
         self.fields['car_skin'].choices = _remainingChoices

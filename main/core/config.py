@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from rallyman import settings as _main_settings
 
+from configuration.configurator import Configurator, Configuration
 from ..core import const as _main_const
+from ..core import crons as _crons
 from ..core import utils_dict as _utils_dict
 
 
@@ -10,23 +12,16 @@ const = _main_const
 
 
 """ Configured data """
-# todo : this dictionary should contain configuration data loaded from an external (non-git) file
-data = {
-    'config_key_1': 'config_key_1_value',
-    'config_key_2': 'config_key_2_value',
-
-    'debug': {
-        'fail_on_warning': False,
-    }
-}
+_confData = Configuration('data', 'rallyman\\config\\config.yml')
+Configurator.register(_confData)
+data = Configurator.load('data')
 
 
 """ Configured Locales """
 # todo : this dictionary should contain localization data loaded from localized templates
-locales = {
-    'KEY_1': 'KEY_1_VALUE',
-    'KEY_2': 'KEY_2_VALUE',
-}
+_confLocales = Configuration('locales', 'rallyman\\config\\locales.yml')
+Configurator.register(_confLocales)
+locales = Configurator.load('locales')
 
 
 """ Main settings """
@@ -38,3 +33,13 @@ settings = _main_settings
 
 def get(path, default=None):
     return _utils_dict.access(data, path, default)
+
+
+""" Crons """
+
+crons = {
+    'rallies_status': _crons.RalliesStatusCron(),
+}
+
+for _cronName, _cron in crons.iteritems():
+    _cron.start()

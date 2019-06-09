@@ -9,6 +9,8 @@
 {% load_user_data user participated_rallies %}
 {% load_user_data user managed_rallies %}
 
+{#{% check_cron rallies_status %}#}
+
 <html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -35,6 +37,8 @@
 
     <!-- Main JavaScript -->
     <script src="{% static 'main/js/console.js' %}"></script>
+    <script src="{% static 'main/js/debug.js' %}"></script>
+    <script src="{% static 'main/js/utils.js' %}"></script>
 
     <style type="text/css">
 
@@ -46,11 +50,8 @@
 
     <!-- Navigation menu -->
     <nav class="navbar navbar-expand bg-dark fixed-top navbar-dark">
-        <a class="navbar-brand" href="#">Rallyman</a>
+        <a class="navbar-brand" href="{% url 'main-home' %}">Rallyman</a>
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link {% if 'home' in ariane %}active{% endif %}" href="{% url 'main-home' %}">Home</a>
-            </li>
             <li class="nav-item">
                 <a class="nav-link {% if 'lobby' in ariane %}active{% endif %}" href="{% url 'main-lobby' %}">Lobby</a>
             </li>
@@ -114,7 +115,6 @@
                 </div>
             </li>
             {% endif %}
-
         </ul>
         <ul class="navbar-nav">
         {% if user.is_anonymous %}
@@ -122,6 +122,17 @@
             <li class="nav-item"><a class="nav-link {% if 'signup' in ariane %}active{% endif %}" href="{% url 'auth-signup' %}"><i class="far fa-address-card"></i> Sign up</a></li>
         {% else %}
             {% if user.is_superuser %}
+            <li class="nav-item dropdown" id="debugMenu">
+                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                    Debug
+                </a>
+                <div class="dropdown-menu">
+                    {% if data.debug.client.console.useUIOutput %}
+                    <a class="dropdown-item" href="#" id="debugMenuShowConsole">Show console</a>
+                    <a class="dropdown-item" href="#" id="debugMenuHideConsole">Hide console</a>
+                    {% endif %}
+                </div>
+            </li>
             <li class="nav-item"><a class="nav-link" href="/admin"><i class="fas fa-user-shield"></i> Admin</a></li>
             {% endif %}
             <li class="nav-item"><a class="nav-link {% if 'profile' in ariane %}active{% endif %}" href="{% url 'user-profile' %}"><i class="far fa-user"></i> Profile</a></li>
@@ -150,6 +161,9 @@
         <!-- Page content -->
         <div class="row mr-0 ml-0">
             <div class="col-lg-12 mt-2 mb-2">
+                <div class="float-right">
+                    {% block page-submenu %}{% endblock %}
+                </div>
                 <h2>{% block page-header %}{% endblock %}</h2>
             </div>
             <div class="col-lg-12">
@@ -167,9 +181,10 @@
     </div>
 
     <footer class="fixed-bottom" id="ConsoleContainer">
-        <div class="float-right fixed-bottom pr-1 mb-2">
+        <div class="float-right fixed-bottom pr-1 mb-2 mr-3">
             <ul class="nav flex-column">
                 <li><button type="button" class="close" role="close"><i class="fas fa-times"></i></button></li>
+                <li><button type="button" class="close" role="reduce" style="font-size: 1.6em"><i class="fas fas fa-minus"></i></button></li>
                 <li><button type="button" class="close" role="increase"><i class="fas fa-angle-double-up"></i></button></li>
                 <li><button type="button" class="close" role="decrease"><i class="fas fa-angle-double-down"></i></button></li>
             </ul>
@@ -179,8 +194,12 @@
 
     <script>
 
-        Console.useUIOutput();
-        Console.initialize('ConsoleContainer', 'ConsoleContent', 'main-page-content');
+        Debug.initialize(Console, DebugLevels.{{ data.debug.client.level }});
+        Console.useUIOutput({{ data.debug.client.console.useUIOutput|lower }});
+        Console.initialize('ConsoleContainer', 'ConsoleContent',
+            'main-page-content',
+            'debugMenuShowConsole', 'debugMenuHideConsole',
+            Debug);
 
         $(document).ready(function(){
 

@@ -8,61 +8,85 @@
 {% block page-body %}
 
 <style>
+
     .rallies-list td, .rallies-list th {
         text-align: center;
-    }
-
-    .rallies-list > table {
-        margin-top: 7px;
     }
     .rallies-list th.orderable {
         cursor: pointer;
     }
-
     .rallies-list-tooltip p {
         text-align: left;
     }
 
-    #btnReset {
+    #btnResetContainer {
         display: none;
-        margin-left: 7px
+        {#margin-left: 7px;#}
     }
     #btnRefresh {
-        margin-left: 7px
+        {#margin-left: 7px;#}
     }
 
-    #formFilter label {
-        margin-right: 5px;
-    }
 </style>
 
 <div class="row">
 
     <!-- Filter -->
-    <div class="col-lg-12 mb-4">
+    <div class="col-lg-12">
         <form class="form-inline" method="get" action="{% url 'main-lobby' %}" id="formFilter">
-            Filter by:
-            <div class="form-group ml-4">
-                <label for="{{ form_filter.rly_stat.id_for_label }}">Rally status</label>
-                {% render_field form_filter.rly_stat class+='form-control' %}
+            Filter by
+            <div class="form-group ml-2">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <label for="{{ form_filter.rly_stat.id_for_label }}" class="input-group-text">Rally status</label>
+                    </div>
+                    {% render_field form_filter.rly_stat class+='form-control' %}
+                </div>
             </div>
 
             {% if not user.is_anonymous %}
-            <div class="form-group ml-4">
-                <label for="{{ form_filter.usr_part.id_for_label }}">Rallies I participate in</label>
-                {% render_field form_filter.usr_part class+='form-control' %}
+            <div class="form-group ml-2">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <label for="{{ form_filter.usr_part.id_for_label }}" class="input-group-text">Rallies I participate in</label>
+                    </div>
+                    {% render_field form_filter.usr_part class+='form-control' %}
+                </div>
             </div>
             {% endif %}
 
             {% if not user.is_anonymous %}
-            <div class="form-group ml-4">
-                <label for="{{ form_filter.rly_crea.id_for_label }}">Rally creator</label>
-                {% render_field form_filter.rly_crea class+='form-control' %}
+            <div class="form-group ml-2">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <label for="{{ form_filter.rly_crea.id_for_label }}" class="input-group-text">Rally creator</label>
+                    </div>
+                    {% render_field form_filter.rly_crea class+='form-control' %}
+                </div>
             </div>
             {% endif %}
 
-            <button id="btnRefresh" type="submit" class="btn btn-primary ml-4">Refresh</button>
-            <button id="btnReset" class="btn btn-warning">Reset</button>
+            <div class="form-group ml-2">
+                <div class="input-group">
+                    <a id="btnRefresh" type="submit" class="btn btn-primary btrr-0 bbrr-0" href="#" onclick="document.getElementById('formFilter').submit()">
+                        <i class="fas fa-sync"></i> Apply filter
+                    </a>
+                    <div class="input-group-append">
+                        {% include 'main/generic/help_button.html' with title='Apply filter' content='Applies the selected filters to the list of rallies.' %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group ml-2" id="btnResetContainer">
+                <div class="input-group">
+                    <a id="btnReset" class="btn btn-warning btrr-0 bbrr-0" href="#" role="reset">
+                        <i class="fas fa-ban"></i> Reset filter
+                    </a>
+                    <div class="input-group-append">
+                        {% include 'main/generic/help_button.html' with title='Reset filter' content='Resets the filter and reloads the default list of rallies.' %}
+                    </div>
+                </div>
+            </div>
 
             <div style="display:none;">
                 {% render_field form_filter.ord_b %}
@@ -72,7 +96,7 @@
     </div>
 
     <!-- Pagination : number of items in page -->
-    <div class="col-lg-12 mb-1">
+    <div class="col-lg-12 mt-3">
         <div style="display:inline-block">
             Show
         </div>
@@ -85,39 +109,47 @@
         <div style="display:none;">
             {% render_field form_pgps.selected_page_size class="form-control" %}
         </div>
-
-        <div class="float-right">
+        {% if not user.is_anonymous %}
+        <div class="form-group ml-2 float-right">
             <a id="btnCreateModal" href="{% url 'rally-create' %}" class="btn btn-primary" data-toggle="modal" data-target="#GenericModal">
                 <i class="far fa-plus-square"></i> Create Rally
             </a>
         </div>
-
+        {% endif %}
     </div>
 
     <!-- List -->
-    <div class="rallies-list col-lg-12">
+    <div class="rallies-list col-lg-12 mt-1">
         <table class="table table-sm" style="display: table">
         <thead>
             <tr>
                 <th class="orderable" onclick="orderByColumnClicked('label');">Rally name</th>
-                <th>Number of participants</th>
-                <th>Number of stages</th>
+                <th>Participants</th>
+                <th>Stages</th>
                 <th class="orderable" onclick="orderByColumnClicked('status');">Rally status</th>
-                <th class="orderable" onclick="orderByColumnClicked('creator');">Creator of the rally</th>
-                <th class="orderable" onclick="orderByColumnClicked('created_at');">Rally created at</th>
+                <th class="orderable" onclick="orderByColumnClicked('creator');">Created by</th>
                 <th class="orderable" onclick="orderByColumnClicked('opened_at');">Rally opens at</th>
-
+                <th class="orderable" onclick="orderByColumnClicked('started_at');">Rally starts at</th>
                 {% if not user.is_anonymous %}
                 <th>Join</th>
                 <th>Quit</th>
                 <th>Delete</th>
+                {% endif %}
+                {% if user.is_superuser %}
+                    <th>Admin</th>
                 {% endif %}
             </tr>
         </thead>
         <tbody>
         {% for rally in rallies %}
             <tr>
-                <td>{{ rally.label }}</td>
+                <td>
+                    {% if rally.label|length > const.lobby.rallies.RALLY_LABEL_MAX_LENGTH_IN_LIST %}
+                        <span title="{{ rally.label }}">{{ rally.label|slice:const.lobby.rallies.RALLY_LABEL_MAX_LENGTH_IN_LIST_SLICE }}...</span>
+                    {% else %}
+                        {{ rally.label }}
+                    {% endif %}
+                </td>
                 <td>
                     <a href="#" class="btn btn-secondary btn-sm"
                     {% if rally.participants_count > 0 %}
@@ -126,7 +158,7 @@
                                         <h5>Participants</h5>
                                         <p>
                                         {% for part in rally.participants %}
-                                            {{ part.player }}<br />
+                                            {{ part.player.get_full_name }}<br />
                                         {% endfor %}
                                         </p>
                                     </div>"
@@ -155,8 +187,8 @@
                 </td>
                 <td>{{ rally.status|lower|capfirst }}</td>
                 <td>{{ rally.creator.get_full_name }}</td>
-                <td>{{ rally.created_at }}</td>
                 <td>{{ rally.opened_at }}</td>
+                <td>{{ rally.started_at }}</td>
 
                 {% if not user.is_anonymous %}
                 <td>
@@ -185,14 +217,20 @@
                 </td>
                 {% endif %}
 
+                {% if user.is_superuser %}
+                <td>
+                    {% include 'main/generic/link_to_bo.html' with instance=rally %}
+                </td>
+                {% endif %}
             </tr>
         {% empty %}
-            <tr><td colspan="5">You don't have a rally in progress.</td></tr>
+            <tr><td colspan="{% if user.is_superuser %}11{% else %}10{% endif %}">No rallies found.</td></tr>
         {% endfor %}
         </tbody>
         </table>
 
         <!-- Pagination navigation  -->
+        {% if rallies_total > form_pgps.selected_page_size.value %}
         <div class="float-sm-right">
             <ul class="pagination ">
 
@@ -237,6 +275,7 @@
             {% endif %}
             </ul>
         </div>
+    {% endif %}
     </div>
 
 </div>
@@ -263,7 +302,9 @@
         $('#filter_form').submit();
     }
 
-    let btnReset = $('#formFilter #btnReset');
+    let btnResetContainer = $('#formFilter #btnResetContainer');
+    {#let btnReset = $('#formFilter #btnReset');#}
+    let btnReset = $('#formFilter #btnResetContainer [role="reset"]');
     let inputFilterUserParticipation = $('#{{ form_filter.usr_part.id_for_label }}');
     let inputFilterRallyStatus = $('#{{ form_filter.rly_stat.id_for_label }}');
     let inputFilterRallyCreator = $('#{{ form_filter.rly_crea.id_for_label }}');
@@ -298,30 +339,16 @@
         {% endif %}
     }
 
-    function loadElementContentFromUrl(elem_id, url) {
-        let elem = $('#' + elem_id);
-        elem.html('');
-        $.ajax({
-            url: url,
-            success: function(data, status, xhr) {
-                elem.html(data);
-            },
-            error: function(xhr, status, data) {
-                elem.html(data);
-            }
-        });
-    }
-
     $(document).ready(function() {
 
         inputFilterUserParticipation.change(function() {
-            btnReset.show();
+            btnResetContainer.show();
         });
         inputFilterRallyStatus.change(function() {
-            btnReset.show();
+            btnResetContainer.show();
         });
         inputFilterRallyCreator.change(function() {
-            btnReset.show();
+            btnResetContainer.show();
         });
 
         btnReset.click(function() {
@@ -375,7 +402,7 @@
 
 
         if (isResetRequired()) {
-            btnReset.show();
+            btnResetContainer.show();
         }
 
     });

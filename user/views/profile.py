@@ -11,7 +11,7 @@ class UserProfileView(LoginRequiredMixin, MainTemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(UserProfileView, self).get_context_data(**kwargs)
-        context['ariane'] = 'profile'
+        context['ariane'] = ['profile']
         context['form_fields'] = UserProfileForm(request=self.request)
         context['form_password'] = UserProfilePasswordChangeForm(request=self.request)
         return context

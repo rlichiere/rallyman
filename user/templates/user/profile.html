@@ -2,6 +2,11 @@
 {% load widget_tweaks %}
 
 {% block page-title %}Profile{% endblock %}
+
+{% block page-submenu %}
+    {% include 'main/generic/link_to_bo.html' with instance=user model='user' module='auth' %}
+{% endblock %}
+
 {% block page-header %}Profile{% endblock %}
 
 {% block page-body %}

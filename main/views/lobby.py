@@ -174,8 +174,6 @@ class LobbyView(MainTemplateView):
             # slot 5
             if num_page <= 4:
                 pages_list.append(5)
-            # elif num_page == 5:
-            #     pages_list.append(6)
             elif num_page >= (page_count - 2):
                 pages_list.append(page_count - 2)
             else:

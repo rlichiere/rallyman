@@ -16,7 +16,7 @@ class SignUpView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super(SignUpView, self).get_context_data(**kwargs)
-        context['ariane'] = 'signup'
+        context['ariane'] = ['signup']
         return context
 
     def form_valid(self, form):

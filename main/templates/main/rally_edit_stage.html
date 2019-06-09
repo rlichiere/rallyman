@@ -6,6 +6,9 @@
 
 <div class="panel mt-4" id="{{ oStage }}_Stage">
     <div class="panel-header mb-2">
+        <div class="float-right">
+            {% include 'main/generic/link_to_bo.html' with instance=stage.stage_instance %}
+        </div>
         <h4 class="modal-title">Stage {{ stage_num }}</h4>
     </div>
 
@@ -80,17 +83,19 @@
     _o{{oStage}}.addSection = function() {
         let _lp = '_o{{oStage}}.addSection: ';
         let url = '{% url 'rally-edit-add-section' pk=rally.id stage_num=stage_num %}';
-        let _this = _o{{oStage}}
+        let _this = _o{{oStage}};
         url += '?section_num=' + (this.getSectionsCount() + 1);
+        Debug.storeAjaxCall(url);
         $.ajax({
             url: url,
             success: function(data, status, xhr) {
+                Debug.storeAjaxResult(url, xhr, status, data);
                 $('#{{ oStage }}_' + _this.getSectionsCount() + '_removeBtn').hide();
                 _this.incrSectionsCount();
                 _this.sectionsList.append(data);
             },
             error: function(xhr, status, data) {
-                console.log(_lp+' ' + xhr.status + 'Error while calling url : ' + url + ' : ' + data);
+                Debug.storeAjaxResult(url, xhr, status, data);
             }
         })
     };

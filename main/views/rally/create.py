@@ -45,7 +45,9 @@ class CreateRallyView(LoginRequiredMixin, MainTemplateView):
             _respContent = json.dumps({'error': _form.errors})
             return HttpResponse(content=_respContent, content_type='application/json', status=httplib.BAD_REQUEST)
 
-        _rally = Rally(label=_form.cleaned_data.get('label'), creator=_executor)
+        _rally = Rally(label=_form.cleaned_data.get('label'),
+                       creator=_executor,
+                       started_at=_form.cleaned_data.get('started_at'))
 
         if _form.cleaned_data.get('set_opened_at'):
             _openedAt = _form.cleaned_data.get('opened_at')

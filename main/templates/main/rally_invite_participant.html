@@ -1,0 +1,75 @@
+{% load static %}
+{% load widget_tweaks %}
+
+<style>
+
+</style>
+
+<form method="POST" action="{% url 'rally-invite-participant' pk=rally.id %}?redirect=rally-edit-participants&redirect_pk={{ rally.id }}">
+{% csrf_token %}
+
+    <div class="modal-header">
+        <h4 class="modal-title">Invite participant</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+    </div>
+
+    <div class="modal-body">
+        <label for="invited_player">Select a player to invite to the rally</label>
+        <select id="invited_player" name="invited_player" class="form-control">
+        {% for available_player in available_players %}
+            <option value="{{ available_player.id }}">{{ available_player.get_full_name }}</option>
+        {% endfor %}
+        </select>
+
+        {% if rally.available_slots_count > 0 %}
+        <div class="input-group mt-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="{{ form_invite.car_skin.id_for_label }}">
+                    Car selection
+                </label>
+                <span class="input-group-text">
+                    <img id="{{ form_invite.car_skin.id_for_label }}_img" src="{% static 'main/img/empty.png' %}" width="16" />
+                </span>
+            </div>
+            {% render_field form_invite.car_skin class+='form-control' %}
+            <div class="input-group-append">
+                {% include 'main/generic/help_button.html' with title='Car selection' content='Choose the color of the car you want to participate with' %}
+            </div>
+        </div>
+        <div class="mt-3">
+            <strong>Any invitation can be cancelled until the start date</strong> of the rally. After this date, it won't be possible to withdraw the registration.
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Invite</button>
+    </div>
+
+</form>
+
+<script>
+
+    $(document).ready(function() {
+        let invitedPlayerCarSkinObj = $('#{{ form_invite.car_skin.id_for_label }}');
+        let invitedPlayerCarSkinImg = $('#{{ form_invite.car_skin.id_for_label }}_img');
+
+        {% for car_skin in car_skins %}
+        if ('{{ car_skin.id }}' === invitedPlayerCarSkinObj.val()) {
+            invitedPlayerCarSkinImg.prop('src', '/static/main/car_skins/{{ car_skin.file }}');
+        }
+        {% endfor %}
+
+        invitedPlayerCarSkinObj.change(function() {
+            {% for car_skin in car_skins %}
+            if ('{{ car_skin.id }}' === $(this).val()) {
+                invitedPlayerCarSkinImg.prop('src', '/static/main/car_skins/{{ car_skin.file }}');
+            }
+            {% endfor %}
+        });
+
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
+</script>

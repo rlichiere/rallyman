@@ -221,17 +221,17 @@ python manage.py runserver localhost:8000
   ```shell
   python manage.py dumpdata --indent 2 --exclude auth.permission --exclude sessions.session --exclude admin.logentry --exclude contenttypes > backup/backup.json
   ```
-* Backup the configuration of the application
+* Backup the configuration of the application to backuped.zip
   ```shell
-  python manage.py configuration backup --file backup.zip --confirm 
+  python manage.py configuration -m backup --file backuped 
   ```
 * Restore the database content
   ```shell
   python manage.py loaddata backup/backup.json
   ```
-* Restore the configuration of the application
+* Restore the configuration of the application from torestore.zip
   ```shell
-  python manage.py configuration restore --file backup.zip --confirm 
+  python manage.py configuration -m restore --file torestore 
   ```
 
 
@@ -244,11 +244,20 @@ python manage.py runserver localhost:8000
 
 * Mandatory
   * add Rally update form (label, opened_at, started_at)
-  * Console:
-    * implement _Close console_ button
-    * implement _Increase_/_Reduce_ console height buttons
+  * implement sections connections (input to output anchors)
+    * this will be required to manage map connections
+  * implement position of participants in rally
+    * use arrival order of participations
+    * the rally creator should be able to change participants positions until the start of the rally
 * Quick
-  * implement the configuration loader
+  * add link-to-backoffice where it can be usefull for the superusers
+  * add a debug menu to manage:
+    * console features (show)
+      * choose logging level: verbose/debug/info/warning/error
+      * search errors button
+    * ping of backend availability
+      * on/off
+      * refresh delay change
 
 * Later
   * GameUI
@@ -257,11 +266,10 @@ python manage.py runserver localhost:8000
   * GameLogic
     * implement the game process:
       1. Initialize game data
-      2. Place participants on track
-      3. Play 1 turn of dices to define the start order of the participants
-      4. Start the game by giving the hand to the first player on track
-  --> 5. Manage this player play
-  |   6. Elect the next participant (the next car on the track)
-  |-< 7. Repeat until all cars have finished the stage
-      8. Process the results and close the game
-
+      1. Place participants on track
+      1. Play 1 turn of dices to define the start order of the participants
+      1. Start the game by giving the hand to the first player on track
+      1. Manage this player play
+      1. Elect the next participant (the next car on the track)
+      1. Repeat from e. until all cars have finished the stage
+      1. Process the results and close the game

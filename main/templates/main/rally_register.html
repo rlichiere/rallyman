@@ -1,3 +1,4 @@
+{% load static %}
 {% load widget_tweaks %}
 
 <style>
@@ -19,12 +20,21 @@
     </div>
 
     <div class="modal-body">
-        <div class="mb-4">
+        <div>
             You're about to join the rally:
-            <pre class="rly-data rly-title" style="margin-top: 5px">{{ rally.label }}</pre>
+            <pre class="rly-data rly-title mt-1">{{ rally.label }}</pre>
         </div>
 
-        <div class="mb-4">
+        <div class="mt-3">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <label for="startsAt" class="input-group-text">Starts at</label>
+                </div>
+                <input id="startsAt" type="text" value="{{ rally.started_at }}" class="form-control" readonly/>
+            </div>
+        </div>
+
+        <div class="mt-3">
             Current participants:
             {% if participations|length %}
                 <table class="table table-sm" style="display:table">
@@ -50,7 +60,7 @@
             {% endif %}
         </div>
 
-        <p class="mb-2">
+        <p class="mt-3">
             There {% if rally.available_slots_count != 1 %}are {% if rally.available_slots_count > 1 %}still {% endif %}{% else %}is {% endif %}
             <strong>{{ rally.available_slots_count }} place{% if rally.available_slots_count != 1 %}s{% endif %} available</strong>.
             <br />
@@ -60,16 +70,21 @@
         </p>
 
         {% if rally.available_slots_count > 0 %}
-        <div class="input-group mb-4">
+        <div class="input-group mt-2">
             <div class="input-group-prepend">
-                <span class="input-group-text">Car selection</span>
+                <span class="input-group-text">
+                    Car selection
+                </span>
+                <span class="input-group-text">
+                    <img id="{{ form_register.car_skin.id_for_label }}_img" src="{% static 'main/img/empty.png' %}" width="16" />
+                </span>
             </div>
             {% render_field form_register.car_skin class+='form-control' %}
             <div class="input-group-append">
-                <a class="btn btn-primary" href="#" data-toggle="tooltip" title="Choose the color of the car you want to participate with">?</a>
+                {% include 'main/generic/help_button.html' with title='Car selection' content='Choose the color of the car you want to participate with' %}
             </div>
         </div>
-        <div>
+        <div class="mt-3">
             <strong>Any registration can be cancelled until the start date</strong> of the rally. After this date, you will no longer be able to withdraw your registration.
         </div>
         {% endif %}
@@ -78,7 +93,7 @@
 
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Register</button>
     </div>
 
 </form>
@@ -86,6 +101,20 @@
 <script>
 
     $(document).ready(function() {
+
+        {% for car_skin in car_skins %}
+        if ('{{ car_skin.id }}' === $('#{{ form_register.car_skin.id_for_label }}').val()) {
+            $('#{{ form_register.car_skin.id_for_label }}_img').prop('src', '/static/main/car_skins/{{ car_skin.file }}');
+        }
+        {% endfor %}
+
+        $('#{{ form_register.car_skin.id_for_label }}').change(function() {
+            {% for car_skin in car_skins %}
+            if ('{{ car_skin.id }}' === $(this).val()) {
+                $('#{{ form_register.car_skin.id_for_label }}_img').prop('src', '/static/main/car_skins/{{ car_skin.file }}');
+            }
+            {% endfor %}
+        });
 
         $('[data-toggle="tooltip"]').tooltip();
     });

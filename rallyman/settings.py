@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'widget_tweaks',
+    'configuration',
     'user',
     'main',
 ]
@@ -162,7 +163,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# Rallyman was created in 43140 FRANCE, so all rallies are based on this timezone
+TIME_ZONE = 'Europe/Paris'
 
 USE_I18N = True
 

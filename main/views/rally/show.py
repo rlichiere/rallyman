@@ -14,7 +14,7 @@ class ShowRallyView(MainTemplateView):
         self.log.startView(_executor)
 
         context = super(ShowRallyView, self).get_context_data(**kwargs)
-        context['ariane'] = 'show_rally'
+        context['ariane'] = ['show_rally']
         _rally = self.get_object_or_404(Rally, kwargs.get('pk'))
         context['rally'] = _rally
 

@@ -137,3 +137,24 @@ def user_managed_rallies(user):
 
             _data[_rally.status].append(_rally)
     return _data
+
+
+@register.filter
+def instance_model(instance):
+    """
+    Template filter that returns instance model name (in lower case).
+    E.g. if field is Rally then {{ instance|instance_type }} will
+    return 'rally'.
+    """
+    return type(instance).__name__.lower()
+
+
+@register.filter
+def instance_module(instance):
+    """
+    Template filter that returns instance model name (in lower case).
+    E.g. if field is Rally then {{ instance|instance_type }} will
+    return 'rally'.
+    """
+    _module = type(instance).__module__
+    return _module[:_module.find('.')]

@@ -1,0 +1,23 @@
+{% comment %}
+    This generic template renders a button targeting the backoffice page of given instance.
+
+    Model and module names are retrieven automatically from given instance. This works fine for custom models.
+    Unfortunately, this doesn't work for some external models such as the User model.
+    In that case, the real model name and module name of the given instance must be specified in the parameters.
+
+    Parameters:
+        instance <Model>: Model instance from which to build the link to the backoffice page.
+        model    <str>  : Optionnal. Use this value instead of calculated model name.
+        module   <str>  : Optionnal. Use this value instead of calculated module name.
+
+    Examples:
+        {% include 'main/generic/link_to_bo.html' with instance=some_rally %}
+        {% include 'main/generic/link_to_bo.html' with instance=some_user model='user' module='auth' %}
+{% endcomment %}
+{% load maintags %}
+
+<a href="/admin/{% if module %}{{ module }}{% else %}{{ instance|instance_module }}{% endif %}/{% if model %}{{ model }}{% else %}{{ instance|instance_model }}{% endif %}/{{ instance.id }}/change/"
+   class="btn btn-primary btn-sm"
+   target="_blank">
+    <i class="fas fa-user-shield"></i>
+</a>

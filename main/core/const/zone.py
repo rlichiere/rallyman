@@ -37,8 +37,8 @@ class ZoneSurfaces(object):
         return cls.DRY
 
 
-class ZoneEntries(object):
-    entries = [1, 2, 3, 4, 5, 6]
+class ZoneAnchors(object):
+    entries = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
     @classmethod
     def as_list(cls):
