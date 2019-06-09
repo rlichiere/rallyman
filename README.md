@@ -221,17 +221,17 @@ python manage.py runserver localhost:8000
   ```shell
   python manage.py dumpdata --indent 2 --exclude auth.permission --exclude sessions.session --exclude admin.logentry --exclude contenttypes > backup/backup.json
   ```
-* Backup the configuration of the application
+* Backup the configuration of the application to backuped.zip
   ```shell
-  python manage.py configuration backup --file backup.zip --confirm 
+  python manage.py configuration -m backup --file backuped 
   ```
 * Restore the database content
   ```shell
   python manage.py loaddata backup/backup.json
   ```
-* Restore the configuration of the application
+* Restore the configuration of the application from torestore.zip
   ```shell
-  python manage.py configuration restore --file backup.zip --confirm 
+  python manage.py configuration -m restore --file torestore 
   ```
 
 
