@@ -114,7 +114,6 @@
                 </div>
             </li>
             {% endif %}
-
         </ul>
         <ul class="navbar-nav">
         {% if user.is_anonymous %}
@@ -122,6 +121,17 @@
             <li class="nav-item"><a class="nav-link {% if 'signup' in ariane %}active{% endif %}" href="{% url 'auth-signup' %}"><i class="far fa-address-card"></i> Sign up</a></li>
         {% else %}
             {% if user.is_superuser %}
+            <li class="nav-item dropdown" id="debugMenu">
+                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                    Debug
+                </a>
+                <div class="dropdown-menu">
+                    {% if data.debug.client.console.useUIOutput %}
+                    <a class="dropdown-item" href="#" id="debugMenuShowConsole">Show console</a>
+                    <a class="dropdown-item" href="#" id="debugMenuHideConsole">Hide console</a>
+                    {% endif %}
+                </div>
+            </li>
             <li class="nav-item"><a class="nav-link" href="/admin"><i class="fas fa-user-shield"></i> Admin</a></li>
             {% endif %}
             <li class="nav-item"><a class="nav-link {% if 'profile' in ariane %}active{% endif %}" href="{% url 'user-profile' %}"><i class="far fa-user"></i> Profile</a></li>
@@ -182,7 +192,10 @@
 
         Debug.initialize(Console, DebugLevels.{{ data.debug.client.level }});
         Console.useUIOutput({{ data.debug.client.console.useUIOutput|lower }});
-        Console.initialize('ConsoleContainer', 'ConsoleContent', 'main-page-content', Debug);
+        Console.initialize('ConsoleContainer', 'ConsoleContent',
+            'main-page-content',
+            'debugMenuShowConsole', 'debugMenuHideConsole',
+            Debug);
 
         $(document).ready(function(){
 
