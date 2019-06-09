@@ -244,10 +244,13 @@ python manage.py runserver localhost:8000
 
 * Mandatory
   * add Rally update form (label, opened_at, started_at)
-  * implement JS Debug object to manage:
-    * easy access to stored data
-
+  * implement sections connections (input to output anchors)
+    * this will be required to manage map connections
+  * implement position of participants in rally
+    * use arrival order of participations
+    * the rally creator should be able to change participants positions until the start of the rally
 * Quick
+  * add link-to-backoffice where it can be usefull for the superusers
   * add a debug menu to manage:
     * console features (show)
       * choose logging level: verbose/debug/info/warning/error
@@ -255,7 +258,6 @@ python manage.py runserver localhost:8000
     * ping of backend availability
       * on/off
       * refresh delay change
-  * implement the configuration loader
 
 * Later
   * GameUI
