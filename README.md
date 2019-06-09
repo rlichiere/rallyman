@@ -271,4 +271,3 @@ python manage.py runserver localhost:8000
       1. Elect the next participant (the next car on the track)
       1. Repeat from e. until all cars have finished the stage
       1. Process the results and close the game
-

@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
+from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.safestring import mark_safe
 
 from ...core.const.lobby.rallies import RallyStatus
+from ...core.const.rally import MAX_PARTICIPANTS_PER_RALLY
 from ...generic.views import MainTemplateView, MainView
-from ...models import Rally, Stage
-from ...forms.rally import EditRallyStagesForm
+from ...models import CarSkin, Participation, Rally, Stage
+from ...forms.rally import EditRallyStagesForm, InviteToRallyForm
 
 
 class EditRallyView(LoginRequiredMixin, MainTemplateView):
-    template_name = 'main/rally_edit.html'
+    template_name = 'main/rally_edit_roadbook.html'
 
     def __init__(self, *args, **kwargs):
         super(EditRallyView, self).__init__(*args, **kwargs)
@@ -23,7 +25,7 @@ class EditRallyView(LoginRequiredMixin, MainTemplateView):
 
         # check permissions
 
-        context['ariane'] = 'edit_rally'
+        context['ariane'] = ['edit_rally', 'roadbook']
         _rally = self.get_object_or_404(Rally, self.kwargs['pk'])
         context['rally'] = _rally
         if _rally.status not in [RallyStatus.SCHEDULED, RallyStatus.OPENED]:
@@ -135,3 +137,120 @@ class EditRallyAddZoneView(LoginRequiredMixin, MainTemplateView):
 
         self.log.endView()
         return context
+
+
+class EditRallyParticipantsView(LoginRequiredMixin, MainTemplateView):
+    template_name = 'main/rally_edit_participants.html'
+
+    def __init__(self, *args, **kwargs):
+        super(EditRallyParticipantsView, self).__init__(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        _executor = self.request.user
+        self.log.startView(_executor)
+
+        _rallyId = self.kwargs['pk']
+        context = super(EditRallyParticipantsView, self).get_context_data(**kwargs)
+        context['ariane'] = ['edit-rally', 'participants']
+        _rally = self.get_object_or_404(Rally, _rallyId)
+        context['rally'] = _rally
+
+        context['participations'] = Participation.objects.filter(rally=_rallyId)
+        _participations = Participation.objects.filter(rally=_rallyId)
+        _availableSlotsCount = MAX_PARTICIPANTS_PER_RALLY - _participations.count()
+        setattr(_rally, 'available_slots_count', _availableSlotsCount)
+        context['participations'] = _participations
+
+        self.log.endView()
+        return context
+
+
+class EditRallyInviteParticipantView(LoginRequiredMixin, MainTemplateView):
+    template_name = 'main/rally_invite_participant.html'
+
+    def __init__(self, *args, **kwargs):
+        super(EditRallyInviteParticipantView, self).__init__(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        _executor = self.request.user
+        self.log.startView(_executor)
+
+        _rallyId = self.kwargs['pk']
+        context = super(EditRallyInviteParticipantView, self).get_context_data(**kwargs)
+        _rally = self.get_object_or_404(Rally, _rallyId)
+
+        context['form_invite'] = InviteToRallyForm(request=self.request, rally_id=_rallyId)
+
+        context['available_players'] = User.objects.all().exclude(id=1)\
+                                                         .exclude(participation__rally=_rallyId)\
+                                                         .order_by('first_name', 'last_name')
+
+        _participations = Participation.objects.filter(rally=_rally)
+        _availableSlotsCount = MAX_PARTICIPANTS_PER_RALLY - _participations.count()
+        setattr(_rally, 'available_slots_count', _availableSlotsCount)
+
+        self.log.debug(availableSlotsCount=_availableSlotsCount)
+
+        context['car_skins'] = CarSkin.objects.all()
+        context['rally'] = _rally
+
+        self.log.endView()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        _executor = self.request.user
+        self.log.startView(_executor,
+                           redirect_to=self.request.GET.get('redirect'),
+                           redirect_to_kwargs={'pk': self.request.GET.get('redirect_pk')})
+
+        _rallyId = kwargs.get('pk')
+        _rally = self.get_object_or_404(Rally, _rallyId)
+        _invitedPlayerId = request.POST['invited_player']
+        _carSkinId = request.POST['car_skin']
+        _invitedPlayer = self.get_object_or_404(User, _invitedPlayerId)
+        _carSkin = self.get_object_or_404(CarSkin, _carSkinId)
+
+        _part = Participation(rally=_rally, player=_invitedPlayer, car_skin=_carSkin)
+        _part.save()
+
+        self.log.endView()
+        return self.redirect_success(self.request, 'Participant invited successfully')
+
+
+class EditRallyKickParticipantView(LoginRequiredMixin, MainTemplateView):
+    template_name = 'main/rally_kick_participant.html'
+
+    def __init__(self, *args, **kwargs):
+        super(EditRallyKickParticipantView, self).__init__(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        _executor = self.request.user
+        self.log.startView(_executor)
+
+        _rallyId = self.kwargs['pk']
+        _kickedUserId = self.kwargs['uid']
+        context = super(EditRallyKickParticipantView, self).get_context_data(**kwargs)
+
+        context['rally'] = self.get_object_or_404(Rally, _rallyId)
+        context['kicked_player'] = self.get_object_or_404(User, _kickedUserId)
+
+        self.log.endView()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        _executor = self.request.user
+        self.log.startView(_executor,
+                           redirect_to=self.request.GET.get('redirect'),
+                           redirect_to_kwargs={'pk': self.request.GET.get('redirect_pk')})
+
+        _rallyId = kwargs.get('pk')
+        _kickedUserId = self.kwargs['uid']
+
+        _rally = self.get_object_or_404(Rally, _rallyId)
+        _kickedParticipant = self.get_object_or_404(User, _kickedUserId)
+
+        _part = Participation.objects.get(rally=_rally, player=_kickedParticipant)
+        _part.delete()
+
+        self.log.endView()
+        return self.redirect_success(self.request, 'Participant kicked from rally')

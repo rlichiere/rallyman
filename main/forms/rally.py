@@ -143,3 +143,22 @@ class RegisterToRallyForm(forms.Form):
                 _remainingChoices.append(_skinChoice)
 
         self.fields['car_skin'].choices = _remainingChoices
+
+
+class InviteToRallyForm(forms.Form):
+    car_skin = forms.ChoiceField(choices=CarSkin.as_choices(CarSkin.availableSkins()))
+
+    def __init__(self, *args, **kwargs):
+        request = kwargs.pop('request')
+        _rallyId = kwargs.pop('rally_id')
+        super(InviteToRallyForm, self).__init__(*args, **kwargs)
+
+        # initialize car_skins field with remaining skins for the given rally
+        _usedSkinsIds = Participation.objects.filter(rally=_rallyId).values_list('car_skin', flat=True)
+        _skinsChoices = self.fields['car_skin'].choices
+        _remainingChoices = list()
+        for _skinChoice in _skinsChoices:
+            if _skinChoice[0] not in _usedSkinsIds:
+                _remainingChoices.append(_skinChoice)
+
+        self.fields['car_skin'].choices = _remainingChoices

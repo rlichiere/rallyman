@@ -1,0 +1,15 @@
+{% extends 'main/base.html' %}
+{% load widget_tweaks %}
+
+{% block page-submenu %}
+
+    <div class="dropdown">
+    <a href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Edit rally</a>
+    <div class="dropdown-menu">
+        <a class="dropdown-item {% if 'planning' in ariane %}active{% endif %}" href="{% url 'rally-edit' pk=rally.id %}">Planning</a>
+        <a class="dropdown-item {% if 'roadbook' in ariane %}active{% endif %}" href="{% url 'rally-edit' pk=rally.id %}">Roadbook</a>
+        <a class="dropdown-item {% if 'participants' in ariane %}active{% endif %}" href="{% url 'rally-edit-participants' pk=rally.id %}">Participants</a>
+    </div>
+</div>
+
+{% endblock %}

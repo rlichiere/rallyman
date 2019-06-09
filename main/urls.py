@@ -19,6 +19,7 @@ from .views.home import HomeView
 from .views.lobby import LobbyView
 from .views.rally import CreateRallyView, DeleteRallyView, ShowRallyView, \
     EditRallyView, EditRallyAddStageView, EditRallyRemoveStageView, EditRallyAddZoneView, \
+    EditRallyParticipantsView, EditRallyInviteParticipantView, EditRallyKickParticipantView, \
     RegisterToRallyView, UnRegisterFromRallyView
 
 urlpatterns = [
@@ -36,6 +37,14 @@ urlpatterns = [
         EditRallyRemoveStageView.as_view(), name='rally-edit-remove-stage'),
     url(r'^rally/(?P<pk>[0-9]+)/edit/stage/(?P<stage_num>[0-9]+)/add-section',
         EditRallyAddZoneView.as_view(), name='rally-edit-add-section'),
-    url(r'^rally/(?P<pk>[0-9]+)/edit', EditRallyView.as_view(), name='rally-edit'),
-    url(r'^rally/(?P<pk>[0-9]+)/delete', DeleteRallyView.as_view(), name='rally-delete'),
+    url(r'^rally/(?P<pk>[0-9]+)/edit/roadbook',
+        EditRallyView.as_view(), name='rally-edit'),
+    url(r'^rally/(?P<pk>[0-9]+)/edit/participants',
+        EditRallyParticipantsView.as_view(), name='rally-edit-participants'),
+    url(r'^rally/(?P<pk>[0-9]+)/invite/participant',
+        EditRallyInviteParticipantView.as_view(), name='rally-invite-participant'),
+    url(r'^rally/(?P<pk>[0-9]+)/kick/participant/(?P<uid>[0-9]+)',
+        EditRallyKickParticipantView.as_view(), name='rally-kick-participant'),
+    url(r'^rally/(?P<pk>[0-9]+)/delete',
+        DeleteRallyView.as_view(), name='rally-delete'),
 ]

@@ -1,4 +1,4 @@
-{% extends 'main/base.html' %}
+{% extends 'main/rally_edit_base.html' %}
 {% load widget_tweaks %}
 
 {% block page-title %}Edit rally roadbook{% endblock %}
@@ -9,7 +9,7 @@
 
 {% if error %}
 <p>
-    An error occurred while retrieving stages data of the rally.
+    An error occurred while retrieving the roadbook of the rally.
 </p>
 <div>Error details:
     <pre class="error-details">{{ error }}</pre>
