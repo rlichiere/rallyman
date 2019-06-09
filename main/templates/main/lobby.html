@@ -144,8 +144,8 @@
         {% for rally in rallies %}
             <tr>
                 <td>
-                    {% if rally.label|length > 30 %}
-                        <span title="{{ rally.label }}">{{ rally.label|slice:':30' }}...</span>
+                    {% if rally.label|length > const.lobby.rallies.RALLY_LABEL_MAX_LENGTH_IN_LIST %}
+                        <span title="{{ rally.label }}">{{ rally.label|slice:const.lobby.rallies.RALLY_LABEL_MAX_LENGTH_IN_LIST_SLICE }}...</span>
                     {% else %}
                         {{ rally.label }}
                     {% endif %}
