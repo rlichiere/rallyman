@@ -39,7 +39,6 @@ class RegisterToRallyView(LoginRequiredMixin, MainTemplateView):
         context['participations'] = _participations
 
         context['car_skins'] = CarSkin.objects.all()
-        context['default_car_skin'] = CarSkin.objects.last()
 
         self.log.endView()
         return context

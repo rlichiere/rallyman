@@ -141,4 +141,5 @@ class RegisterToRallyForm(forms.Form):
         for _skinChoice in _skinsChoices:
             if _skinChoice[0] not in _usedSkinsIds:
                 _remainingChoices.append(_skinChoice)
+
         self.fields['car_skin'].choices = _remainingChoices

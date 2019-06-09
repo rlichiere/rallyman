@@ -76,7 +76,7 @@
                     Car selection
                 </span>
                 <span class="input-group-text">
-                    <img id="{{ form_register.car_skin.id_for_label }}_img" src="/static/main/car_skins/{{ default_car_skin.file }}" width="16" />
+                    <img id="{{ form_register.car_skin.id_for_label }}_img" src="{% static 'main/img/empty.png' %}" width="16" />
                 </span>
             </div>
             {% render_field form_register.car_skin class+='form-control' %}
@@ -101,6 +101,12 @@
 <script>
 
     $(document).ready(function() {
+
+        {% for car_skin in car_skins %}
+        if ('{{ car_skin.id }}' === $('#{{ form_register.car_skin.id_for_label }}').val()) {
+            $('#{{ form_register.car_skin.id_for_label }}_img').prop('src', '/static/main/car_skins/{{ car_skin.file }}');
+        }
+        {% endfor %}
 
         $('#{{ form_register.car_skin.id_for_label }}').change(function() {
             {% for car_skin in car_skins %}
