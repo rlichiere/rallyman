@@ -42,6 +42,9 @@
             <th>Name</th>
             <th>Car skin</th>
             <th>Kick</th>
+            {% if user.is_superuser %}
+            <th>Admin</th>
+            {% endif %}
         </tr>
         {% for participation in participations %}
         <tr>
@@ -56,6 +59,13 @@
                     <i class="fas fa-trash-alt"></i>
                 </a>
             </td>
+
+            {% if user.is_superuser %}
+            <td>
+                {% include 'main/generic/link_to_bo.html' with instance=participation %}
+            </td>
+            {% endif %}
+
         {% endfor %}
         </tr>
     </table>

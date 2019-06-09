@@ -35,6 +35,7 @@ class RoadbookView(LoginRequiredMixin, MainTemplateView):
         _stagesData = list()
         for _stage in Stage.objects.filter(rally=_rally.id):
             _stageData = dict()
+            _stageData['stage_instance'] = _stage
             _stageData['sections'] = _stage.get_roadbook
             _stageData['number_of_sections'] = len(_stageData['sections'])
             _stageData['has_assistance'] = _stage.has_assistance

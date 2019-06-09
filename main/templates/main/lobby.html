@@ -219,9 +219,7 @@
 
                 {% if user.is_superuser %}
                 <td>
-                    <a href="/admin/main/rally/{{ rally.id }}/change/" class="btn btn-primary btn-sm" target="_blank">
-                        <i class="fas fa-user-shield"></i>
-                    </a>
+                    {% include 'main/generic/link_to_bo.html' with instance=rally %}
                 </td>
                 {% endif %}
             </tr>
