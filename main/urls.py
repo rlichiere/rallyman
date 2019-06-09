@@ -17,10 +17,9 @@ from django.conf.urls import url
 
 from .views.home import HomeView
 from .views.lobby import LobbyView
-from .views.rally import CreateRallyView, DeleteRallyView, ShowRallyView, \
-    EditRallyView, EditRallyAddStageView, EditRallyRemoveStageView, EditRallyAddZoneView, \
-    EditRallyParticipantsView, EditRallyInviteParticipantView, EditRallyKickParticipantView, \
-    RegisterToRallyView, UnRegisterFromRallyView
+from .views.rally import CreateRallyView, DeleteRallyView, ShowRallyView, RegisterToRallyView, UnRegisterFromRallyView
+from .views.rally.edit import RoadbookView, RoadbookAddStageView, RoadbookRemoveStageView, RoadbookAddZoneView, \
+    ParticipantsView, InviteParticipantView, KickParticipantView
 
 urlpatterns = [
     url(r'^$', HomeView.as_view(), name='main-home'),
@@ -32,19 +31,19 @@ urlpatterns = [
     url(r'^rally/(?P<pk>[0-9]+)/unregister', UnRegisterFromRallyView.as_view(), name='rally-unregister'),
 
     url(r'^rally/(?P<pk>[0-9]+)/edit/add-stage',
-        EditRallyAddStageView.as_view(), name='rally-edit-add-stage'),
+        RoadbookAddStageView.as_view(), name='rally-edit-add-stage'),
     url(r'^rally/(?P<pk>[0-9]+)/edit/remove-stage',
-        EditRallyRemoveStageView.as_view(), name='rally-edit-remove-stage'),
+        RoadbookRemoveStageView.as_view(), name='rally-edit-remove-stage'),
     url(r'^rally/(?P<pk>[0-9]+)/edit/stage/(?P<stage_num>[0-9]+)/add-section',
-        EditRallyAddZoneView.as_view(), name='rally-edit-add-section'),
+        RoadbookAddZoneView.as_view(), name='rally-edit-add-section'),
     url(r'^rally/(?P<pk>[0-9]+)/edit/roadbook',
-        EditRallyView.as_view(), name='rally-edit'),
+        RoadbookView.as_view(), name='rally-edit'),
     url(r'^rally/(?P<pk>[0-9]+)/edit/participants',
-        EditRallyParticipantsView.as_view(), name='rally-edit-participants'),
+        ParticipantsView.as_view(), name='rally-edit-participants'),
     url(r'^rally/(?P<pk>[0-9]+)/invite/participant',
-        EditRallyInviteParticipantView.as_view(), name='rally-invite-participant'),
+        InviteParticipantView.as_view(), name='rally-invite-participant'),
     url(r'^rally/(?P<pk>[0-9]+)/kick/participant/(?P<uid>[0-9]+)',
-        EditRallyKickParticipantView.as_view(), name='rally-kick-participant'),
+        KickParticipantView.as_view(), name='rally-kick-participant'),
     url(r'^rally/(?P<pk>[0-9]+)/delete',
         DeleteRallyView.as_view(), name='rally-delete'),
 ]
