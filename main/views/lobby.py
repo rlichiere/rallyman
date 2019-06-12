@@ -49,12 +49,14 @@ class LobbyView(MainTemplateView):
 
         # manage user_participation
         _rlysParts = Participation.objects.filter(rally__in=_rallies)
-        _rlysPartsIds = _rlysParts.values_list('id', flat=True)
+
+        _rlyUserParts = _rlysParts.filter(player=_executor)
+        _rlysUserPartsIds = _rlyUserParts.values_list('rally__id', flat=True)
         if not _executor.is_anonymous:
             if _userPart == '1':
-                _rallies = _rallies.filter(id__in=_rlysPartsIds)
+                _rallies = _rallies.filter(id__in=_rlysUserPartsIds)
             elif _userPart == '0':
-                _rallies = _rallies.exclude(id__in=_rlysPartsIds)
+                _rallies = _rallies.exclude(id__in=_rlysUserPartsIds)
 
         # order by database fields
         if _orderBy and _orderBy in ['label', 'status', 'creator', 'created_at', 'opened_at']:
