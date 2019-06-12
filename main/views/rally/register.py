@@ -62,10 +62,12 @@ class RegisterToRallyView(LoginRequiredMixin, MainTemplateView):
             return self.redirect_error(self.request, _msg)
 
         _carSkin = CarSkin.objects.get(id=_form.cleaned_data.get('car_skin'))
+        _position = Participation.objects.filter(rally=_rallyId).count() + 1
         _participation = Participation(rally=_rally,
                                        player=_executor,
                                        car_skin=_carSkin,
-                                       car_position=Participation.objects.filter(rally=_rallyId).count() + 1)
+                                       car_position=_position,
+                                       turn_position=_position)
         _participation.save()
 
         self.log.endView()
@@ -114,7 +116,18 @@ class UnRegisterFromRallyView(LoginRequiredMixin, MainTemplateView):
             _msg = 'Unexpected error while retrieving Participation %s : %s' % (_logDesc, repr(e))
             return self.redirect_error(self.request, _msg)
 
+        _removedPosition = _participation.turn_position
         _participation.delete()
 
+        # update position of other participants
+        _participations = Participation.objects.filter(rally__id=_rallyId)
+        for _participation in _participations:
+            if _participation.turn_position > _removedPosition:
+                _newPosition = int(_participation.turn_position) - 1
+                _participation.turn_position = _newPosition
+                _participation.car_position = _newPosition
+                _participation.save()
+                self.log.debug('Updated position for player %s : %s' % (_participation.player.get_full_name(),
+                                                                        _participation.car_position))
         self.log.endView()
         return self.redirect_success(self.request, 'Participation registered successfully')

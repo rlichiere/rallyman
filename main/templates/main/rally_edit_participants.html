@@ -39,8 +39,10 @@
 
     <table id="ParticipantsList" class="table table-responsive" role="table">
         <tr>
+            <th>Position</th>
             <th>Name</th>
             <th>Car skin</th>
+            <th>Change position</th>
             <th>Kick</th>
             {% if user.is_superuser %}
             <th>Admin</th>
@@ -49,10 +51,21 @@
         {% for participation in participations %}
         <tr>
             <td>
+                <p>#{{ participation.turn_position }}</p>
+            </td>
+            <td>
                 <p>{{ participation.player.get_full_name }}</p>
             </td>
             <td>
                 <img src="/static/main/car_skins/{{ participation.car_skin.file }}" width="16" />
+            </td>
+            <td>
+                {% if participation.turn_position > 1 %}
+                <a href="#" id="btnChangePositionUp_{{ participation.player.id }}" class="btn btn-primary btn-sm"><i class="fas fa-angle-up"></i></a>
+                {% endif %}
+                {% if participation.turn_position < participations|length %}
+                <a href="#" id="btnChangePositionDown_{{ participation.player.id }}" class="btn btn-primary btn-sm"><i class="fas fa-angle-down"></i></a>
+                {% endif %}
             </td>
             <td>
                 <a href="{% url 'rally-kick-participant' pk=rally.id uid=participation.player.id %}" type="button" class="btn btn-danger btn-sm" id="btnKickParticipant_{{ participation.player.id }}" data-toggle="modal" data-target="#GenericModal">
@@ -62,7 +75,7 @@
 
             {% if user.is_superuser %}
             <td>
-                {% include 'main/generic/link_to_bo.html' with instance=participation %}
+                {% include 'main/generic/link_to_bo.html' with instance=participation size='sm' %}
             </td>
             {% endif %}
 
@@ -85,16 +98,44 @@
 
 <script>
 
-$('#btnInviteParticipant').click(function() {
-    loadElementContentFromUrl('GenericModalContent', $(this).prop('href'));
-});
+    $('#btnInviteParticipant').click(function() {
+        loadElementContentFromUrl('GenericModalContent', $(this).prop('href'));
+    });
 
-{% for participation in participations %}
-$('#btnKickParticipant_{{ participation.player.id }}').click(function() {
-    console.log('coucou');
-    loadElementContentFromUrl('GenericModalContent', $(this).prop('href'));
-});
-{% endfor %}
+    {% for participation in participations %}
+    $('#btnKickParticipant_{{ participation.player.id }}').click(function() {
+        loadElementContentFromUrl('GenericModalContent', $(this).prop('href'));
+    });
+
+    $('#btnChangePositionUp_{{ participation.player.id }}').click(function() {
+        changePlayerPosition({{ participation.player.id }}, 'up');
+    });
+    $('#btnChangePositionDown_{{ participation.player.id }}').click(function() {
+        changePlayerPosition({{ participation.player.id }}, 'down');
+    });
+
+    {% endfor %}
+
+    function changePlayerPosition(playerId, way) {
+        let _url = '{% url "rally-edit-participant-change-position" pk=rally.id %}';
+        let _data = {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            player_id: playerId,
+            change_way: way,
+        };
+        Debug.storeAjaxCall(_url, _data);
+        $.ajax({
+            url: _url,
+            method: 'POST',
+            data: _data,
+            success: function(data, status, xhr) {
+                window.location.href = "{% url 'rally-edit-participants' pk=rally.id %}";
+            },
+            error: function(xhr, status, data) {
+                Debug.storeAjaxResult(_url, xhr, status, data);
+            }
+        });
+    }
 
 </script>
 {% endif %}

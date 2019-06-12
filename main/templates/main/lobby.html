@@ -158,7 +158,7 @@
                                         <h5>Participants</h5>
                                         <p>
                                         {% for part in rally.participants %}
-                                            {{ part.player.get_full_name }}<br />
+                                            #{{ part.turn_position }} {{ part.player.get_full_name }}<br />
                                         {% endfor %}
                                         </p>
                                     </div>"

@@ -9,6 +9,7 @@
         instance <Model>: Model instance from which to build the link to the backoffice page.
         model    <str>  : Optionnal. Use this value instead of calculated model name.
         module   <str>  : Optionnal. Use this value instead of calculated module name.
+        size     <str>  : Optionnal. Size of the button.
 
     Examples:
         {% include 'main/generic/link_to_bo.html' with instance=some_rally %}
@@ -17,7 +18,7 @@
 {% load maintags %}
 
 <a href="/admin/{% if module %}{{ module }}{% else %}{{ instance|instance_module }}{% endif %}/{% if model %}{{ model }}{% else %}{{ instance|instance_model }}{% endif %}/{{ instance.id }}/change/"
-   class="btn btn-primary btn-sm"
+   class="btn btn-primary {% if size %}btn-{{ size }}{% endif %}"
    target="_blank">
     <i class="fas fa-user-shield"></i>
 </a>

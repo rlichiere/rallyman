@@ -19,7 +19,7 @@ from .views.home import HomeView
 from .views.lobby import LobbyView
 from .views.rally import CreateRallyView, DeleteRallyView, ShowRallyView, RegisterToRallyView, UnRegisterFromRallyView
 from .views.rally.edit import RoadbookView, RoadbookAddStageView, RoadbookRemoveStageView, RoadbookAddZoneView, \
-    ParticipantsView, InviteParticipantView, KickParticipantView
+    ParticipantsView, ChangeParticipantPositionView, InviteParticipantView, KickParticipantView
 
 urlpatterns = [
     url(r'^$', HomeView.as_view(), name='main-home'),
@@ -40,6 +40,8 @@ urlpatterns = [
         RoadbookView.as_view(), name='rally-edit'),
     url(r'^rally/(?P<pk>[0-9]+)/edit/participants',
         ParticipantsView.as_view(), name='rally-edit-participants'),
+    url(r'^rally/(?P<pk>[0-9]+)/edit/participant/position',
+        ChangeParticipantPositionView.as_view(), name='rally-edit-participant-change-position'),
     url(r'^rally/(?P<pk>[0-9]+)/invite/participant',
         InviteParticipantView.as_view(), name='rally-invite-participant'),
     url(r'^rally/(?P<pk>[0-9]+)/kick/participant/(?P<uid>[0-9]+)',

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 
-from .core.renderers import CarSkinRenderer, RallyStagesRenderer, RoadbookRenderer
-from .models import CarSkin, Rally, Participation, Stage, Zone
+from .core.renderers import CarSkinRenderer, RallyStagesRenderer, RoadbookRenderer, RallyParticipationsRenderer
+
+from .models import CarSkin, Participation, Rally, Stage, Zone
 
 
 class CarSkinAdmin(admin.ModelAdmin):
@@ -20,19 +21,27 @@ class RallyAdmin(admin.ModelAdmin):
     list_filter = ('status', 'creator', )
     search_fields = ('label', )
 
-    readonly_fields = ('created_at', 'stages', )
+    readonly_fields = ('created_at', 'stages',
+                       'participants'
+                       )
     fieldsets = (
         (None, {
             'fields': ('label', 'created_at', 'opened_at', 'started_at', 'finished_at', 'status', 'creator', )
         }),
         ('Stages', {
-            'fields': ('stages', )
+            'fields': ('stages',
+                       'participants',
+                       )
         }),
     )
 
     @staticmethod
     def stages(instance):
         return RallyStagesRenderer(instance).as_table()
+
+    @staticmethod
+    def participants(instance):
+        return RallyParticipationsRenderer(Participation, instance).as_table()
 
 
 class ParticipationAdmin(admin.ModelAdmin):
