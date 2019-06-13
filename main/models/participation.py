@@ -46,8 +46,17 @@ class Participation(models.Model):
     def carPosition(self):
         return json.loads(self.car_position)
 
-    def setCarPosition(self, car_position):
-        self.car_position = json.dumps(car_position)
+    def setCarPosition(self, stage=None, section=None, cell=None):
+        _carPos = self.carPosition
+
+        if stage is not None:
+            _carPos['stage'] = stage
+        if section is not None:
+            _carPos['section'] = section
+        if cell is not None:
+            _carPos['cell'] = cell
+
+        self.car_position = json.dumps(_carPos)
         self.save()
 
     @property
@@ -82,7 +91,6 @@ class Participation(models.Model):
         _data = {
             1: TIME_DATA_ZERO
         }
-        print('data : %s' % _data)
         self.times_data = json.dumps(_data)
         self.save()
 
@@ -94,7 +102,4 @@ class Participation(models.Model):
         return True
 
     def setLastStageFinished(self):
-        _carPos = self.carPosition
-        _carPos['stage'] = 0
-        _carPos['cell'] = 0
-        self.setCarPosition(_carPos)
+        self.setCarPosition(stage=0, cell=0)

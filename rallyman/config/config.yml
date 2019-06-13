@@ -1,4 +1,8 @@
 
+cron:
+  expired_gamesteps:
+    delay: 5
+
 debug:
   client:
     level: 'DEBUG'
@@ -7,5 +11,5 @@ debug:
   fail_on_warning: False
 
 game:
-  gameste:
+  gamestep:
     max_lifetime: 10

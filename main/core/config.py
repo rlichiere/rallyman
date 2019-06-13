@@ -32,7 +32,10 @@ settings = _main_settings
 
 
 def get(path, default=None):
-    return _utils_dict.access(data, path, default)
+    _accessed = _utils_dict.access(data, path)
+    if not _accessed:
+        return default
+    return _accessed
 
 
 """ Crons """

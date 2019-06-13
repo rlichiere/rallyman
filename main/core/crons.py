@@ -70,7 +70,7 @@ class ExpiredGameSteps(Thread):
 
     def __init__(self):
         Thread.__init__(self)
-        self._delay = CHECK_EXPIRED_GAMESTEPS_DELAY
+        self._delay = config.get('cron/expired_gamesteps/delay', CHECK_EXPIRED_GAMESTEPS_DELAY)
 
     def run(self):
         _l = Log(self)
@@ -84,12 +84,16 @@ class ExpiredGameSteps(Thread):
         _l = Log(self)
         _dtStart = dt.now()
 
+        _expiredGameSteps = 0
         _gameSteps = GameStep.objects.filter(status=StepStatus.RUNNING, rally__status=RallyStatus.STARTED)
         for _gameStep in _gameSteps:
+            _gameStepLog = '#%s %s' % (_gameStep.id, _gameStep.rally.label)
 
             _part = Participation.objects.get(rally=_gameStep.rally, player=_gameStep.player)
             if _part.isLastStageFinished:
+                _l.info('Expire gamestep: %s, Force arrived player [%s]' % (_gameStepLog, _gameStep.player))
                 GameLogic(_gameStep.rally).closeGameStep(_gameStep)
+                _expiredGameSteps += 1
                 continue
 
             _startedAt = _gameStep.started_at
@@ -98,9 +102,10 @@ class ExpiredGameSteps(Thread):
             _gameStepLifeTime = config.get('game/gamestep/max_lifetime', GAMESTEP_MAX_LIFETIME)
             _expiresAt = _startedAt + timedelta(seconds=_gameStepLifeTime)
             if _expiresAt < _now:
+                _l.info('Expire gamestep: %s, Force running player [%s}' % (_gameStepLog, _gameStep.player))
                 GameLogic(_gameStep.rally).forcePlayerToPlay(_gameStep)
                 GameLogic(_gameStep.rally).closeGameStep(_gameStep)
-                _l.info('Cron CLOSE Expired gamestep: #%s %s' % (_gameStep.id, _gameStep.rally.label))
+                _expiredGameSteps += 1
 
         _dtEnd = dt.now()
-        _l.info('Expired gamesteps processed in %s' % (_dtEnd - _dtStart))
+        _l.info('%s expired gamesteps processed in %s' % (_expiredGameSteps, (_dtEnd - _dtStart)))
