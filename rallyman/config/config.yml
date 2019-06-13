@@ -1,10 +1,11 @@
 
 cron:
   check_expired_gamesteps:
-    delay: 5
+    delay: 30                 # seconds. Recommended value :  30 (should be less than game/gamestep/max_lifetime)
 
   check_rallies_status:
-    delay: 60
+    delay: 60                 # seconds. Recommended value :  60
+
 
 debug:
   client:
@@ -13,6 +14,15 @@ debug:
       useUIOutput: True
   fail_on_warning: False
 
+
 game:
+  create:
+    delay_open_to_next: 5     # minutes. Recommended value :   5
+    delay_start_to_next: 15   # minutes. Recommended value :  15
+
   gamestep:
-    max_lifetime: 60
+    max_lifetime: 10          # seconds. Recommended value :  60
+
+  persistence:
+    open_in_next: 5           # minutes. Recommended value :   5
+    start_in_next: 15         # minutes. Recommended value :  15

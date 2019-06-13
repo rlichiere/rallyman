@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 
-from .core.renderers import CarSkinRenderer, RallyStagesRenderer, RoadbookRenderer, RallyParticipationsRenderer
-
-from .models import CarSkin, GameStep, Participation, Rally, Stage, Zone
+from .core import renderers
+from . import models
 
 
 class CarSkinAdmin(admin.ModelAdmin):
@@ -13,7 +12,7 @@ class CarSkinAdmin(admin.ModelAdmin):
 
     @staticmethod
     def image(instance):
-        return CarSkinRenderer(instance).as_image()
+        return renderers.CarSkinRenderer(instance).as_image()
 
 
 class GameStepAdmin(admin.ModelAdmin):
@@ -24,14 +23,16 @@ class GameStepAdmin(admin.ModelAdmin):
 
 
 class RallyAdmin(admin.ModelAdmin):
-    list_display = ('label', 'status', 'creator', 'created_at', 'opened_at', 'finished_at', 'participants_count', 'stages_count')
+    list_display = ('label', 'status', 'creator', 'created_at', 'opened_at', 'started_at', 'finished_at',
+                    'participants_count', 'stages_count', 'is_persisting')
     list_filter = ('status', 'creator', )
     search_fields = ('label', )
 
     readonly_fields = ('created_at', 'stages', 'participants', )
     fieldsets = (
         (None, {
-            'fields': ('label', 'created_at', 'opened_at', 'started_at', 'finished_at', 'status', 'creator', )
+            'fields': ('label', 'created_at', 'opened_at', 'started_at', 'finished_at',
+                       'status', 'creator', 'is_persisting')
         }),
         ('Stages', {
             'fields': ('stages', 'participants', )
@@ -40,19 +41,19 @@ class RallyAdmin(admin.ModelAdmin):
 
     @staticmethod
     def participants_count(instance):
-        return Participation.objects.filter(rally=instance).count()
+        return models.Participation.objects.filter(rally=instance).count()
 
     @staticmethod
     def stages_count(instance):
-        return Stage.objects.filter(rally=instance).count()
+        return models.Stage.objects.filter(rally=instance).count()
 
     @staticmethod
     def stages(instance):
-        return RallyStagesRenderer(instance).as_table()
+        return renderers.RallyStagesRenderer(instance).as_table()
 
     @staticmethod
     def participants(instance):
-        return RallyParticipationsRenderer(Participation, instance).as_table()
+        return renderers.RallyParticipationsRenderer(models.Participation, instance).as_table()
 
 
 class ParticipationAdmin(admin.ModelAdmin):
@@ -62,7 +63,7 @@ class ParticipationAdmin(admin.ModelAdmin):
 
     @staticmethod
     def car(instance):
-        return CarSkinRenderer(instance.car_skin).as_image()
+        return renderers.CarSkinRenderer(instance.car_skin).as_image()
 
 
 class StageAdmin(admin.ModelAdmin):
@@ -83,7 +84,7 @@ class StageAdmin(admin.ModelAdmin):
     @staticmethod
     def stages(instance):
         _roadbook = instance.get_roadbook
-        return RoadbookRenderer(_roadbook).as_list()
+        return renderers.RoadbookRenderer(_roadbook).as_list()
 
 
 class ZoneAdmin(admin.ModelAdmin):
@@ -91,9 +92,9 @@ class ZoneAdmin(admin.ModelAdmin):
     list_filter = ('name', 'surface', )
 
 
-admin.site.register(CarSkin, CarSkinAdmin)
-admin.site.register(GameStep, GameStepAdmin)
-admin.site.register(Rally, RallyAdmin)
-admin.site.register(Participation, ParticipationAdmin)
-admin.site.register(Stage, StageAdmin)
-admin.site.register(Zone, ZoneAdmin)
+admin.site.register(models.CarSkin, CarSkinAdmin)
+admin.site.register(models.GameStep, GameStepAdmin)
+admin.site.register(models.Rally, RallyAdmin)
+admin.site.register(models.Participation, ParticipationAdmin)
+admin.site.register(models.Stage, StageAdmin)
+admin.site.register(models.Zone, ZoneAdmin)

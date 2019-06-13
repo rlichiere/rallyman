@@ -25,6 +25,10 @@ class Rally(models.Model):
     creator = models.ForeignKey(help_text='Creator of the rally.',
                                 to=User)
 
+    is_persisting = models.BooleanField(help_text='A persisting rally reopens automatically when finished.'
+                                                  'This option can only be enabled by an administrator',
+                                        default=False)
+
     class Meta:
         verbose_name_plural = "rallies"
 

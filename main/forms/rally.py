@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime as dt
 from datetime import timedelta
 
 from django import forms
 from django.core.validators import RegexValidator
 
-from ..core import utils_date, utils_str
+from ..core import config, utils_date, utils_str
 from ..core.const import rally as const_rally
 from ..models import CarSkin, Participation, Stage
 
@@ -25,12 +24,14 @@ class CreateRallyForm(forms.Form):
         super(CreateRallyForm, self).__init__(*args, **kwargs)
 
         self.fields['label'].initial = utils_str.get_random_phrase()
-        _now = dt.now()
-        self.fields['opened_at'].initial = utils_date.round_to_next_minutes(_now,
-                                                                            const_rally.ROUND_OPENED_AT_MINUTES)
+        _now = utils_date.now()
+        _confOpenNext = config.get('game/create/delay_open_to_next', const_rally.DELAY_OPEN_TO_NEXT)
+        _opensAt = utils_date.round_to_next_minutes(_now, _confOpenNext)
+        self.fields['opened_at'].initial = _opensAt
 
-        _rounded = utils_date.round_to_next_minutes(_now, const_rally.ROUND_STARTED_AT_MINUTES)
-        self.fields['started_at'].initial = _rounded + timedelta(minutes=const_rally.DELAY_STARTED_AT_MINUTES)
+        _confStartDelay = config.get('game/create/delay_start_to_next', const_rally.DELAY_START_TO_NEXT)
+        _startAt = _opensAt + timedelta(minutes=_confStartDelay)
+        self.fields['started_at'].initial = _startAt
 
     def clean_started_at(self):
         _startedAt = self.cleaned_data['started_at']

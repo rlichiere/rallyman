@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import sys
+
 from rallyman import settings as _main_settings
 
 from configuration.configurator import Configurator, Configuration
@@ -40,10 +42,11 @@ def get(path, default=None):
 
 """ Crons """
 
-crons = {
-    'check_rallies_status': _crons.RalliesStatusCron(),
-    'check_expired_gamesteps': _crons.ExpiredGameSteps(),
-}
+crons = [
+    _crons.RalliesStatusCron(),
+    _crons.ExpiredGameSteps(),
+]
 
-for _cronName, _cron in crons.iteritems():
-    _cron.start()
+if sys.argv[1] == 'runserver':
+    for _cron in crons:
+        _cron.start()

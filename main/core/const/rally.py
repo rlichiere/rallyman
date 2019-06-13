@@ -1,15 +1,21 @@
 # -*- coding: utf-8 -*-
 
-""" Rally creation """
-
-ROUND_OPENED_AT_MINUTES = 5
-ROUND_STARTED_AT_MINUTES = 5
-DELAY_STARTED_AT_MINUTES = 15
+""" Rally constants """
 
 
-""" Rally configuration """
+""" Creation """
+
+DELAY_OPEN_TO_NEXT = 5
+DELAY_START_TO_NEXT = 15
+
+PERSISTENCE_OPEN_IN_NEXT = 5
+PERSISTENCE_START_IN_NEXT = 20
+
+
+""" Configuration """
 
 MAX_PARTICIPANTS_PER_RALLY = 4
+GAMESTEP_MAX_LIFETIME = 300    # Maximum lifetime of a game step, in seconds.
 
 
 class StepStatus(object):
@@ -27,6 +33,3 @@ class StepStatus(object):
     @classmethod
     def get_default(cls):
         return cls.RUNNING
-
-
-GAMESTEP_MAX_LIFETIME = 300    # Maximum lifetime of a game step, in seconds.

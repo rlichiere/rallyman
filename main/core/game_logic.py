@@ -1,7 +1,8 @@
 # -*- coding:utf-8 -*-
+import config
 from . import utils_date
 from .logger import Log
-from .const.rally import StepStatus
+from .const import rally as const_rally
 from .const.lobby.rallies import RallyStatus
 from ..models import GameStep, Participation, Rally, Stage
 
@@ -47,7 +48,7 @@ class GameLogic(object):
 
         # Close current gamestep
         _gameStep = game_step if game_step else GameStep.objects.get(id=game_step_id)
-        _gameStep.status = StepStatus.CLOSED
+        _gameStep.status = const_rally.StepStatus.CLOSED
         _gameStep.save()
 
         # Check if rally is finished
@@ -72,10 +73,41 @@ class GameLogic(object):
     def closeRally(self):
         _l = Log(self)
         _l.info('Close rally [#%s %s]' % (self._rally.id, self._rally.label))
-        self._rally.status = RallyStatus.FINISHED
-        self._rally.finished_at = utils_date.now()
+
+        # recreate rally if it's a 'persisting' one
+        _now = utils_date.now()
+        _opensAt = utils_date.round_to_next_minutes(_now, config.get('', const_rally.PERSISTENCE_OPEN_IN_NEXT))
+        _startsAt = utils_date.round_to_next_minutes(_now, const_rally.PERSISTENCE_START_IN_NEXT)
+
+        _logRallyName = '[#%s %s]' % (self._rally.id, self._rally.label)
+        if self._rally.is_persisting:
+
+            if self._rally.participation_set.count() > 0:
+                # create a new rally
+                _newRally = Rally(label=self._rally.label, creator=self._rally.creator,
+                                  opened_at=_opensAt, started_at=_startsAt,
+                                  status=RallyStatus.SCHEDULED, is_persisting=True)
+                _newRally.save()
+
+                for _stage in self._rally.stage_set.all():
+                    _stage.rally = _newRally
+                    _stage.save()
+
+                self._rally.status = RallyStatus.FINISHED
+                self._rally.finished_at = utils_date.now()
+                _l.debug('Persisting rally %s recreated aa: %s' % (_logRallyName, _newRally.id))
+            else:
+                # reuse existing rally
+                self._rally.status = RallyStatus.SCHEDULED
+                self._rally.opened_at = _opensAt
+                self._rally.started_at = _startsAt
+                _l.debug('Persisting rally %s reused' % _logRallyName)
+        else:
+            # close non persisting rally
+            self._rally.status = RallyStatus.FINISHED
+            self._rally.finished_at = utils_date.now()
+            _l.debug('Close rally %s done' % _logRallyName)
         self._rally.save()
-        _l.debug('Close rally [#%s %s] done' % (self._rally.id, self._rally.label))
 
     def forcePlayerToPlay(self, game_step):
         _l = Log(self)
