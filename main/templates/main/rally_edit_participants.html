@@ -29,7 +29,7 @@
 <form method="POST" action="{% url 'rally-edit-participants' pk=rally.id %}?redirect=rally-edit-participants&redirect_pk={{ rally.id }}">
     {% csrf_token %}
 
-    <div class="input-group mb-3">
+    <div class="input-group mb-3 shadow">
         <div class="input-group-prepend">
             <span class="input-group-text">Rally name</span>
         </div>

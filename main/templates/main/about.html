@@ -1,0 +1,97 @@
+{% comment %}
+    This template build the About modal content
+
+    Parameters:
+    - version  <Version>: version information of Rallyman Online
+{% endcomment %}
+{% load maintags %}
+
+{% load_config const %}
+
+<style>
+    #aboutModalBody {
+        padding-bottom: 0;
+    }
+    span.code {
+        font-weight: bold;
+        font-family: "Courier New", Courier, serif;
+    }
+</style>
+
+<div class="modal-header">
+    <h4 class="modal-title">About Rallyman Online</h4>
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+</div>
+
+<div class="modal-body" id="aboutModalBody">
+    <div class="col-lg-12 d-flex justify-content-center">
+        <p class="mb-0">
+            <strong>Rallyman Online</strong> is a web implementation<br /> of the famous board game <strong>Rallyman</strong>.
+        </p>
+    </div>
+
+    <hr />
+    <div class="col-lg-12">
+        <div class="float-right">
+            <a href="{{ const.copyright.RALLYMAN_PRIMORDIAL_WEBSITE }}" class="btn btn-primary btn-sm" target="_blank"
+               data-toggle="tooltip" data-html="true"
+               title="Open <strong><em>{{ const.copyright.RALLYMAN_PRIMORDIAL_WEBSITE }}</em></strong> in a new tab"
+            >
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+        </div>
+        <h5>Rallyman</h5>
+        <div class="pl-2">
+            <p class="mb-1">
+                Version : <span class="code">{{ const.copyright.RALLYMAN_PRIMORDIAL_VERSION_LABEL }}</span>
+            </p>
+            <p>
+                Author :
+                <span class="code">
+                    <a href="{{ const.copyright.RALLYMAN_PRIMORDIAL_AUTHOR_CONTACT_URL }}" target="_blank">
+                        {{ const.copyright.RALLYMAN_PRIMORDIAL_AUTHOR_NAME }}
+                    </a>
+                </span>
+            </p>
+        </div>
+    </div>
+
+    <hr />
+    <div class="col-lg-12">
+        <div class="float-right">
+            {% if user.is_superuser %}
+            <a href="{% url 'doc-page' pk='changelog' %}#{{ version.Version }}" class="btn btn-primary btn-sm" target="_blank"
+               data-toggle="tooltip" data-html="true"
+               title="Open the <strong><em>changelog</em></strong> of version <strong><em>{{ version.Version }}</em></strong> in a new tab"
+            >
+                <i class="fas fa-list"></i>
+            </a>
+            {% endif %}
+            <a href="{{ const.copyright.RALLYMAN_ONLINE_WEBSITE }}" class="btn btn-primary btn-sm" target="_blank"
+               data-toggle="tooltip" data-html="true"
+               title="Open the <strong><em>GitHub project</em></strong> in a new tab"
+            >
+                <i class="fab fa-git"></i>
+            </a>
+        </div>
+        <h5>Rallyman Online</h5>
+        <div class="pl-2">
+            <p class="mb-1">
+                Version : <span class="code">{{ version.VersionFull }}</span>
+            </p>
+            <p>
+                Author : <span class="code"><a href="mailto:{{ const.copyright.RALLYMAN_ONLINE_AUTHOR_EMAIL }}">{{ const.copyright.RALLYMAN_ONLINE_AUTHOR_NAME }}</a></span>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>

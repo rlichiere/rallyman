@@ -15,14 +15,17 @@ Including another URLconf
 """
 from django.conf.urls import url
 
+from .views.about import AboutView
 from .views.home import HomeView
 from .views.lobby import LobbyView
 from .views.rally import CreateRallyView, DeleteRallyView, ShowRallyView, RegisterToRallyView, UnRegisterFromRallyView
-from .views.rally.edit import PlanningView, RoadbookView, RoadbookAddStageView, RoadbookRemoveStageView, RoadbookAddZoneView, \
+from .views.rally.edit import PlanningView, \
+    RoadbookView, RoadbookAddStageView, RoadbookRemoveStageView, RoadbookAddZoneView, \
     ParticipantsView, ChangePositionView, InviteParticipantView, KickParticipantView
 
 urlpatterns = [
     url(r'^$', HomeView.as_view(), name='main-home'),
+    url(r'^about', AboutView.as_view(), name='about'),
     url(r'^lobby', LobbyView.as_view(), name='main-lobby'),
 
     url(r'^rally$', CreateRallyView.as_view(), name='rally-create'),

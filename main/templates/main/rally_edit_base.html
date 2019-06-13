@@ -3,7 +3,7 @@
 
 {% block page-submenu %}
 
-    <div class="dropdown">
+<div class="dropdown">
     <a href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Edit rally</a>
     <div class="dropdown-menu">
         <a class="dropdown-item {% if 'planning' in ariane %}active{% endif %}" href="{% url 'rally-edit-planning' pk=rally.id %}">Planning</a>

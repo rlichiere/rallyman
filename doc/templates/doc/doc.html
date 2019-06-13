@@ -1,0 +1,73 @@
+{% extends 'main/base.html' %}
+{% comment %}
+    This template is used to build documentation pages.
+
+    Parameters:
+    - page_title   <str> : Title of the  page
+    - page_content <str> : Rendered content of the  page
+    - doc_pages    <list>: List of submenu items that compose the documentation hierarchy menu
+{% endcomment %}
+
+{% block page-title %}Doc: {{ page_title }}{% endblock %}
+
+{% block page-header %}{{ page_title }}{% endblock %}
+
+
+{% block page-submenu %}
+
+<style>
+
+    #documentationHierarchy > div.dropdown-menu {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+    #documentationHierarchy > div.dropdown-menu > a.dropdown-item {
+        padding-left: 1.1rem;
+        padding-right: 1.1rem;
+    }
+
+</style>
+
+<div class="dropdown" id="documentationHierarchy">
+    <a href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Table of contents</a>
+    <div class="dropdown-menu">
+    {% for doc_page in doc_pages %}
+        <a class="dropdown-item {% if doc_page.key in ariane %}active{% endif %}" href="{% url 'doc-page' pk=doc_page.key %}">
+            {{ doc_page.title }}
+            {% if doc_page.requires == 'superuser' %}
+            <span title="This page is only accessible to superusers" class="fas fa-user-shield small float-right" style="padding-top: 7px"></span>
+            {% endif %}
+        </a>
+    {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block page-body %}
+
+{{ page_content|safe }}
+
+{% endblock %}
+
+
+{% block page-footer %}
+
+<div class="float-right">
+    <a id="docBtnScrollTop" href="#" class="btn btn-secondary btn-sm"><i class="fas fa-chevron-up"></i></a>
+</div>
+
+{% endblock %}
+
+{% block extra_script %}
+
+<script>
+    $(document).ready(function() {
+        $('#docBtnScrollTop').click(function() {
+            $('main-page-content').scrollTop(0);
+        });
+    });
+</script>
+
+{% endblock %}

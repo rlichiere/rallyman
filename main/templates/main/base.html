@@ -48,7 +48,11 @@
 
     <!-- Navigation menu -->
     <nav class="navbar navbar-expand bg-dark fixed-top navbar-dark">
+
+        <!-- Main title -->
         <a class="navbar-brand" href="{% url 'main-home' %}">Rallyman</a>
+
+        <!-- Top left navbar -->
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
                 <a class="nav-link {% if 'lobby' in ariane %}active{% endif %}" href="{% url 'main-lobby' %}">Lobby</a>
@@ -114,32 +118,45 @@
             </li>
             {% endif %}
         </ul>
+
+        <!-- Top right navbar -->
         <ul class="navbar-nav">
-        {% if user.is_anonymous %}
-            <li class="nav-item"><a class="nav-link {% if 'signin' in ariane %}active{% endif %}" href="{% url 'auth-signin' %}"><i class="fas fa-sign-in-alt"></i> Sign in</a></li>
-            <li class="nav-item"><a class="nav-link {% if 'signup' in ariane %}active{% endif %}" href="{% url 'auth-signup' %}"><i class="far fa-address-card"></i> Sign up</a></li>
-        {% else %}
-            {% if user.is_superuser %}
-            <li class="nav-item dropdown" id="debugMenu">
-                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
-                    Debug
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle {% if 'about' in ariane %}active{% endif %}" href="#" data-toggle="dropdown">
+                    About
                 </a>
                 <div class="dropdown-menu">
-                    {% if data.debug.client.console.useUIOutput %}
-                    <a class="dropdown-item" href="#" id="debugMenuShowConsole">Show console</a>
-                    <a class="dropdown-item" href="#" id="debugMenuHideConsole">Hide console</a>
-                    {% endif %}
+                    <a class="dropdown-item" id="btnAbout" href="{% url 'about' %}" data-toggle="modal" data-target="#GenericModal">About</a>
+                    <a class="dropdown-item {% if 'doc' in ariane %}active{% endif %}" href="{% url 'doc' %}">Documentation</a>
                 </div>
             </li>
-            <li class="nav-item"><a class="nav-link" href="/admin"><i class="fas fa-user-shield"></i> Admin</a></li>
+
+            {% if user.is_anonymous %}
+                <li class="nav-item"><a class="nav-link {% if 'signin' in ariane %}active{% endif %}" href="{% url 'auth-signin' %}"><i class="fas fa-sign-in-alt"></i> Sign in</a></li>
+                <li class="nav-item"><a class="nav-link {% if 'signup' in ariane %}active{% endif %}" href="{% url 'auth-signup' %}"><i class="far fa-address-card"></i> Sign up</a></li>
+            {% else %}
+                {% if user.is_superuser %}
+                <li class="nav-item dropdown" id="debugMenu">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                        Debug
+                    </a>
+                    <div class="dropdown-menu">
+                        {% if data.debug.client.console.useUIOutput %}
+                        <a class="dropdown-item" href="#" id="debugMenuShowConsole">Show console</a>
+                        <a class="dropdown-item" href="#" id="debugMenuHideConsole">Hide console</a>
+                        {% endif %}
+                    </div>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="/admin"><i class="fas fa-user-shield"></i> Admin</a></li>
+                {% endif %}
+                <li class="nav-item"><a class="nav-link {% if 'profile' in ariane %}active{% endif %}" href="{% url 'user-profile' %}"><i class="far fa-user"></i> Profile</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'auth-signout' %}"><i class="fas fa-sign-out-alt"></i> Sign out</a></li>
             {% endif %}
-            <li class="nav-item"><a class="nav-link {% if 'profile' in ariane %}active{% endif %}" href="{% url 'user-profile' %}"><i class="far fa-user"></i> Profile</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'auth-signout' %}"><i class="fas fa-sign-out-alt"></i> Sign out</a></li>
-        {% endif %}
         </ul>
     </nav>
 
     <div id="main-page-content">
+
         <!-- Potential alert messages -->
         {% if messages %}
         <div class="row">
@@ -167,12 +184,15 @@
             <div class="col-lg-12">
                 {% block page-body %}{% endblock %}
             </div>
+            <div class="col-lg-12">
+                {% block page-footer %}{% endblock %}
+            </div>
         </div>
 
     </div>
 
     <!-- Generic modal -->
-    <div id="GenericModal" class="modal fade ">
+    <div id="GenericModal" class="modal fade">
         <div class="modal-dialog">
            <div class="modal-content" id="GenericModalContent"></div>
         </div>
@@ -200,6 +220,10 @@
             Debug);
 
         $(document).ready(function(){
+
+            $('#btnAbout').click(function() {
+                loadElementContentFromUrl('GenericModalContent', $(this).prop('href'));
+            });
 
             $('[data-toggle="tooltip"]').tooltip();
 

@@ -1,2 +1,3 @@
 django-widget-tweaks==1.4.1
 PyYAML==3.11
+markdown2==2.3.5
