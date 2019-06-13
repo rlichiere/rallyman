@@ -247,8 +247,8 @@ python manage.py runserver localhost:8000
   * implement sections connections (input to output anchors)
     * this will be required to manage map connections
   * implement position of participants in rally
-    * use arrival order of participations
-    * the rally creator should be able to change participants positions until the start of the rally
+    * manage first_turn while closeGameStep to make each player plays N times at the first turn of a stage
+  
 * Quick
   * add link-to-backoffice where it can be usefull for the superusers
   * add a debug menu to manage:

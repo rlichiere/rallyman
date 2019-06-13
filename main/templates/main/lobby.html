@@ -208,11 +208,13 @@
                     {% endif %}
                 </td>
                 <td>
-                    {% if rally.is_deletable and rally.creator == user %}
+                    {% if rally.is_deletable %}
+                    {% if rally.creator == user or user.is_superuser %}
                     <a id="btnDeleteModal_{{ rally.id }}" href="{% url 'rally-delete' pk=rally.id %}" class="btn btn-danger btn-sm"
                         data-toggle="modal" data-target="#GenericModal">
                         <i class="far fa-trash-alt"></i>
                     </a>
+                    {% endif %}
                     {% endif %}
                 </td>
                 {% endif %}

@@ -3,7 +3,7 @@ from django.contrib import admin
 
 from .core.renderers import CarSkinRenderer, RallyStagesRenderer, RoadbookRenderer, RallyParticipationsRenderer
 
-from .models import CarSkin, Participation, Rally, Stage, Zone
+from .models import CarSkin, GameStep, Participation, Rally, Stage, Zone
 
 
 class CarSkinAdmin(admin.ModelAdmin):
@@ -16,24 +16,35 @@ class CarSkinAdmin(admin.ModelAdmin):
         return CarSkinRenderer(instance).as_image()
 
 
+class GameStepAdmin(admin.ModelAdmin):
+    list_display = ('rally', 'index', 'player', 'status', 'started_at')
+    list_filter = ('rally', 'player', 'status', )
+
+    readonly_fields = ('started_at', )
+
+
 class RallyAdmin(admin.ModelAdmin):
-    list_display = ('label', 'status', 'creator', 'created_at', 'opened_at', 'finished_at')
+    list_display = ('label', 'status', 'creator', 'created_at', 'opened_at', 'finished_at', 'participants_count', 'stages_count')
     list_filter = ('status', 'creator', )
     search_fields = ('label', )
 
-    readonly_fields = ('created_at', 'stages',
-                       'participants'
-                       )
+    readonly_fields = ('created_at', 'stages', 'participants', )
     fieldsets = (
         (None, {
             'fields': ('label', 'created_at', 'opened_at', 'started_at', 'finished_at', 'status', 'creator', )
         }),
         ('Stages', {
-            'fields': ('stages',
-                       'participants',
-                       )
+            'fields': ('stages', 'participants', )
         }),
     )
+
+    @staticmethod
+    def participants_count(instance):
+        return Participation.objects.filter(rally=instance).count()
+
+    @staticmethod
+    def stages_count(instance):
+        return Stage.objects.filter(rally=instance).count()
 
     @staticmethod
     def stages(instance):
@@ -81,6 +92,7 @@ class ZoneAdmin(admin.ModelAdmin):
 
 
 admin.site.register(CarSkin, CarSkinAdmin)
+admin.site.register(GameStep, GameStepAdmin)
 admin.site.register(Rally, RallyAdmin)
 admin.site.register(Participation, ParticipationAdmin)
 admin.site.register(Stage, StageAdmin)

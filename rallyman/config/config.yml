@@ -5,3 +5,7 @@ debug:
     console:
       useUIOutput: True
   fail_on_warning: False
+
+game:
+  gameste:
+    max_lifetime: 10

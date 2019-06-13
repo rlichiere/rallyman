@@ -66,7 +66,6 @@ class RegisterToRallyView(LoginRequiredMixin, MainTemplateView):
         _participation = Participation(rally=_rally,
                                        player=_executor,
                                        car_skin=_carSkin,
-                                       car_position=_position,
                                        turn_position=_position)
         _participation.save()
 
@@ -123,11 +122,10 @@ class UnRegisterFromRallyView(LoginRequiredMixin, MainTemplateView):
         _participations = Participation.objects.filter(rally__id=_rallyId)
         for _participation in _participations:
             if _participation.turn_position > _removedPosition:
-                _newPosition = int(_participation.turn_position) - 1
-                _participation.turn_position = _newPosition
-                _participation.car_position = _newPosition
+                _newTurnPosition = int(_participation.turn_position) - 1
+                _participation.turn_position = _newTurnPosition
                 _participation.save()
-                self.log.debug('Updated position for player %s : %s' % (_participation.player.get_full_name(),
-                                                                        _participation.car_position))
+                self.log.debug('Updated turn position for player %s : %s' % (_participation.player.get_full_name(),
+                                                                             _participation.turn_position))
         self.log.endView()
         return self.redirect_success(self.request, 'Participation registered successfully')
