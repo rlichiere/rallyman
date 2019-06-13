@@ -10,7 +10,7 @@ import config
 from .game_logic import GameLogic
 from .const.lobby.rallies import RallyStatus
 from .const.rally import StepStatus, GAMESTEP_MAX_LIFETIME
-from .const.crons import REFRESH_RALLIES_STATUS_SECONDS, CHECK_EXPIRED_GAMESTEPS_DELAY
+from .const import crons as const_cron
 from .logger import Log
 from ..models import GameStep, Participation, Rally
 
@@ -19,7 +19,7 @@ class RalliesStatusCron(Thread):
 
     def __init__(self):
         Thread.__init__(self)
-        self._delay = REFRESH_RALLIES_STATUS_SECONDS
+        self._delay = config.get('cron/check_rallies_status/delay', const_cron.CHECK_RALLIES_STATUS_DELAY)
 
     def run(self):
         _l = Log(self)
@@ -49,9 +49,7 @@ class RalliesStatusCron(Thread):
             # close rally if it has no participations
             _participations = Participation.objects.filter(rally=_rally)
             if _participations.count() == 0:
-                _rally.status = RallyStatus.FINISHED
-                _rally.finished_at = utils_date.now()
-                _rally.save()
+                GameLogic(_rally).closeRally()
 
                 # TODO : recreate rally if it's a 'looping' one
 
@@ -59,8 +57,6 @@ class RalliesStatusCron(Thread):
 
             # initialize Rally
             GameLogic(_rally).initializeRally()
-            _step = GameStep(rally=_rally, player=Participation.objects.get(rally=_rally, turn_position=1).player)
-            _step.save()
 
         _dtEnd = dt.now()
         _l.info('Rallies status processed in %s' % (_dtEnd - _dtStart))
@@ -70,7 +66,7 @@ class ExpiredGameSteps(Thread):
 
     def __init__(self):
         Thread.__init__(self)
-        self._delay = config.get('cron/expired_gamesteps/delay', CHECK_EXPIRED_GAMESTEPS_DELAY)
+        self._delay = config.get('cron/check_expired_gamesteps/delay', const_cron.CHECK_EXPIRED_GAMESTEPS_DELAY)
 
     def run(self):
         _l = Log(self)

@@ -41,8 +41,8 @@ def get(path, default=None):
 """ Crons """
 
 crons = {
-    'rallies_status': _crons.RalliesStatusCron(),
-    'expired_gamesteps': _crons.ExpiredGameSteps(),
+    'check_rallies_status': _crons.RalliesStatusCron(),
+    'check_expired_gamesteps': _crons.ExpiredGameSteps(),
 }
 
 for _cronName, _cron in crons.iteritems():

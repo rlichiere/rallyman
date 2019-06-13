@@ -1,7 +1,10 @@
 
 cron:
-  expired_gamesteps:
+  check_expired_gamesteps:
     delay: 5
+
+  check_rallies_status:
+    delay: 60
 
 debug:
   client:
@@ -12,4 +15,4 @@ debug:
 
 game:
   gamestep:
-    max_lifetime: 10
+    max_lifetime: 60

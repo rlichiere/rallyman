@@ -2,7 +2,7 @@
 
 """ Rally creation """
 
-REFRESH_RALLIES_STATUS_SECONDS = 60  # seconds
+CHECK_RALLIES_STATUS_DELAY = 60  # seconds
 
 
 """ Game Steps expiration """
