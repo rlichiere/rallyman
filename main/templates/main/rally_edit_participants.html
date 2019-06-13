@@ -36,7 +36,6 @@
         <input type="text" value="{{ rally.label }}" class="form-control" title="Rally name" readonly="readonly">
     </div>
 
-
     <table id="ParticipantsList" class="table" style="display: table">
         <tr>
             <th>Position</th>
@@ -78,6 +77,7 @@
                 {% include 'main/generic/link_to_bo.html' with instance=participation size='sm' %}
             </td>
             {% endif %}
+        </tr>
         {% empty %}
         <tr>
             <td colspan="{% if user.is_superuser %}6{% else %}5{% endif %}">
@@ -85,7 +85,6 @@
             </td>
         </tr>
         {% endfor %}
-        </tr>
     </table>
 
     <div class="float-right">

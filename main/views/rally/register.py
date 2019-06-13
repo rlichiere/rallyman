@@ -9,17 +9,17 @@ from ...forms.rally import RegisterToRallyForm
 from ...models import CarSkin, Participation, Rally
 
 
-class RegisterToRallyView(LoginRequiredMixin, MainTemplateView):
+class RegisterView(LoginRequiredMixin, MainTemplateView):
     template_name = 'main/rally_register.html'
 
     def __init__(self, *args, **kwargs):
-        super(RegisterToRallyView, self).__init__(*args, **kwargs)
+        super(RegisterView, self).__init__(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         _executor = self.request.user
         self.log.startView(_executor)
 
-        context = super(RegisterToRallyView, self).get_context_data(**kwargs)
+        context = super(RegisterView, self).get_context_data(**kwargs)
         _rallyId = self.kwargs['pk']
         context['form_register'] = RegisterToRallyForm(request=self.request, rally_id=_rallyId)
 
@@ -73,17 +73,17 @@ class RegisterToRallyView(LoginRequiredMixin, MainTemplateView):
         return self.redirect_success(self.request, 'Participation registered successfully')
 
 
-class UnRegisterFromRallyView(LoginRequiredMixin, MainTemplateView):
+class UnRegisterView(LoginRequiredMixin, MainTemplateView):
     template_name = 'main/rally_unregister.html'
 
     def __init__(self, *args, **kwargs):
-        super(UnRegisterFromRallyView, self).__init__(*args, **kwargs)
+        super(UnRegisterView, self).__init__(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         _executor = self.request.user
         self.log.startView(_executor)
 
-        context = super(UnRegisterFromRallyView, self).get_context_data(**kwargs)
+        context = super(UnRegisterView, self).get_context_data(**kwargs)
 
         _rallyId = self.kwargs['pk']
 

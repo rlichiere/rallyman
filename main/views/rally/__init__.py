@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from .create import CreateRallyView
-from .register import RegisterToRallyView, UnRegisterFromRallyView
-from .delete import DeleteRallyView
-from .show import ShowRallyView
+from .create import CreateView
+from .register import RegisterView, UnRegisterView
+from .delete import DeleteView
+from .show import ShowView

@@ -1,4 +1,5 @@
 {% comment %}
+
     This generic template renders a button targeting the backoffice page of given instance.
 
     Model and module names are retrieven automatically from given instance. This works fine for custom models.
@@ -7,18 +8,21 @@
 
     Parameters:
         instance <Model>: Model instance from which to build the link to the backoffice page.
-        model    <str>  : Optionnal. Use this value instead of calculated model name.
-        module   <str>  : Optionnal. Use this value instead of calculated module name.
-        size     <str>  : Optionnal. Size of the button.
+        model    <str>  : Optional. Use this value instead of calculated model name.
+        module   <str>  : Optional. Use this value instead of calculated module name.
+        size     <str>  : Optional. Size of the button.
 
     Examples:
         {% include 'main/generic/link_to_bo.html' with instance=some_rally %}
         {% include 'main/generic/link_to_bo.html' with instance=some_user model='user' module='auth' %}
+
 {% endcomment %}
 {% load maintags %}
 
 <a href="/admin/{% if module %}{{ module }}{% else %}{{ instance|instance_module }}{% endif %}/{% if model %}{{ model }}{% else %}{{ instance|instance_model }}{% endif %}/{{ instance.id }}/change/"
    class="btn btn-primary {% if size %}btn-{{ size }}{% endif %}"
+   data-toggle="tooltip" data-html="true" data-placement="left"
+   title="Access to backoffice page of <strong>{% if module %}{{ module }}{% else %}{{ instance|instance_module }}{% endif %}.{% if model %}{{ model }}{% else %}{{ instance|instance_model|capfirst }}{% endif %} #{{ instance.id }}</strong>"
    target="_blank">
     <i class="fas fa-user-shield"></i>
 </a>

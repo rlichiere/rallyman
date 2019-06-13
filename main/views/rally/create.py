@@ -13,11 +13,11 @@ from ...models import Rally
 from ...forms.rally import CreateRallyForm
 
 
-class CreateRallyView(LoginRequiredMixin, MainTemplateView):
+class CreateView(LoginRequiredMixin, MainTemplateView):
     template_name = 'main/rally_create.html'
 
     def __init__(self, *args, **kwargs):
-        super(CreateRallyView, self).__init__(*args, **kwargs)
+        super(CreateView, self).__init__(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         _executor = self.request.user

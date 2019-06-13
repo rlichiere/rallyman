@@ -72,17 +72,17 @@ class RoadbookView(LoginRequiredMixin, MainTemplateView):
         return self.redirect_success(self.request, 'Rally stages edited successfully')
 
 
-class RoadbookAddStageView(LoginRequiredMixin, MainTemplateView):
+class AddStageView(LoginRequiredMixin, MainTemplateView):
     template_name = 'main/rally_edit_stage.html'
 
     def __init__(self, *args, **kwargs):
-        super(RoadbookAddStageView, self).__init__(*args, **kwargs)
+        super(AddStageView, self).__init__(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         _executor = self.request.user
         self.log.startView(_executor)
 
-        context = super(RoadbookAddStageView, self).get_context_data(**kwargs)
+        context = super(AddStageView, self).get_context_data(**kwargs)
         _rally = self.get_object_or_404(Rally, self.kwargs['pk'])
 
         # check permissions
@@ -96,10 +96,10 @@ class RoadbookAddStageView(LoginRequiredMixin, MainTemplateView):
         return context
 
 
-class RoadbookRemoveStageView(LoginRequiredMixin, MainView):
+class RemoveStageView(LoginRequiredMixin, MainView):
 
     def __init__(self, *args, **kwargs):
-        super(RoadbookRemoveStageView, self).__init__(*args, **kwargs)
+        super(RemoveStageView, self).__init__(*args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         _executor = self.request.user
@@ -141,18 +141,18 @@ class RoadbookRemoveStageView(LoginRequiredMixin, MainView):
         return self.redirect_success(self.request, _msg)
 
 
-class RoadbookAddZoneView(LoginRequiredMixin, MainTemplateView):
+class AddSectionView(LoginRequiredMixin, MainTemplateView):
     template_name = 'main/rally_edit_stage_section.html'
 
     def __init__(self, *args, **kwargs):
-        super(RoadbookAddZoneView, self).__init__(*args, **kwargs)
+        super(AddSectionView, self).__init__(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         _executor = self.request.user
         self.log.startView(_executor)
 
         _rallyId = kwargs.get('pk')
-        context = super(RoadbookAddZoneView, self).get_context_data(**kwargs)
+        context = super(AddSectionView, self).get_context_data(**kwargs)
         _rally = self.get_object_or_404(Rally, _rallyId)
 
         # check permissions

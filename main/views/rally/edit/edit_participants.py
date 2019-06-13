@@ -79,18 +79,18 @@ class ChangePositionView(LoginRequiredMixin, MainView):
         return self.return_success(self.request, 'Changed participant position in rally')
 
 
-class InviteParticipantView(LoginRequiredMixin, MainTemplateView):
+class InviteView(LoginRequiredMixin, MainTemplateView):
     template_name = 'main/rally_invite_participant.html'
 
     def __init__(self, *args, **kwargs):
-        super(InviteParticipantView, self).__init__(*args, **kwargs)
+        super(InviteView, self).__init__(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         _executor = self.request.user
         self.log.startView(_executor)
 
         _rallyId = self.kwargs['pk']
-        context = super(InviteParticipantView, self).get_context_data(**kwargs)
+        context = super(InviteView, self).get_context_data(**kwargs)
         _rally = self.get_object_or_404(Rally, _rallyId)
 
         if (_executor.id is not _rally.creator.id) and not _executor.is_superuser:
@@ -138,11 +138,11 @@ class InviteParticipantView(LoginRequiredMixin, MainTemplateView):
         return self.redirect_success(self.request, 'Participant invited successfully')
 
 
-class KickParticipantView(LoginRequiredMixin, MainTemplateView):
+class KickView(LoginRequiredMixin, MainTemplateView):
     template_name = 'main/rally_kick_participant.html'
 
     def __init__(self, *args, **kwargs):
-        super(KickParticipantView, self).__init__(*args, **kwargs)
+        super(KickView, self).__init__(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         _executor = self.request.user
@@ -150,7 +150,7 @@ class KickParticipantView(LoginRequiredMixin, MainTemplateView):
 
         _rallyId = self.kwargs['pk']
         _kickedUserId = self.kwargs['uid']
-        context = super(KickParticipantView, self).get_context_data(**kwargs)
+        context = super(KickView, self).get_context_data(**kwargs)
         _rally = self.get_object_or_404(Rally, _rallyId)
 
         if (_executor.id is not _rally.creator.id) and not _executor.is_superuser:
