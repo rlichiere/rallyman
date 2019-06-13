@@ -23,13 +23,14 @@ class RoadbookView(LoginRequiredMixin, MainTemplateView):
         _rally = self.get_object_or_404(Rally, self.kwargs['pk'])
 
         # check permissions
-        if _executor.id is not _rally.creator.id:
+        if (_executor.id is not _rally.creator.id) and not _executor.is_superuser:
             raise PermissionDenied
 
         context['ariane'] = ['edit_rally', 'roadbook']
         context['rally'] = _rally
         if _rally.status not in [RallyStatus.SCHEDULED, RallyStatus.OPENED]:
-            return self.set_context_error(self.request, 'This rally cannot be edited due to its status : %s' % _rally.status, context)
+            _msg = 'This rally cannot be edited due to its status : %s' % _rally.status
+            return self.set_context_error(self.request, _msg, context)
 
         _stages = Stage.objects.filter(rally=_rally.id)
         _stagesData = list()
@@ -57,12 +58,13 @@ class RoadbookView(LoginRequiredMixin, MainTemplateView):
         _rally = self.get_object_or_404(Rally, kwargs.get('pk'))
 
         # check permissions
-        if _executor.id is not _rally.creator.id:
+        if (_executor.id is not _rally.creator.id) and not _executor.is_superuser:
             raise PermissionDenied
 
         _form = EditRallyStagesForm(self.request.POST, request=self.request, rally=_rally)
         if not _form.is_valid():
-            return self.redirect_error(self.request, mark_safe('Form is not valid: %s' % _form.errors))
+            _msg = mark_safe('Form is not valid: %s' % _form.errors)
+            return self.redirect_error(self.request, _msg)
 
         _form.execute()
 
@@ -84,7 +86,7 @@ class RoadbookAddStageView(LoginRequiredMixin, MainTemplateView):
         _rally = self.get_object_or_404(Rally, self.kwargs['pk'])
 
         # check permissions
-        if _executor.id is not _rally.creator.id:
+        if (_executor.id is not _rally.creator.id) and not _executor.is_superuser:
             raise PermissionDenied
 
         context['rally'] = _rally
@@ -109,12 +111,13 @@ class RoadbookRemoveStageView(LoginRequiredMixin, MainView):
         _rally = self.get_object_or_404(Rally, _rallyId)
 
         # check permissions
-        if _executor.id is not _rally.creator.id:
+        if (_executor.id is not _rally.creator.id) and not _executor.is_superuser:
             raise PermissionDenied
 
         _stageNum = self.request.POST['stage_num']
 
-        _stages = Stage.objects.filter(rally=_rally).order_by('position_in_roadbook').order_by('position_in_roadbook')
+        _stages = Stage.objects.filter(rally=_rally)\
+                               .order_by('position_in_roadbook')
         _stageIdx = 0
         _stageFound = False
         for _stage in _stages:
@@ -130,10 +133,12 @@ class RoadbookRemoveStageView(LoginRequiredMixin, MainView):
                 _stage.save()
 
         if not _stageFound:
-            return self.redirect_error(self.request, 'Stage %s not found for rally %s' % (_stageNum, _rallyId))
+            _msg = 'Stage %s not found for rally %s' % (_stageNum, _rallyId)
+            return self.redirect_error(self.request, _msg)
 
         self.log.endView()
-        return self.redirect_success(self.request, 'Rally stage %s removed successfully from rally %s' % (_stageNum, _rallyId))
+        _msg = 'Rally stage %s removed successfully from rally %s' % (_stageNum, _rallyId)
+        return self.redirect_success(self.request, _msg)
 
 
 class RoadbookAddZoneView(LoginRequiredMixin, MainTemplateView):
@@ -151,7 +156,7 @@ class RoadbookAddZoneView(LoginRequiredMixin, MainTemplateView):
         _rally = self.get_object_or_404(Rally, _rallyId)
 
         # check permissions
-        if _executor.id is not _rally.creator.id:
+        if (_executor.id is not _rally.creator.id) and not _executor.is_superuser:
             raise PermissionDenied
 
         context['stage_num'] = kwargs.get('stage_num')

@@ -18,8 +18,8 @@ from django.conf.urls import url
 from .views.home import HomeView
 from .views.lobby import LobbyView
 from .views.rally import CreateRallyView, DeleteRallyView, ShowRallyView, RegisterToRallyView, UnRegisterFromRallyView
-from .views.rally.edit import RoadbookView, RoadbookAddStageView, RoadbookRemoveStageView, RoadbookAddZoneView, \
-    ParticipantsView, ChangeParticipantPositionView, InviteParticipantView, KickParticipantView
+from .views.rally.edit import PlanningView, RoadbookView, RoadbookAddStageView, RoadbookRemoveStageView, RoadbookAddZoneView, \
+    ParticipantsView, ChangePositionView, InviteParticipantView, KickParticipantView
 
 urlpatterns = [
     url(r'^$', HomeView.as_view(), name='main-home'),
@@ -36,12 +36,14 @@ urlpatterns = [
         RoadbookRemoveStageView.as_view(), name='rally-edit-remove-stage'),
     url(r'^rally/(?P<pk>[0-9]+)/edit/stage/(?P<stage_num>[0-9]+)/add-section',
         RoadbookAddZoneView.as_view(), name='rally-edit-add-section'),
+    url(r'^rally/(?P<pk>[0-9]+)/edit/planning',
+        PlanningView.as_view(), name='rally-edit-planning'),
     url(r'^rally/(?P<pk>[0-9]+)/edit/roadbook',
-        RoadbookView.as_view(), name='rally-edit'),
+        RoadbookView.as_view(), name='rally-edit-roadbook'),
     url(r'^rally/(?P<pk>[0-9]+)/edit/participants',
         ParticipantsView.as_view(), name='rally-edit-participants'),
     url(r'^rally/(?P<pk>[0-9]+)/edit/participant/position',
-        ChangeParticipantPositionView.as_view(), name='rally-edit-participant-change-position'),
+        ChangePositionView.as_view(), name='rally-edit-participant-change-position'),
     url(r'^rally/(?P<pk>[0-9]+)/invite/participant',
         InviteParticipantView.as_view(), name='rally-invite-participant'),
     url(r'^rally/(?P<pk>[0-9]+)/kick/participant/(?P<uid>[0-9]+)',

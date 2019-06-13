@@ -89,7 +89,7 @@ class LobbyView(MainTemplateView):
             _checkIfDeletable = True
             try:
 
-                if _rally.status in [RallyStatus.SCHEDULED, RallyStatus.STARTED, _rally.status == RallyStatus.FINISHED]:
+                if _rally.status in [RallyStatus.SCHEDULED, RallyStatus.STARTED, RallyStatus.FINISHED]:
                     _checkIfJoignable = False
 
                 if _rally.status in [RallyStatus.STARTED, RallyStatus.FINISHED]:

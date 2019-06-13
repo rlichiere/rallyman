@@ -19,7 +19,7 @@
 </p>
 {% else %}
 
-<form method="POST" action="{% url 'rally-edit' pk=rally.id %}?redirect=rally-edit&redirect_pk={{ rally.id }}">
+<form method="POST" action="{% url 'rally-edit-roadbook' pk=rally.id %}?redirect=rally-edit-roadbook&redirect_pk={{ rally.id }}">
     {% csrf_token %}
     <input type="hidden" id="StagesCount" name="stages_count" value="{{ stages_count }}">
 
@@ -82,7 +82,7 @@
 
     stageEditor.removeStage = function (stage_num) {
         let _lp = 'stageEditor.removeStage: ';
-        let _url = "{% url 'rally-edit-remove-stage' pk=rally.id %}?redirect=rally-edit&redirect_pk={{ rally.id }}";
+        let _url = "{% url 'rally-edit-remove-stage' pk=rally.id %}?redirect=rally-edit-roadbook&redirect_pk={{ rally.id }}";
         let _data = {
             'csrfmiddlewaretoken': '{{ csrf_token  }}',
             'stage_num': stage_num
@@ -94,7 +94,7 @@
             data: _data,
             success: function(data, status, xhr) {
                 Debug.storeAjaxResult(_url, xhr, status, data);
-                window.location.href = "{% url 'rally-edit' pk=rally.id %}";
+                window.location.href = "{% url 'rally-edit-roadbook' pk=rally.id %}";
             },
             error: function(xhr, status, data) {
                 Debug.storeAjaxResult(_url, xhr, status, data);

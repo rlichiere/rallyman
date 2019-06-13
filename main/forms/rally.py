@@ -34,13 +34,41 @@ class CreateRallyForm(forms.Form):
         self.fields['started_at'].initial = _startAt
 
     def clean_started_at(self):
-        _startedAt = self.cleaned_data['started_at']
         _openedAt = self.cleaned_data['opened_at']
+        _startedAt = self.cleaned_data['started_at']
 
         if _openedAt > _startedAt:
             raise forms.ValidationError('Start date must be later than Open date')
 
         return self.cleaned_data['started_at']
+
+
+class EditRallyPlanningForm(forms.Form):
+    opened_at = forms.DateTimeField()
+    started_at = forms.DateTimeField()
+
+    def __init__(self, *args, **kwargs):
+        request = kwargs.pop('request')
+        self.rally = kwargs.pop('rally')
+        super(EditRallyPlanningForm, self).__init__(*args, **kwargs)
+        _executor = request.user
+        _lp = '[%s] %s.__init__:' % (_executor, self.__class__.__name__)
+
+        self.fields['opened_at'].initial = self.rally.opened_at
+        self.fields['started_at'].initial = self.rally.started_at
+
+    def clean_started_at(self):
+        _openedAt = self.cleaned_data['opened_at']
+        _startedAt = self.cleaned_data['started_at']
+        if _openedAt > _startedAt:
+            raise forms.ValidationError('Start date must be later than Open date')
+
+        return self.cleaned_data['started_at']
+
+    def execute(self):
+        self.rally.opened_at = self.cleaned_data['opened_at']
+        self.rally.started_at = self.cleaned_data['started_at']
+        self.rally.save()
 
 
 class EditRallyStagesForm(object):

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionDenied
 
 from ...generic.views import MainTemplateView
 from ...models import Rally
@@ -19,6 +19,11 @@ class DeleteRallyView(LoginRequiredMixin, MainTemplateView):
 
         _rallyId = kwargs.get('pk')
         _rally = self.get_object_or_404(Rally, _rallyId)
+
+        # check permissions
+        if (_executor.id is not _rally.creator.id) and not _executor.is_superuser:
+            raise PermissionDenied
+
         context['rally'] = _rally
 
         self.log.endView()
@@ -27,9 +32,14 @@ class DeleteRallyView(LoginRequiredMixin, MainTemplateView):
     def post(self, request, *args, **kwargs):
         _executor = self.request.user
         _redirect = self.request.GET.get('redirect', 'main-home')
+        _rallyId = kwargs.get('pk')
         self.log.startView(_executor, _redirect)
 
+        _rally = self.get_object_or_404(Rally, _rallyId)
+
         # check permissions
+        if (_executor.id is not _rally.creator.id) and not _executor.is_superuser:
+            raise PermissionDenied
 
         _rallyId = kwargs.get('pk')
         _rally = self.get_object_or_404(Rally, _rallyId)

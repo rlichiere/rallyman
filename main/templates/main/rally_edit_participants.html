@@ -37,7 +37,7 @@
     </div>
 
 
-    <table id="ParticipantsList" class="table table-responsive" role="table">
+    <table id="ParticipantsList" class="table" style="display: table">
         <tr>
             <th>Position</th>
             <th>Name</th>
@@ -78,7 +78,12 @@
                 {% include 'main/generic/link_to_bo.html' with instance=participation size='sm' %}
             </td>
             {% endif %}
-
+        {% empty %}
+        <tr>
+            <td colspan="{% if user.is_superuser %}6{% else %}5{% endif %}">
+                Rally has no participants yet.
+            </td>
+        </tr>
         {% endfor %}
         </tr>
     </table>

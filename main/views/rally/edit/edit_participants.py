@@ -23,7 +23,7 @@ class ParticipantsView(LoginRequiredMixin, MainTemplateView):
         context['ariane'] = ['edit-rally', 'participants']
         _rally = self.get_object_or_404(Rally, _rallyId)
 
-        if _executor.id is not _rally.creator.id:
+        if (_executor.id is not _rally.creator.id) and not _executor.is_superuser:
             raise PermissionDenied
 
         _participations = Participation.objects.filter(rally=_rallyId).order_by('turn_position')
@@ -36,10 +36,10 @@ class ParticipantsView(LoginRequiredMixin, MainTemplateView):
         return context
 
 
-class ChangeParticipantPositionView(LoginRequiredMixin, MainView):
+class ChangePositionView(LoginRequiredMixin, MainView):
 
     def __init__(self, *args, **kwargs):
-        super(ChangeParticipantPositionView, self).__init__(*args, **kwargs)
+        super(ChangePositionView, self).__init__(*args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         _executor = self.request.user
@@ -51,7 +51,7 @@ class ChangeParticipantPositionView(LoginRequiredMixin, MainView):
 
         _rally = self.get_object_or_404(Rally, _rallyId)
 
-        if _executor.id is not _rally.creator.id:
+        if (_executor.id is not _rally.creator.id) and not _executor.is_superuser:
             raise PermissionDenied
 
         _participant = self.get_object_or_404(User, _participantId)
@@ -76,7 +76,7 @@ class ChangeParticipantPositionView(LoginRequiredMixin, MainView):
         _otherParticipant.save()
 
         self.log.endView()
-        return self.return_success(self.request, 'Participant kicked from rally')
+        return self.return_success(self.request, 'Changed participant position in rally')
 
 
 class InviteParticipantView(LoginRequiredMixin, MainTemplateView):
@@ -93,7 +93,7 @@ class InviteParticipantView(LoginRequiredMixin, MainTemplateView):
         context = super(InviteParticipantView, self).get_context_data(**kwargs)
         _rally = self.get_object_or_404(Rally, _rallyId)
 
-        if _executor.id is not _rally.creator.id:
+        if (_executor.id is not _rally.creator.id) and not _executor.is_superuser:
             raise PermissionDenied
 
         context['form_invite'] = InviteToRallyForm(request=self.request, rally_id=_rallyId)
@@ -123,7 +123,7 @@ class InviteParticipantView(LoginRequiredMixin, MainTemplateView):
         _rallyId = kwargs.get('pk')
         _rally = self.get_object_or_404(Rally, _rallyId)
 
-        if _executor.id is not _rally.creator.id:
+        if (_executor.id is not _rally.creator.id) and not _executor.is_superuser:
             raise PermissionDenied
 
         _invitedPlayerId = request.POST['invited_player']
@@ -153,7 +153,7 @@ class KickParticipantView(LoginRequiredMixin, MainTemplateView):
         context = super(KickParticipantView, self).get_context_data(**kwargs)
         _rally = self.get_object_or_404(Rally, _rallyId)
 
-        if _executor.id is not _rally.creator.id:
+        if (_executor.id is not _rally.creator.id) and not _executor.is_superuser:
             raise PermissionDenied
 
         context['rally'] = _rally
@@ -173,7 +173,7 @@ class KickParticipantView(LoginRequiredMixin, MainTemplateView):
 
         _rally = self.get_object_or_404(Rally, _rallyId)
 
-        if _executor.id is not _rally.creator.id:
+        if (_executor.id is not _rally.creator.id) and not _executor.is_superuser:
             raise PermissionDenied
 
         _kickedParticipant = self.get_object_or_404(User, _kickedUserId)

@@ -97,7 +97,7 @@
 
                     <div class="dropdown-item-group">Edit opened rallies:</div>
                     {% for rally in managed_rallies.OPENED %}
-                        <a class="dropdown-item" href="{% url 'rally-edit' pk=rally.id %}">{{ rally.label }}</a>
+                        <a class="dropdown-item" href="{% url 'rally-edit-roadbook' pk=rally.id %}">{{ rally.label }}</a>
                     {% empty %}
                         <a class="dropdown-item">No opened rallies</a>
                     {% endfor %}
@@ -105,7 +105,7 @@
 
                     <div class="dropdown-item-group">Edit scheduled rallies:</div>
                     {% for rally in managed_rallies.SCHEDULED %}
-                        <a class="dropdown-item" href="{% url 'rally-edit' pk=rally.id %}">{{ rally.label }}</a>
+                        <a class="dropdown-item" href="{% url 'rally-edit-roadbook' pk=rally.id %}">{{ rally.label }}</a>
                     {% empty %}
                         <a class="dropdown-item">No opened rallies</a>
                     {% endfor %}
