@@ -32,7 +32,6 @@ class SignUpView(FormView):
 
         except User.DoesNotExist:
             _user = User(username=form.cleaned_data.get('username'),
-                         email=form.cleaned_data.get('email'),
                          first_name=form.cleaned_data.get('first_name'),
                          last_name=form.cleaned_data.get('last_name'))
             _user.set_password(form.cleaned_data.get('password'))

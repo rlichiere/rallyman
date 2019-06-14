@@ -7,6 +7,7 @@
   * manage first_turn while closeGameStep to make each player plays N times at the first turn of a stage
 * fix Roadbook update:
   * actually fails at the first save of the roadbook of a new rally, where at least 1 section have been added
+* manage password complexity while signup and profile change
 
 <hr />
 

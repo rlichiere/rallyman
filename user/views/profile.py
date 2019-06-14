@@ -36,14 +36,10 @@ class UserProfileView(LoginRequiredMixin, MainTemplateView):
             login(request, _executor)
             return self.redirect_success(self.request, 'Password changed')
 
-        # user modifies other fields (email, first_name, last_name)
+        # user modifies other fields (first_name, last_name)
         _form = UserProfileForm(self.request.POST, request=self.request)
         if not _form.is_valid():
             return self.redirect_error(self.request, 'Form is not valid')
-
-        _pEmail = _form.cleaned_data.get('email')
-        if _pEmail != _executor.email:
-            _executor.email = _pEmail
 
         _pFirsName = _form.cleaned_data.get('first_name')
         if _pFirsName != _executor.first_name:
