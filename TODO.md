@@ -35,7 +35,7 @@
      
          The participants who did not participate to the previous rally are placed at end,
             ordered by experience, otherwise by order of registration
-     * `from_rally_result_reverse`: Sort participants according to the reversed result of a previous rally
+     * `from_rally_result_reverse`: Sort participants according to the reversed result of a previous rally.
      
          The participants who did not participate to the previous rally are placed at first,
             ordered by experience reversed, otherwise by order of registration reversed
