@@ -5,5 +5,5 @@ from django.forms.widgets import PasswordInput
 
 
 class SignInForm(AuthenticationForm):
-    username = forms.CharField()
-    password = forms.CharField(widget=PasswordInput())
+    username = forms.CharField(max_length=200)
+    password = forms.CharField(max_length=200, widget=PasswordInput())
