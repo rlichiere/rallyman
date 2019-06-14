@@ -93,6 +93,7 @@
 
     <!-- Pagination : number of items in page -->
     <div class="col-lg-12 mt-3">
+        {% if rallies_total > configurations.PageSizeConfiguration.get_min %}
         <div style="display:inline-block">
             Show
         </div>
@@ -100,11 +101,17 @@
             {% render_field form_pgps.available_page_sizes class='form-control' %}
         </div>
         <div style="display:inline-block">
-            of {{ rallies_total }} rallies
+            of {{ rallies_total }} {% if rallies_total == 1 %}rally{% else %}rallies{% endif %}
         </div>
         <div style="display:none;">
             {% render_field form_pgps.selected_page_size class="form-control" %}
         </div>
+        {% else %}
+        <div style="display:inline-block">
+            Show {{ rallies_total }} {% if rallies_total == 1 %}rally{% else %}rallies{% endif %}
+        </div>
+        {% endif %}
+
         {% if not user.is_anonymous %}
         <div class="form-group ml-2 float-right">
             <a id="btnCreateModal" href="{% url 'rally-create' %}" class="btn btn-primary" data-toggle="modal" data-target="#GenericModal">
@@ -280,25 +287,8 @@
 
 <script>
 
-    let elem_tenant_by_page = $('#available_page_sizes');
-    elem_tenant_by_page.change(function() {
-        let tenant_per_page = elem_tenant_by_page[0].value;
-        $('#show_number_tenant').val(tenant_per_page);
-        sendFilterForm();
-    });
-    function sendFilterForm() {
-        $('input').each(function() {
-            if($(this).val() === '') {
-                $(this).remove();
-            }
-        });
-        $('select').each(function() {
-            if($(this).val() === '') {
-                $(this).remove();
-            }
-        });
-        $('#filter_form').submit();
-    }
+    /* Navigation */
+    let navInputPageSizes = $('#{{ form_pgps.available_page_sizes.id_for_label }}');
 
     let btnResetContainer = $('#formFilter #btnResetContainer');
     let btnReset = $('#formFilter #btnResetContainer [role="reset"]');
@@ -354,16 +344,11 @@
             inputFilterRallyCreator.val('');
             formFilter.submit();
         });
-        $('#id_available_page_sizes').change(function() {
-            let url = '{{ page_url|safe }}';
-            {% if has_filter %}
-            url += '&_pgps=' + $(this).val();
-            {% else %}
-            url += '?_pgps=' + $(this).val();
-            {% endif %}
 
-            window.location.href = url;
-            // todo : navigate
+        navInputPageSizes.change(function() {
+            let _url = '{{ page_url|safe }}';
+            _url += '{% if has_filter %}&{% else %}?{% endif %}_pgps=' + $(this).val();
+            window.location.href = _url;
         });
 
         btnCreateModal.click(function() {

@@ -41,6 +41,13 @@ CREATOR_CHOICES = [
 ]
 CREATOR_DEFAULT_KEY = CREATOR_CHOICES[0][0]
 
+PAGINATION__PAGESIZES = [
+    10,
+    25,
+    50,
+    100,
+]
+
 ORDER_BY = [
     'label',
     # ('number_of_participants', 'number_of_participants'),

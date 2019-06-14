@@ -31,9 +31,16 @@ class SignUpView(FormView):
             return HttpResponseRedirect(reverse('auth-signup'))
 
         except User.DoesNotExist:
+            _firstName = form.cleaned_data.get('first_name', '')
+            _lastName = form.cleaned_data.get('last_name', '')
+            if _firstName is None:
+                _firstName = ''
+            if _lastName is None:
+                _lastName = ''
+
             _user = User(username=form.cleaned_data.get('username'),
-                         first_name=form.cleaned_data.get('first_name'),
-                         last_name=form.cleaned_data.get('last_name'))
+                         first_name=_firstName,
+                         last_name=_lastName)
             _user.set_password(form.cleaned_data.get('password'))
             _user.save()
 

@@ -19,6 +19,7 @@
   * manage all consts:
      * that are used in templates: via `{% get_conf 'path' const.[module.]CONSTANT %]`
      * that are used in python methods, via `config.get_conf()`
+* create custom Exceptions to properly manage errors between layers
 * add `rally-edit-advanced` page to manage:
   * persistence
   * privacy options

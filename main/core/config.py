@@ -39,6 +39,49 @@ def get(path, default=None):
     return _accessed
 
 
+def get_config(path, constant):
+    """
+        Returns configuration value at given `path` if found, otherwise returns given `constant`.
+
+        Equivalent to the eponymous tag.
+
+        Example:
+
+            > config.get_config('path/of/some/configuration/key', const.module.of.some.constant.SOME_CONSTANT)
+
+    :param path:
+    :param constant:
+    :return:
+    """
+    _value = get(path)
+    if _value is not None:
+        return _value
+
+    return constant
+
+
+class PageSizeConfiguration(object):
+
+    pageSizes = get_config('lobby/rallies/pagination/pagesizes',
+                           const.lobby.rallies.PAGINATION__PAGESIZES)
+
+    @classmethod
+    def as_choices(cls):
+        return [(_, str(_)) for _ in cls.pageSizes]
+
+    @classmethod
+    def get_default(cls):
+        return cls.pageSizes[0]
+
+    @classmethod
+    def get_min(cls):
+        return min(cls.pageSizes)
+
+
+configurations = dict()
+configurations[PageSizeConfiguration.__class__.__name__] = PageSizeConfiguration
+
+
 """ Crons """
 
 crons = [

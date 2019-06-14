@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
 
+from ..core import config
 from ..core.const.lobby import rallies as const_rallies
 
 
@@ -33,11 +34,16 @@ class FilterRalliesForm(forms.Form):
 
 
 class PaginationPageSizeForm(forms.Form):
-    CHOICES = (
-        (10, '10'),
-        (25, '25'),
-        (50, '50'),
-        (100, '100'),
-    )
-    available_page_sizes = forms.ChoiceField(label='Show x item', choices=CHOICES, required=False)
-    selected_page_size = forms.CharField(label='Show x item', required=False)
+    available_page_sizes = forms.ChoiceField(label='List of available page sizes',
+                                             help_text='This field contains the list of available page sizes',
+                                             required=False)
+    selected_page_size = forms.CharField(label='Number of items per page',
+                                         help_text='This field limits the number of elements'
+                                                   ' to show in a page of a paginated list',
+                                         required=False)
+
+    def __init__(self, **kwargs):
+        super(PaginationPageSizeForm, self).__init__(**kwargs)
+
+        self.fields['available_page_sizes'].choices = config.PageSizeConfiguration.as_choices()
+        self.fields['available_page_sizes'].initial = config.PageSizeConfiguration.get_default()

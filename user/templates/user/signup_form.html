@@ -15,19 +15,34 @@
                         <form role="form" method="post" action="{% url 'auth-signup' %}">
                             {% csrf_token %}
                             <fieldset>
-                                <div class="form-group">
-                                    {% render_field form.username class+="form-control" placeholder="Login" %}
+                                <div class="input-group">
+                                    {% render_field form.username class+="form-control" placeholder=form.username.label %}
+                                    <div class="input-group-append">
+                                        {% include 'main/generic/help_button.html' with title='Login format' content=form.username.help_text %}
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    {% render_field form.password class+="form-control" placeholder="Password" %}
+                                <div class="input-group mt-3">
+                                    {% render_field form.password class+="form-control" placeholder=form.password.label %}
+                                    <div class="input-group-append">
+                                        {% include 'main/generic/help_button.html' with title='Password format' content=form.password.help_text %}
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    {% render_field form.first_name class+="form-control" placeholder="First name" %}
+                                <div class="form-group mt-3">
+                                    {% render_field form.password_confirmation class+="form-control" placeholder=form.password_confirmation.label %}
                                 </div>
-                                <div class="form-group">
-                                    {% render_field form.last_name class+="form-control" placeholder="Last name" %}
+                                <div class="input-group mt-3">
+                                    {% render_field form.first_name class+="form-control" placeholder=form.first_name.label %}
+                                    <div class="input-group-append">
+                                        {% include 'main/generic/help_button.html' with title='First name format' content=form.first_name.help_text %}
+                                    </div>
                                 </div>
-                                <button class="btn btn-lg btn-success btn-block" type="submit">Sign in</button>
+                                <div class="input-group mt-3">
+                                    {% render_field form.last_name class+="form-control" placeholder=form.last_name.label %}
+                                    <div class="input-group-append">
+                                        {% include 'main/generic/help_button.html' with title='Last name format' content=form.last_name.help_text %}
+                                    </div>
+                                </div>
+                                <button class="btn btn-lg btn-success btn-block mt-3" type="submit">Sign in</button>
                             </fieldset>
                             {% if form.errors %}
                                 <p style="color:red;">Username or password incorrect. Please try again.</p>

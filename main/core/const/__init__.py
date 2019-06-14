@@ -7,5 +7,6 @@ from . import dashboard
 from . import dictionnaries
 from . import form
 from . import layout
+from . import lobby
 from . import rally
 from . import zone

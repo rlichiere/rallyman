@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.core.paginator import Paginator
 
+from ..core import config
 from ..core.const.lobby.rallies import RallyStatus
 from ..forms.lobby import FilterRalliesForm, PaginationPageSizeForm
 from ..generic.views import MainTemplateView
@@ -20,7 +21,7 @@ class LobbyView(MainTemplateView):
         context = super(LobbyView, self).get_context_data(**kwargs)
         context['ariane'] = ['lobby']
 
-        _pgPageSize = int(self.request.GET.get('_pgps', 10))
+        _pgPageSize = int(self.request.GET.get('_pgps', config.PageSizeConfiguration.get_default()))
         _pgPageIndex = int(self.request.GET.get('_pgpi', 1))
         _allRlys = Rally.objects.all()
 
@@ -50,7 +51,13 @@ class LobbyView(MainTemplateView):
         # manage user_participation
         _rlysParts = Participation.objects.filter(rally__in=_rallies)
 
-        _rlyUserParts = _rlysParts.filter(player=_executor)
+        # retrieve participations of the user
+        if _executor.is_anonymous:
+            # force the use of an empty queryset for anonymous users
+            _rlyUserParts = _rlysParts.filter(id=-1)  # did not found better than this trick
+        else:
+            _rlyUserParts = _rlysParts.filter(player=_executor)
+
         _rlysUserPartsIds = _rlyUserParts.values_list('rally__id', flat=True)
         if not _executor.is_anonymous:
             if _userPart == '1':

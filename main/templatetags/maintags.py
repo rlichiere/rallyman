@@ -19,6 +19,7 @@ def concat(left, right):
 
 _config_mappings = {
     'const': config.const,
+    'configurations': config.configurations,
     'data': config.data,
     'locales': config.locales,
     'settings': config.settings,
