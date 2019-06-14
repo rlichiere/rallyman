@@ -7,11 +7,14 @@ logger = logging.getLogger('main_logger')
 
 class Log(object):
 
-    def __init__(self, caller=None):
+    def __init__(self, caller=None, executor=None):
         self._caller = caller
-        self._executor = None
+        self._executor = executor
         self._redirect_to = None
         self._redirect_to_kwargs = None
+
+        self._callerClass = ('%s.' % self._caller.__class__.__name__) if self._caller is not None else ''
+
     """ Public """
 
     def debug(self, msg=None, *arg_msg, **kw_msg):
@@ -74,9 +77,8 @@ class Log(object):
         lr = logger.makeRecord(name='main_logger', level=level, msg=_msg,
                                fn=rv[0], lno=rv[1], func=rv[2],
                                args=[], exc_info=None)
-        _caller = ('%s.' % self._caller.__class__.__name__) if self._caller != '' else ''
         _executor = ('[%s] ' % self._executor) if self._executor is not None else ''
-        return '%s %s%s%s:%3d: %s' % (lr.module, _executor, _caller, lr.funcName, lr.lineno, _msg)
+        return '%s %s%s%s:%3d: %s' % (lr.module, _executor, self._callerClass, lr.funcName, lr.lineno, _msg)
 
     @classmethod
     def _expandMessage(cls, msg='', *arg_msg, **kw_msg):

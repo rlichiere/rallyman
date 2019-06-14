@@ -249,15 +249,15 @@
             Debug);
 
         let topScroller = new TopScroller('docBtnScrollTop', {
-            scrollDuration: {{ const.layout.TOPSCROLLER__SCROLL__DURATION }},
-            hideBtnDuration: {{ const.layout.TOPSCROLLER__HIDE_BUTTON__DURATION }},
-            showBtnDuration: {{ const.layout.TOPSCROLLER__SHOW_BUTTON__DURATION }},
+            scrollDuration: {% get_conf 'layout/scroller_top/scroll/time' layout.TOPSCROLLER__SCROLL__TIME %},
+            hideBtnDuration: {% get_conf 'layout/scroller_top/hide/time' layout.TOPSCROLLER__HIDE__TIME %},
+            showBtnDuration: {% get_conf 'layout/scroller_top/show/time' layout.TOPSCROLLER__SHOW__TIME %},
             root: $rootElements,
         });
         topScroller.listenEvents();
 
         let anchorScroller = new AnchorsScroller({
-            scrollDuration: {{ const.layout.ANCHOR__SCROLL__DURATION }},
+            scrollDuration: {% get_conf 'layout/scroller_anchors/scroll/time' layout.ANCHOR__SCROLL__TIME %},
             root: $rootElements,
         });
         anchorScroller.listenEvents();

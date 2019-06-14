@@ -100,9 +100,9 @@ class AnchorsScroller {
 
             // skip links which have 'empty' (i.e '#') href
             let _href = $(this).attr('href');
-            if (_href === '#') return true;
 
-            if (!$(this).hasClass('.dropdown-toggle')) return true;
+            if (_href === '#') return true;
+            if ($(this).hasClass('.dropdown-toggle')) return true;
 
             // scroll to target with a duration
             _this.animateScroll(this);

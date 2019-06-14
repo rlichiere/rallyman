@@ -88,12 +88,10 @@ def zip_folder(folder_path, output_path):
             for folder_name in folders:
                 absolute_path = os.path.join(root, folder_name)
                 relative_path = absolute_path[len(folder_path) + 1:]
-                # print("Adding '%s' to archive." % absolute_path)
                 zip_file.write(absolute_path, relative_path)
             for file_name in files:
                 absolute_path = os.path.join(root, file_name)
                 relative_path = absolute_path[len(folder_path) + 1:]
-                # print("Adding '%s' to archive." % absolute_path)
                 zip_file.write(absolute_path, relative_path)
     except IOError as e:
         sys.exit(1)

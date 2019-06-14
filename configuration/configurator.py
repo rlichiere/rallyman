@@ -16,8 +16,6 @@ class Configuration(object):
         _pathEnd = file_path.rfind('\\')
         self.fileName = file_path[_pathEnd + 1:]
         self.fileFolder = file_path[:_pathEnd]
-        print('self.fileName : %s' % self.fileName)
-        print('self.fileFolder : %s' % self.fileFolder)
         self.filePath = file_path
 
         if content_type:
@@ -48,11 +46,8 @@ class Configuration(object):
             return _fileData
 
     def backup(self, path):
-        print('backup: path : %s' % path)
         _sourceFilePath = '%s\\%s' % (self.fileFolder, self.fileName)
         _targetFilePath = '%s\\%s' % (path, self.fileName)
-        print('backup: _sourceFilePath : %s' % _sourceFilePath)
-        print('backup: _targetFilePath : %s' % _targetFilePath)
 
         self.copy_file(_sourceFilePath, _targetFilePath)
 

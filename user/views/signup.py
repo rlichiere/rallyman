@@ -7,6 +7,8 @@ from django.http import HttpResponseRedirect
 from django.utils.safestring import mark_safe
 from django.views.generic import FormView
 
+from main.core.logger import Log
+
 from ..forms.signup import SignUpForm
 
 
@@ -20,27 +22,36 @@ class SignUpView(FormView):
         return context
 
     def form_valid(self, form):
+        _l = Log(self)
 
-        _user = User(username=form.cleaned_data.get('username'),
-                     email=form.cleaned_data.get('email'),
-                     first_name=form.cleaned_data.get('first_name'),
-                     last_name=form.cleaned_data.get('last_name'))
-        _user.set_password(form.cleaned_data.get('password'))
-        _user.save()
+        try:
+            _u = User.objects.get(username=form.cleaned_data.get('username'))
+            _msg = 'This login is not available. Please choose another one.'
+            messages.add_message(self.request, messages.ERROR, _msg)
+            return HttpResponseRedirect(reverse('auth-signup'))
 
-        _msg = 'User account created successfully'
-        print(_msg)
-        messages.add_message(self.request, messages.SUCCESS, _msg)
+        except User.DoesNotExist:
+            _user = User(username=form.cleaned_data.get('username'),
+                         email=form.cleaned_data.get('email'),
+                         first_name=form.cleaned_data.get('first_name'),
+                         last_name=form.cleaned_data.get('last_name'))
+            _user.set_password(form.cleaned_data.get('password'))
+            _user.save()
 
-        login(self.request, _user)
-        _msg = 'User logged successfully'
-        print(_msg)
-        messages.add_message(self.request, messages.SUCCESS, _msg)
+            _msg = 'User account created successfully'
+            _l.info(_msg)
+            messages.add_message(self.request, messages.SUCCESS, _msg)
 
-        return HttpResponseRedirect(reverse('user-profile'))
+            login(self.request, _user)
+            _msg = 'User logged successfully'
+            _l.info(_msg)
+            messages.add_message(self.request, messages.SUCCESS, _msg)
+
+            return HttpResponseRedirect(reverse('user-profile'))
 
     def form_invalid(self, form):
+        _l = Log(self)
         _msg = 'Error while creating user account : %s' % form.errors
-        print(_msg)
+        _l.info(_msg)
         messages.add_message(self.request, messages.ERROR, mark_safe(_msg))
         return HttpResponseRedirect(reverse('auth-signup'))

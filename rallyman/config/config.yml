@@ -1,11 +1,9 @@
-
+# yml
 cron:
   check_expired_gamesteps:
-    delay:  5                 # seconds. Recommended value :  30 (should be less than game/gamestep/max_lifetime)
-
+    delay:  30                # seconds. Recommended value :  30 (should be less than game/gamestep/max_lifetime)
   check_rallies_status:
     delay: 60                 # seconds. Recommended value :  60
-
 
 debug:
   client:
@@ -14,15 +12,24 @@ debug:
       useUIOutput: True
   fail_on_warning: False
 
-
 game:
   create:
     delay_open_to_next: 5     # minutes. Recommended value :   5
     delay_start_to_next: 15   # minutes. Recommended value :  15
-
   gamestep:
-    max_lifetime: 10          # seconds. Recommended value :  60
-
+    max_lifetime: 60          # seconds. Recommended value :  60
   persistence:
     open_in_next: 5           # minutes. Recommended value :   5
     start_in_next: 15         # minutes. Recommended value :  15
+
+layout:
+  scroller_top:
+    scroll:
+      time: 201               # milliseconds. Recommended value: 200
+    hide:
+      time: 201               # milliseconds. Recommended value: 200
+    show:
+      time: 201               # milliseconds. Recommended value: 200
+  scroller_anchors:
+    scroll:
+      time: 201               # milliseconds. Recommended value: 200

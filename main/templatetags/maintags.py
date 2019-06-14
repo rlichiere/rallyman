@@ -6,6 +6,8 @@ from ..core.const.lobby.rallies import RallyStatus
 from ..core.logger import Log
 from ..models import Rally
 
+from . import utils
+
 
 register = template.Library()
 
@@ -158,3 +160,81 @@ def instance_module(instance):
     """
     _module = type(instance).__module__
     return _module[:_module.find('.')]
+
+
+@register.tag(name='get_conf')
+def get_configuration_or_constant(parser, token):
+    """
+    Returns the configured value at given `path` if found, otherwise returns the value of the given constant
+
+    Takes path as first argument and constant as second argument.
+    Path should be in the form of `'some/path/to/some/config/key'` or `"some/path/to/a/config/key"` ,
+    Constant should be in the form [const.]module.of.the.constant.SOME_CONSTANT.
+
+    Examples:
+
+        * Standard case:
+
+            ```
+            {% get_conf 'some/path/key' const.some.module.SOME_CONSTANT %}
+            ```
+
+        * Shorten case:
+
+            As `const.` prefix is not mandatory for the `constantName parameter`, it may be omitted.
+
+            ```
+            {% get_conf 'path' some_child_of_const_module.some.module.SOME_CONSTANT %}
+            ```
+
+    :param parser: the standard Parser given by the call of the tag while the template rendering
+                    This object is used in the tag to compile an string into an evaluable expression,
+                        which must be passed to the rendering Node in order to be evaluated (`.resolve`).
+    :type parser: django.template.base.Parser
+    :param token: the standard Token given by the call of the tag while the template rendering.
+                    This object must be split in order to unpack tag parameters
+    :type token: django.template.base.Token
+    :return: found configuration-otherwise-constant value for given `path` and `constantName`
+    :rtype: int, str, list, dict
+    """
+    _l = Log()
+    bits = token.split_contents()
+    error_msg = '%r tag requires a "path/to/some/config/key" followed by its corresponding constant' % bits[0]
+    try:
+        path = bits[1]
+        constantName = bits[2]
+    except ValueError:
+        _l.error(error_msg)
+        raise template.TemplateSyntaxError(error_msg)
+
+    _validator = utils.validators.GetConfigurationOrConstantValidator(path, constantName)
+    if not _validator.is_valid():
+        _msg = 'Validation error : %s' % _validator.errors
+        _l.error(_msg)
+        raise Exception(_msg)
+
+    path = _validator.cleaned_data['path']
+    constantName = _validator.cleaned_data['constantName']
+    _l.debug(path=path, constantName=constantName)
+
+    constantExpression = parser.compile_filter(constantName)
+    return GetConfNode(path, constantName, constantExpression)
+
+
+class GetConfNode(template.Node):
+    def __init__(self, path, constant_name, constant_expression):
+        self.path = path
+        self.constantName = constant_name
+        self.constantExpression = constant_expression
+
+    def render(self, context):
+        _l = Log(self)
+
+        _configuredValue = config.get(self.path)
+        if _configuredValue:
+            _l.info('use configuration for path %s : %s' % (self.path, _configuredValue))
+            return _configuredValue
+
+        _constantValue = self.constantExpression.resolve(context)
+        _l.info('use constant %s for path %s : %s' % (self.constantName, self.path, _constantValue))
+        return _constantValue
