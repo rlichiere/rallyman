@@ -9,7 +9,7 @@ from ....forms.rally import EditRallyPlanningForm
 
 
 class PlanningView(LoginRequiredMixin, MainTemplateView):
-    template_name = 'main/rally_edit_planning.html'
+    template_name = 'main/rally/edit/planning.html'
 
     def __init__(self, *args, **kwargs):
         super(PlanningView, self).__init__(*args, **kwargs)

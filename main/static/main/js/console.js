@@ -89,6 +89,8 @@ Console.initialize = function(containerId, contentId, compensedId, btnShowId, bt
         // increase console height
         _this._containerObj.css('height', '100px');
         _this._compensedObj.css('margin-bottom', '100px');
+        $('#docBtnScrollTop').css('bottom', '105px');
+
         $(this).css('margin-bottom', '0');
 
     });
@@ -97,6 +99,8 @@ Console.initialize = function(containerId, contentId, compensedId, btnShowId, bt
         _this._containerObj.css('height', '+=30px');
         _this._contentObj.css('height', '+=30px');
         _this._compensedObj.css('margin-bottom', '+=30px');
+        $('#docBtnScrollTop').css('bottom', '+=30px');
+
         $('#'+_this._containerId + ' div.float-right > ul.nav > li > button.close[role="reduce"]').css('margin-bottom', '+=30px');
     });
     $('#'+this._containerId + ' div.float-right > ul.nav > li > button.close[role="decrease"]').click(function() {
@@ -106,6 +110,8 @@ Console.initialize = function(containerId, contentId, compensedId, btnShowId, bt
             _this._containerObj.css('height', '-=30px');
             _this._contentObj.css('height', '-=30px');
             _this._compensedObj.css('margin-bottom', '-=30px');
+            $('#docBtnScrollTop').css('bottom', '-=30px');
+
             $('#'+_this._containerId + ' div.float-right > ul.nav > li > button.close[role="reduce"]').css('margin-bottom', '-=30px');
         }
     });
@@ -128,6 +134,8 @@ Console.show = function() {
     this._containerObj.show();
     let _consoleHeight = this._containerObj.height();
     this._compensedObj.css('margin-bottom', '+=' + _consoleHeight + 'px');
+    $('#docBtnScrollTop').css('bottom', '+=' + _consoleHeight + 'px');
+
     this._btnShowObj.hide();
     this._btnHideObj.show();
 };
@@ -136,9 +144,12 @@ Console.hide = function() {
     this._containerObj.hide();
     let _consoleHeight = this._containerObj.height();
     this._compensedObj.css('margin-bottom', '-=' + _consoleHeight + 'px');
+    $('#docBtnScrollTop').css('bottom', '-=' + _consoleHeight + 'px');
+
     this._btnShowObj.show();
     this._btnHideObj.hide();
 };
+
 
 /* Exploitation */
 

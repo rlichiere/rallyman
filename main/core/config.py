@@ -12,7 +12,6 @@ from ..core import utils_dict as _utils_dict
 """ Main constants """
 const = _main_const
 
-
 """ Configured data """
 _confData = Configuration('data', 'rallyman\\config\\config.yml')
 Configurator.register(_confData)

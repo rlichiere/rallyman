@@ -14,7 +14,7 @@ from ...forms.rally import CreateRallyForm
 
 
 class CreateView(LoginRequiredMixin, MainTemplateView):
-    template_name = 'main/rally_create.html'
+    template_name = 'main/rally/create.html'
 
     def __init__(self, *args, **kwargs):
         super(CreateView, self).__init__(*args, **kwargs)

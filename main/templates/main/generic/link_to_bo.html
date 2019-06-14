@@ -20,9 +20,16 @@
 {% load maintags %}
 
 <a href="/admin/{% if module %}{{ module }}{% else %}{{ instance|instance_module }}{% endif %}/{% if model %}{{ model }}{% else %}{{ instance|instance_model }}{% endif %}/{{ instance.id }}/change/"
-   class="btn btn-primary {% if size %}btn-{{ size }}{% endif %}"
+   class="btn btn-info {% if size %}btn-{{ size }}{% endif %}"
    data-toggle="tooltip" data-html="true" data-placement="left"
-   title="Access to backoffice page of <strong>{% if module %}{{ module }}{% else %}{{ instance|instance_module }}{% endif %}.{% if model %}{{ model }}{% else %}{{ instance|instance_model|capfirst }}{% endif %} #{{ instance.id }}</strong>"
+   title="<h6>Direct link to Backoffice</h6>
+        <p>
+            Access to backoffice page of
+            <strong>{% if module %}{{ module }}{% else %}{{ instance|instance_module }}{% endif %}.{% if model %}{{ model }}{% else %}{{ instance|instance_model|capfirst }}{% endif %} #{{ instance.id }}</strong>.
+        </p>
+        <p class='mb-1'>
+            This link is only accessible to superusers.
+        </p>"
    target="_blank">
     <i class="fas fa-user-shield"></i>
 </a>

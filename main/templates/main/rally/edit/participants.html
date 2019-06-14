@@ -1,4 +1,4 @@
-{% extends 'main/rally_edit_base.html' %}
+{% extends 'main/rally/edit/base.html' %}
 {% load widget_tweaks %}
 
 {% block page-title %}Edit rally participants{% endblock %}
@@ -68,7 +68,7 @@
             </td>
             <td>
                 <a href="{% url 'rally-kick-participant' pk=rally.id uid=participation.player.id %}" type="button" class="btn btn-danger btn-sm" id="btnKickParticipant_{{ participation.player.id }}" data-toggle="modal" data-target="#GenericModal">
-                    <i class="fas fa-trash-alt"></i>
+                    <i class="fas fa-user-minus"></i>
                 </a>
             </td>
 
@@ -90,10 +90,12 @@
     <div class="float-right">
         {% if rally.available_slots_count > 0 %}
         <a href="{% url 'rally-invite-participant' pk=rally.id %}" class="btn btn-primary" id="btnInviteParticipant" data-toggle="modal" data-target="#GenericModal">
+            <i class="fas fa-user-plus"></i>
             Invite participant
         </a>
         {% else %}
         <a href="#" class="btn btn-secondary" data-toggle="tooltip" title="All slots are taken. It is not possible to invite a new participant.">
+            <i class="fas fa-user-plus"></i>
             Invite participant
         </a>
         {% endif %}

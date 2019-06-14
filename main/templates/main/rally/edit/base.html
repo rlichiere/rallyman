@@ -4,8 +4,11 @@
 {% block page-submenu %}
 
 <div class="dropdown">
-    <a href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Edit rally</a>
-    <div class="dropdown-menu">
+    <a href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+        <i class="fas fa-edit"></i>
+        Edit rally configuration
+    </a>
+    <div class="dropdown-menu dropdown-menu-right">
         <a class="dropdown-item {% if 'planning' in ariane %}active{% endif %}" href="{% url 'rally-edit-planning' pk=rally.id %}">Planning</a>
         <a class="dropdown-item {% if 'roadbook' in ariane %}active{% endif %}" href="{% url 'rally-edit-roadbook' pk=rally.id %}">Roadbook</a>
         <a class="dropdown-item {% if 'participants' in ariane %}active{% endif %}" href="{% url 'rally-edit-participants' pk=rally.id %}">Participants</a>

@@ -1,0 +1,52 @@
+<style type="text/css">
+{% comment %}
+
+    BoostrapExtension classes extends Boostrap classes.
+
+{% endcomment %}
+
+{% comment %}
+
+    .info
+
+        The `info` class reproduces the behaviors of the class `btn-info`, to be used where the use of the `btn` class is not possible:
+            - `btn-info` colors are applied to:
+                - A.info
+                - A.info > I.info
+                - A.info > SPAN.info
+
+        Example:
+         <a class="info">
+             <i class="SomeAwesomeIcon info"></i>
+             SomeLabel
+         </a>
+
+{% endcomment %}
+
+    /* inactive menu item */
+    a.info:not(.active) > i.info, a.info:not(.active) > span.info {
+        color: {{ const.bootstrap.COLOR_INFO }};
+    }
+
+    /* inactive menu item hover */
+    a.info:hover:not(.active) {
+        color: {{ const.bootstrap.COLOR_INFO_HOVER }};
+    }
+    a.info:hover:not(.active) > i.info, a.info:hover:not(.active) > span.info {
+        color: {{ const.bootstrap.COLOR_INFO_HOVER }};
+    }
+
+    /* active menu item */
+    a.info.active > i.info, a.info.active > span.info {
+        color: #fff;
+    }
+
+    /* active menu item hover */
+    a.info.active:hover > i.info, a.info.active:hover > span.info {
+        color: #fff;
+    }
+
+    /* TODO:
+    *   - add other colors: primary, secondary, success, warning, danger
+    */
+</style>

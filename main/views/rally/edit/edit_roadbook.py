@@ -9,7 +9,7 @@ from ....forms.rally import EditRallyStagesForm
 
 
 class RoadbookView(LoginRequiredMixin, MainTemplateView):
-    template_name = 'main/rally_edit_roadbook.html'
+    template_name = 'main/rally/edit/roadbook.html'
 
     def __init__(self, *args, **kwargs):
         super(RoadbookView, self).__init__(*args, **kwargs)
@@ -73,7 +73,7 @@ class RoadbookView(LoginRequiredMixin, MainTemplateView):
 
 
 class AddStageView(LoginRequiredMixin, MainTemplateView):
-    template_name = 'main/rally_edit_stage.html'
+    template_name = 'main/rally/edit/stage.html'
 
     def __init__(self, *args, **kwargs):
         super(AddStageView, self).__init__(*args, **kwargs)
@@ -142,7 +142,7 @@ class RemoveStageView(LoginRequiredMixin, MainView):
 
 
 class AddSectionView(LoginRequiredMixin, MainTemplateView):
-    template_name = 'main/rally_edit_stage_section.html'
+    template_name = 'main/rally/edit/stage_section.html'
 
     def __init__(self, *args, **kwargs):
         super(AddSectionView, self).__init__(*args, **kwargs)

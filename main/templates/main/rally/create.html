@@ -1,6 +1,6 @@
 {% load widget_tweaks %}
 
-<form method="POST" action="{% url 'rally-create' %}?redirect=rally-edit" onsubmit="return createRally.onSubmit(this)">
+<form method="POST" action="{% url 'rally-create' %}?redirect=rally-edit-roadbook" onsubmit="return createRally.onSubmit(this)">
 {% csrf_token %}
 
     <div class="modal-header">

@@ -6,7 +6,7 @@ from ...models import Rally
 
 
 class DeleteView(LoginRequiredMixin, MainTemplateView):
-    template_name = 'main/rally_delete.html'
+    template_name = 'main/rally/delete.html'
 
     def __init__(self, *args, **kwargs):
         super(DeleteView, self).__init__(*args, **kwargs)

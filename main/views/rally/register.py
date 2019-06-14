@@ -10,7 +10,7 @@ from ...models import CarSkin, Participation, Rally
 
 
 class RegisterView(LoginRequiredMixin, MainTemplateView):
-    template_name = 'main/rally_register.html'
+    template_name = 'main/rally/participation/register.html'
 
     def __init__(self, *args, **kwargs):
         super(RegisterView, self).__init__(*args, **kwargs)
@@ -74,7 +74,7 @@ class RegisterView(LoginRequiredMixin, MainTemplateView):
 
 
 class UnRegisterView(LoginRequiredMixin, MainTemplateView):
-    template_name = 'main/rally_unregister.html'
+    template_name = 'main/rally/participation/unregister.html'
 
     def __init__(self, *args, **kwargs):
         super(UnRegisterView, self).__init__(*args, **kwargs)

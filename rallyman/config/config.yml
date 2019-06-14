@@ -1,7 +1,7 @@
 
 cron:
   check_expired_gamesteps:
-    delay: 30                 # seconds. Recommended value :  30 (should be less than game/gamestep/max_lifetime)
+    delay:  5                 # seconds. Recommended value :  30 (should be less than game/gamestep/max_lifetime)
 
   check_rallies_status:
     delay: 60                 # seconds. Recommended value :  60

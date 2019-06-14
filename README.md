@@ -4,9 +4,9 @@
 Python/Django implementation of the famous board game **_[Rallyman](http://rallyman.fr/)_** created by **J.-C. Bouvier**.
 **Thank you to him, may joy and happiness iridesce his life**.
 
-This implementation is based on the **2nd edition of the game** (_November 2009_), with the objective of covering all the rules of this version.
+This implementation is based on the **2nd edition of the game** (_November 2009_), with the objective of covering all the rules of this edition.
 
-Additional functionalities are planned and will concern the side events:
+Additional functionalities are planned and will only concern the side events:
 no change will be made to the original rules governing the conduct of the games.
 
 Uses:
@@ -17,14 +17,26 @@ Uses:
 
 <hr />
 
+Summary:
+
+* <a href='#main-features'>Main features</a>
+* <a href='#app-install'>Installation</a>
+  * <a href='#app-prerequisites'>Install prerequisites</a>
+  * <a href='#app-configure'>Configure application</a>
+  * <a href='#app-initialize'>Initialize application</a>
+* <a href='#run'>Run</a>
+* <a href='#tools'>Tools</a>
+
+<a name='main-features'></a>
 ### Main features
 
-Below, the non-exhaustive list of features planned to be implemented in this application:
+Below, a **non-exhaustive list of features planned to be implemented** in this application:
 
-* Game modes
+##### Game modes
   * Solo game
   * Multiplayer game, up to 4 players
-* Game features
+  
+##### Game features
   * Game creation
      * Roadbook configuration
         * Configuration of the stages of the rally
@@ -98,7 +110,8 @@ Below, the non-exhaustive list of features planned to be implemented in this app
            * deletes related WR timings
            * do not delete WR achievements
   * Ability to give a score (between 1 and 10) to public templates
-* Player profile
+  
+##### Player profile
   * Ability to modify user's first name, last name, email and password
   * Display of user's statistics
      * Number of participated rallies
@@ -178,9 +191,11 @@ Below, the non-exhaustive list of features planned to be implemented in this app
 
 <hr />
 
+<a name='app-install'></a>
 ### Installation
 
-#### Install prerequisites
+<a name='app-prerequisites'></a>
+##### Install prerequisites
 
 * Install Python 2.7
 * Install Django 
@@ -189,13 +204,15 @@ Below, the non-exhaustive list of features planned to be implemented in this app
    pip install Django
    ```
 
-#### Prepare application configuration
+<a name='app-configure'></a>
+##### Configure application
 
 * Edit `config/config.yml`
   * Configure the type and connection parameters for the application database
   * Configure the static application presets (max participants per rally, etc)
 
-#### Initialize application
+<a name='app-initialize'></a>
+##### Initialize application
    
 * Migrate
   
@@ -213,35 +230,71 @@ Below, the non-exhaustive list of features planned to be implemented in this app
   python manage.py loaddata install/initial.json
   ```
 
-#### Run
-
-```shell
-python manage.py runserver localhost:8000
-```
-
 <hr />
 
+<a name='run'></a>
+### Run application
+
+Execute below command in order to run rallyman application:
+    
+  ```shell
+  python manage.py runserver localhost:8000
+  ```
+
+For a production execution, `ipaddr` and `port` should be adapted to the environment. Refer to the documentation of the command for more information:
+
+  ```shell
+  python manage.py runserver --help
+  ```
+  
+<hr />
+
+<a name='tools'></a>
 ### Tools
 
-#### Backup/Restore
+Tools are provided to facilitate the maintenance of the application by operators. 
 
-* Backup the database content
+##### Backup
+
+`dumpdata` and `configuration` commands allow the operator to save data from the application
+
+* Backup the database content: 
+
+    `dumpdata` exports the **live data** to a file
+
+    ```shell
+    python manage.py dumpdata --indent 2 --exclude auth.permission --exclude sessions.session --exclude admin.logentry --exclude contenttypes > backup/backup.json
+    ```
   
-  ```shell
-  python manage.py dumpdata --indent 2 --exclude auth.permission --exclude sessions.session --exclude admin.logentry --exclude contenttypes > backup/backup.json
-  ```
 * Backup the configuration of the application to backuped.zip
   
-  ```shell
-  python manage.py configuration -m backup --file backuped 
-  ```
-* Restore the database content
+    `configuration -m backup` copies application file configuration to a backup file.
   
-  ```shell
-  python manage.py loaddata backup/backup.json
-  ```
+    ```shell
+    python manage.py configuration -m backup --file backuped 
+    ```
+  
+##### Restore
+
+`loaddata` and `configuration` commands allow the operator to load data from a backup to the application.
+
+* Restore the database content
+
+    `loaddata` imports the content of a file to **live data**.
+
+    ```shell
+    python manage.py loaddata backup/backup.json
+    ```
+
+    Be very careful with this command because:
+    * It does not requires a confirmation flag to apply the command.
+    * **Live data** are be **replaced** by loaded data.
+        This can therefore lead to loss or inconsistency in live gate game data.
+
 * Restore the configuration of the application from torestore.zip
   
-  ```shell
-  python manage.py configuration -m restore --file torestore 
-  ```
+    `configuration -m restore` replaces the application configuration files with those from a backup file.
+  
+    ```shell
+    python manage.py configuration -m restore --file torestore 
+    ```

@@ -26,7 +26,7 @@ Anonymous users can:
 
 <hr />
 
-<a name='signup'></a>
+<a name='sign-up'></a>
 ### Sign-up
 
 Sign-up is required to access to all the features of `Rallyman Online`.
@@ -38,7 +38,7 @@ You have to manually click on `Sign-out` in order to be disconnected.
 
 <hr />
 
-<a name='signin'></a>
+<a name='sign-in'></a>
 ### Sign-in
 
 Sign-in is required to be connected.
@@ -49,7 +49,7 @@ If you don't have such information, refer to <a href='#signup'>Sign-up</a> in or
 
 <hr />
 
-<a name='signout'></a>
+<a name='sign-out'></a>
 ### Sign-out
 
 Sign-out closes the user session.

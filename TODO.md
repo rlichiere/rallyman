@@ -1,7 +1,6 @@
 
 #### Mandatory
 
-* add Rally update form (label, opened_at, started_at)
 * implement sections connections (input to output anchors)
   * this will be required to manage map connections
 * implement position of participants in rally
@@ -11,7 +10,25 @@
 
 #### Quick
 
-* add link-to-backoffice where it can be usefull for the superusers
+* add persistence option to create rally form
+* add `rally-edit-advanced` page to manage:
+  * persistence
+  * privacy options
+  * participants start order method:
+     * `by_experience`: sort participants by their number of travelled cells
+     * `by_registration_order`: sort participants by order of registration
+     * `by_creator`: allows only the creator of the rally to sort the participants.
+            The participants who are not placed by the creator are sorted by experience, otherwise by order of registration
+     * `from_rally_order`: Sort participants according to the order used in a previous rally.
+             The participants who did not participate to the previous rally are placed at end,
+                ordered by order of registration
+     * `from_rally_result`: Sort participants according to the result of a previous rally.
+            The participants who did not participate to the previous rally are placed at end,
+                ordered by experience, otherwise by order of registration
+     * `from_rally_result_reverse`: Sort participants according to the reversed result of a previous rally
+            The participants who did not participate to the previous rally are placed at first,
+            ordered by experience reversed, otherwise by order of registration reversed
+* add `link_to_bo` where it can be usefull for the superusers
 * add a debug menu to manage:
   * console features (show)
      * choose logging level: verbose/debug/info/warning/error

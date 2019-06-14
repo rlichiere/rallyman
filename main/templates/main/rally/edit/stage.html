@@ -17,16 +17,19 @@
     <div class="panel-body">
         <div class="row" id="{{ oStage }}_SectionsList">
         {% for section in stage.sections %}
-            {% include 'main/rally_edit_stage_section.html' with stage_num=stage_num section_num=forloop.counter section=section %}
+            {% include 'main/rally/edit/stage_section.html' with stage_num=stage_num section_num=forloop.counter section=section %}
         {% empty %}
-            {% include 'main/rally_edit_stage_section.html' with stage_num=stage_num section_num=1 %}
+            {% include 'main/rally/edit/stage_section.html' with stage_num=stage_num section_num=1 %}
         {% endfor %}
         </div>
     </div>
 
     <div class="panel-footer">
         <div class="form-inline">
-            <a href="#" class="btn btn-primary" onclick="_o{{oStage}}.addSection()">Add section</a>
+            <a href="#" class="btn btn-primary" onclick="_o{{oStage}}.addSection()">
+                <i class="fas fa-plus-square"></i>
+                Add section
+            </a>
 
             <div class="input-group ml-3">
                 <div class="input-group-text">

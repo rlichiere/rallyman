@@ -15,27 +15,20 @@
 
 {% block page-submenu %}
 
-<style>
-
-    #documentationHierarchy > div.dropdown-menu {
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
-    }
-    #documentationHierarchy > div.dropdown-menu > a.dropdown-item {
-        padding-left: 1.1rem;
-        padding-right: 1.1rem;
-    }
-
-</style>
-
-<div class="dropdown" id="documentationHierarchy">
+<div class="dropdown">
     <a href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Table of contents</a>
-    <div class="dropdown-menu">
+    <div class="dropdown-menu dropdown-menu-right">
     {% for doc_page in doc_pages %}
-        <a class="dropdown-item {% if doc_page.key in ariane %}active{% endif %}" href="{% url 'doc-page' pk=doc_page.key %}">
+        <a class="dropdown-item {% if doc_page.key in ariane %}active{% endif %} {% if doc_page.requires == 'superuser' %}info{% endif %}"
+           href="{% url 'doc-page' pk=doc_page.key %}"
+           {% if doc_page.requires == 'superuser' %}
+           data-toggle="tooltip" data-placement="left" data-html="true"
+           title="This page is only accessible to <strong>superusers</strong>"
+           {% endif %}
+        >
             {{ doc_page.title }}
             {% if doc_page.requires == 'superuser' %}
-            <span title="This page is only accessible to superusers" class="fas fa-user-shield small float-right" style="padding-top: 7px"></span>
+            <i class="fas fa-user-shield small float-right pt-2 info"></i>
             {% endif %}
         </a>
     {% endfor %}
@@ -48,26 +41,5 @@
 {% block page-body %}
 
 {{ page_content|safe }}
-
-{% endblock %}
-
-
-{% block page-footer %}
-
-<div class="float-right">
-    <a id="docBtnScrollTop" href="#" class="btn btn-secondary btn-sm"><i class="fas fa-chevron-up"></i></a>
-</div>
-
-{% endblock %}
-
-{% block extra_script %}
-
-<script>
-    $(document).ready(function() {
-        $('#docBtnScrollTop').click(function() {
-            $('main-page-content').scrollTop(0);
-        });
-    });
-</script>
 
 {% endblock %}

@@ -37,8 +37,31 @@
     <script src="{% static 'main/js/console.js' %}"></script>
     <script src="{% static 'main/js/debug.js' %}"></script>
     <script src="{% static 'main/js/utils.js' %}"></script>
+    <script src="{% static 'main/js/scrollers.js' %}"></script>
 
-    <style type="text/css">
+    {% include 'main/base_utils/boostrap_extensions.html' %}
+
+    <style>
+        #docBtnScrollTop {
+            display: none; /* Hidden by default */
+            position: fixed; /* Fixed/sticky position */
+            bottom: 5px; /* Place the button at the bottom of the page */
+            right: 3px; /* Place the button 30px from the right */
+            z-index: 99; /* Make sure it does not overlap */
+        }
+        #docBtnScrollTop:hover {
+            {#background-color: #555; /* Add a dark-grey background on hover */#}
+        }
+
+        .page-marge {
+            padding-left: 2.3rem;
+            padding-right: 2.3rem;
+        }
+
+        #MainSubmenu > div.dropdown > div.dropdown-menu {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
 
     </style>
     {% block head %}{% endblock %}
@@ -175,17 +198,22 @@
 
         <!-- Page content -->
         <div class="row mr-0 ml-0">
-            <div class="col-lg-12 mt-2 mb-2">
-                <div class="float-right">
+            <div class="col-lg-12 mt-2 mb-2 page-marge">
+                <div class="float-right" id="MainSubmenu">
                     {% block page-submenu %}{% endblock %}
                 </div>
                 <h2>{% block page-header %}{% endblock %}</h2>
             </div>
-            <div class="col-lg-12">
+            <div class="col-lg-12 page-marge">
                 {% block page-body %}{% endblock %}
             </div>
-            <div class="col-lg-12">
+            <div class="col-lg-12 page-marge">
                 {% block page-footer %}{% endblock %}
+            </div>
+            <div class="col-lg-12">
+                <div class="float-right">
+                    <a id="docBtnScrollTop" href="#" class="btn btn-secondary btn-sm"><i class="fas fa-chevron-up"></i></a>
+                </div>
             </div>
         </div>
 
@@ -211,6 +239,7 @@
     </footer>
 
     <script>
+        let $rootElements = $('html, body');
 
         Debug.initialize(Console, DebugLevels.{{ data.debug.client.level }});
         Console.useUIOutput({{ data.debug.client.console.useUIOutput|lower }});
@@ -218,6 +247,20 @@
             'main-page-content',
             'debugMenuShowConsole', 'debugMenuHideConsole',
             Debug);
+
+        let topScroller = new TopScroller('docBtnScrollTop', {
+            scrollDuration: {{ const.layout.TOPSCROLLER__SCROLL__DURATION }},
+            hideBtnDuration: {{ const.layout.TOPSCROLLER__HIDE_BUTTON__DURATION }},
+            showBtnDuration: {{ const.layout.TOPSCROLLER__SHOW_BUTTON__DURATION }},
+            root: $rootElements,
+        });
+        topScroller.listenEvents();
+
+        let anchorScroller = new AnchorsScroller({
+            scrollDuration: {{ const.layout.ANCHOR__SCROLL__DURATION }},
+            root: $rootElements,
+        });
+        anchorScroller.listenEvents();
 
         $(document).ready(function(){
 

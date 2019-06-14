@@ -9,7 +9,7 @@ from ....forms.rally import InviteToRallyForm
 
 
 class ParticipantsView(LoginRequiredMixin, MainTemplateView):
-    template_name = 'main/rally_edit_participants.html'
+    template_name = 'main/rally/edit/participants.html'
 
     def __init__(self, *args, **kwargs):
         super(ParticipantsView, self).__init__(*args, **kwargs)
@@ -80,7 +80,7 @@ class ChangePositionView(LoginRequiredMixin, MainView):
 
 
 class InviteView(LoginRequiredMixin, MainTemplateView):
-    template_name = 'main/rally_invite_participant.html'
+    template_name = 'main/rally/participation/invite_participant.html'
 
     def __init__(self, *args, **kwargs):
         super(InviteView, self).__init__(*args, **kwargs)
@@ -139,7 +139,7 @@ class InviteView(LoginRequiredMixin, MainTemplateView):
 
 
 class KickView(LoginRequiredMixin, MainTemplateView):
-    template_name = 'main/rally_kick_participant.html'
+    template_name = 'main/rally/participation/kick_participant.html'
 
     def __init__(self, *args, **kwargs):
         super(KickView, self).__init__(*args, **kwargs)

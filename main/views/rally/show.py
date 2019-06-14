@@ -4,7 +4,7 @@ from ...models import Rally
 
 
 class ShowView(MainTemplateView):
-    template_name = 'main/rally_show.html'
+    template_name = 'main/rally/show.html'
 
     def __init__(self, *args, **kwargs):
         super(ShowView, self).__init__(*args, **kwargs)
