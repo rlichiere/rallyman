@@ -41,8 +41,13 @@
 .tooltip div.tooltip-inner h1 {
     font-size: 1.2rem;
 }
-.tooltip div.tooltip-inner p {
+.tooltip div.tooltip-inner > p,
+.tooltip div.tooltip-inner > ul,
+.tooltip div.tooltip-inner > ul > li {
     text-align: left;
+}
+.tooltip div.tooltip-inner > ul {
+    margin-left: 25px;
 }
 
 body > nav.navbar > ul.navbar-nav > li.dropdown > div.dropdown-menu > div.dropdown-item-group {

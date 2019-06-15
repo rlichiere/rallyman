@@ -15,9 +15,9 @@ class FormFieldHelpTextRenderer(object):
     def render(self):
         _html = '<p>%s</p>' % self._helpText['intro']
         _html += '<p>Constraints:'
-        _html += '<ul>'
+        _html += '<ul class=\'fa-ul\'>'
         for _validation in self._helpText['constraints']:
-            _html += '<li>%s</li>' % _validation
+            _html += '<li><span class=\'fa-li\'><i class=\'fas fa-caret-right\'></i></span>%s</li>' % _validation
         _html += '</ul></p>'
 
         return mark_safe(_html)
