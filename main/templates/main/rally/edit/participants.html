@@ -36,7 +36,8 @@
         <input type="text" value="{{ rally.label }}" class="form-control" title="Rally name" readonly="readonly">
     </div>
 
-    <table id="ParticipantsList" class="table" style="display: table">
+    <table id="ParticipantsList" class="table table-hover table-sm" style="display: table">
+    <thead>
         <tr>
             <th>Position</th>
             <th>Name</th>
@@ -47,6 +48,8 @@
             <th>Admin</th>
             {% endif %}
         </tr>
+    </thead>
+    <tbody>
         {% for participation in participations %}
         <tr>
             <td>
@@ -85,6 +88,7 @@
             </td>
         </tr>
         {% endfor %}
+    </tbody>
     </table>
 
     <div class="float-right">
