@@ -4,6 +4,7 @@ from django import template
 from ..core import config
 from ..core.const.lobby.rallies import RallyStatus
 from ..core.logger import Log
+from ..core.renderers.field_help_text import FormFieldHelpTextRenderer
 from ..models import Rally
 
 from . import utils
@@ -239,3 +240,9 @@ class GetConfNode(template.Node):
         _constantValue = self.constantExpression.resolve(context)
         _l.info('use constant %s for path %s : %s' % (self.constantName, self.path, _constantValue))
         return _constantValue
+
+
+@register.filter
+def render_help_text(help_text_data, params=None):
+    _renderer = FormFieldHelpTextRenderer(help_text_data)
+    return _renderer.render()

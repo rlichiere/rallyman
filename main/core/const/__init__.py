@@ -9,4 +9,5 @@ from . import form
 from . import layout
 from . import lobby
 from . import rally
+from . import user
 from . import zone

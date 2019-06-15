@@ -49,7 +49,7 @@ class ComplexPasswordValidator(object):
                                   params={'number': self.minExotic, 'alphabet': 'exotic'})
 
     def get_help_text(self):
-        _msg = 'Your password must contain at least' \
+        _msg = 'The password must contain at least' \
                ' {min_lower} {lower},' \
                ' {min_upper} {upper} and' \
                ' {min_exotic} {exotic} characters'\

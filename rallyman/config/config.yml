@@ -12,6 +12,20 @@ debug:
       useUIOutput: True
   fail_on_warning: False
 
+user:
+#  username:
+#    min_length:  2            # Recommended value :    2
+#    max_length: 64            # Recommended value :   64
+#  password:
+#    min_length: 12            # Recommended value :   12
+#    max_length: 64            # Recommended value :   64
+#  first_name:
+#    min_length:  0            # Recommended value :    0
+#    max_length: 64            # Recommended value :   64
+#  last_name:
+#    min_length:  0            # Recommended value :    0
+#    max_length: 64            # Recommended value :   64
+
 game:
   create:
     delay_open_to_next: 5     # minutes. Recommended value :   5
