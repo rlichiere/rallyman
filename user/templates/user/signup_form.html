@@ -3,55 +3,54 @@
 {% load maintags %}
 
 {% block page-title %}Sign up{% endblock %}
-
-{% block page-header %}Sign up{% endblock %}
+{% block page-header %}{% endblock %}
 
 {% block page-body %}
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 col-md-offset-4">
-                <div class="login-panel panel panel-default">
-                    <div class="panel-body">
-                        <form role="form" method="post" action="{% url 'auth-signup' %}">
-                            {% csrf_token %}
-                            <fieldset>
-                                <div class="input-group">
-                                    {% render_field form.username class+="form-control" placeholder=form.username.label %}
-                                    <div class="input-group-append">
-                                        {% include 'main/generic/help_button.html' with title='Login format' content=form.username.help_text|render_help_text %}
-                                    </div>
-                                </div>
-                                <div class="input-group mt-3">
-                                    {% render_field form.password class+="form-control" placeholder=form.password.label %}
-                                    <div class="input-group-append">
-                                        {% include 'main/generic/help_button.html' with title='Password validation' content=form.password.help_text|render_help_text %}
-                                    </div>
-                                </div>
-                                <div class="form-group mt-3">
-                                    {% render_field form.password_confirmation class+="form-control" placeholder=form.password_confirmation.label %}
-                                </div>
-                                <div class="input-group mt-3">
-                                    {% render_field form.first_name class+="form-control" placeholder=form.first_name.label %}
-                                    <div class="input-group-append">
-                                        {% include 'main/generic/help_button.html' with title='First name format' content=form.first_name.help_text|render_help_text %}
-                                    </div>
-                                </div>
-                                <div class="input-group mt-3">
-                                    {% render_field form.last_name class+="form-control" placeholder=form.last_name.label %}
-                                    <div class="input-group-append">
-                                        {% include 'main/generic/help_button.html' with title='Last name format' content=form.last_name.help_text|render_help_text %}
-                                    </div>
-                                </div>
-                                <button class="btn btn-lg btn-success btn-block mt-3" type="submit">Sign in</button>
-                            </fieldset>
-                            {% if form.errors %}
-                                <p style="color:red;">Username or password incorrect. Please try again.</p>
-                            {% endif %}
-                        </form>
+<div class="d-flex justify-content-center mt-5">
+    <div class="panel panel-default">
+        <div class="panel-header mb-4" style="text-align: center">
+            <h2>Sign up</h2>
+        </div>
+        <div class="panel-body">
+            <form role="form" method="post" action="{% url 'auth-signup' %}">
+                {% csrf_token %}
+                <fieldset>
+                    <div class="input-group">
+                        {% render_field form.username class+="form-control" placeholder=form.username.label %}
+                        <div class="input-group-append">
+                            {% include 'main/generic/help_button.html' with title='Login format' content=form.username.help_text|render_help_text %}
+                        </div>
                     </div>
-                </div>
-            </div>
+                    <div class="input-group mt-3">
+                        {% render_field form.password class+="form-control" placeholder=form.password.label %}
+                        <div class="input-group-append">
+                            {% include 'main/generic/help_button.html' with title='Password validation' content=form.password.help_text|render_help_text %}
+                        </div>
+                    </div>
+                    <div class="form-group mt-3">
+                        {% render_field form.password_confirmation class+="form-control" placeholder=form.password_confirmation.label %}
+                    </div>
+                    <div class="input-group mt-3">
+                        {% render_field form.first_name class+="form-control" placeholder=form.first_name.label %}
+                        <div class="input-group-append">
+                            {% include 'main/generic/help_button.html' with title='First name format' content=form.first_name.help_text|render_help_text %}
+                        </div>
+                    </div>
+                    <div class="input-group mt-3">
+                        {% render_field form.last_name class+="form-control" placeholder=form.last_name.label %}
+                        <div class="input-group-append">
+                            {% include 'main/generic/help_button.html' with title='Last name format' content=form.last_name.help_text|render_help_text %}
+                        </div>
+                    </div>
+                    <button class="btn btn-lg btn-success btn-block mt-3" type="submit">Sign in</button>
+                </fieldset>
+                {% if form.errors %}
+                    <p style="color:red;">Username or password incorrect. Please try again.</p>
+                {% endif %}
+            </form>
         </div>
     </div>
+</div>
+
 {% endblock %}
