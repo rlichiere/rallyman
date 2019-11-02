@@ -1,2 +1,2 @@
 django-widget-tweaks==1.4.1
-PyYAML==3.11
+PyYAML==5.1
